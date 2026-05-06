@@ -19,7 +19,21 @@ brain = TongTongBrain()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    mode = request.args.get('mode', '通通沒問題')
+    voice_type = request.args.get('voice', 'female')
+    
+    # Initialize the mode and get welcome message
+    welcome_text = brain.set_mode(mode)
+    
+    # Pre-clean and generate audio for welcome message
+    display_text = bot_clean_text(welcome_text)
+    cleaned_speech = bot_speak_re(welcome_text)
+    audio_url = generate_bot_audio(cleaned_speech, voice_type)
+    
+    return render_template('index.html', 
+                           initial_message=display_text, 
+                           initial_audio=audio_url,
+                           current_mode=mode)
 
 @app.route('/api/chat', methods=['POST'])
 def chat():

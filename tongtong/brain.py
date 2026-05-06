@@ -110,7 +110,7 @@ class TongTongBrain:
                 ]
                 return f"好的，聽完這個故事就要乖乖睡覺喔：{random.choice(stories)} 😴💤"
             elif "數羊" in user_input:
-                return "一隻羊...🐑 兩隻羊...🐑 三隻羊...🐑（通通的聲音越來越小）...四隻羊...Zzz...😴"
+                return "一隻羊🐑 兩隻羊🐑🐑 三隻羊🐑🐑🐑 四隻羊🐑🐑🐑🐑 五隻羊🐑🐑🐑🐑🐑 六隻羊🐑🐑🐑🐑🐑🐑 七隻羊🐑🐑🐑🐑🐑🐑🐑 八隻羊🐑🐑🐑🐑🐑🐑🐑🐑 九隻羊🐑🐑🐑🐑🐑🐑🐑🐑🐑 十隻羊 🐑🐑🐑🐑🐑🐑🐑🐑🐑🐑"
             return "呼...呼...Zzz...💤"
 
         if self.mode == "不知道":

@@ -31,12 +31,14 @@ def bot_clean_text(text):
         # Fuzzy check: If the first 15 characters are nearly identical, skip
         prefix = s[:15].lower()
         if prefix not in seen_prefixes:
-            # Language check: If we have multiple results, prefer those with Chinese characters
-            # (Only applies if there's a mix of Chinese and English)
-            has_chinese = any('\u4e00' <= char <= '\u9fff' for char in s)
-            
             cleaned_sentences.append(s + punc)
             seen_prefixes.add(prefix)
+    
+    # IMPORTANT: Handle the remaining text if there's no punctuation at the end
+    if len(sentences) > 0 and len(sentences) % 2 != 0:
+        last_s = sentences[-1].strip()
+        if last_s and last_s[:15].lower() not in seen_prefixes:
+            cleaned_sentences.append(last_s)
     
     # Final check: If there's any Chinese content, remove purely English sentences
     has_any_chinese = any(any('\u4e00' <= char <= '\u9fff' for char in s) for s in cleaned_sentences)

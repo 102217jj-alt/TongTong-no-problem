@@ -6,26 +6,36 @@
     <title>通通 (TongTong) 語音聊天</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #1a1a1a; color: white; font-family: 'Heiti TC', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        :root {
+            --primary-color: #007bff;
+            --accent-color: #f9e79f;
+            --bg-dark: #1a1a1a;
+            --nav-bg: #222;
+        }
+
+        body { background-color: var(--bg-dark); color: white; font-family: 'Heiti TC', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.5s; }
         
         /* Top Navigation Bar */
-        #top-nav { background-color: #222; padding: 10px 15px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between; }
-        .original-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: bold; transition: 0.2s; }
-        .original-btn.active { background: #0056b3; box-shadow: 0 0 10px rgba(0,123,255,0.5); border: 1px solid #fff; }
-        .personality-dropdown { background: #333; color: #f9e79f; border: 1px solid #555; padding: 6px; border-radius: 8px; font-size: 14px; width: 140px; }
+        #top-nav { background-color: var(--nav-bg); padding: 10px 15px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between; transition: background-color 0.5s; }
+        .original-btn { background: var(--primary-color); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: bold; transition: 0.3s; }
+        .original-btn.active { box-shadow: 0 0 15px var(--primary-color); border: 1px solid #fff; }
+        .personality-dropdown { background: #333; color: var(--accent-color); border: 1px solid #555; padding: 6px; border-radius: 8px; font-size: 14px; width: 140px; }
         
         #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
-        .message { margin-bottom: 15px; max-width: 85%; padding: 10px 15px; border-radius: 20px; word-wrap: break-word; }
-        .user-message { background-color: #007bff; align-self: flex-end; margin-left: auto; border-bottom-right-radius: 5px; }
-        .bot-message { background-color: #333; align-self: flex-start; border-bottom-left-radius: 5px; color: #f9e79f; }
+        .message { margin-bottom: 15px; max-width: 85%; padding: 10px 15px; border-radius: 20px; word-wrap: break-word; transition: 0.3s; }
+        .user-message { background-color: var(--primary-color); align-self: flex-end; margin-left: auto; border-bottom-right-radius: 5px; }
+        .bot-message { background-color: #333; align-self: flex-start; border-bottom-left-radius: 5px; color: var(--accent-color); }
         
-        #controls-area { background-color: #222; border-top: 1px solid #444; padding: 10px; }
+        #controls-area { background-color: var(--nav-bg); border-top: 1px solid #444; padding: 10px; transition: background-color 0.5s; }
         #quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; justify-content: center; }
-        .action-btn { background: #444; color: #f9e79f; border: 1px solid #666; padding: 8px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; }
+        .action-btn { background: #444; color: var(--accent-color); border: 1px solid #666; padding: 8px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; }
+        .action-btn:hover { transform: scale(1.05); background: #555; }
         
-        #input-area { background-color: #111; padding: 15px; display: flex; align-items: center; }
+        #input-area { background-color: #111; padding: 15px; display: flex; align-items: center; transition: background-color 0.5s; }
         .mic-btn { width: 50px; height: 50px; border-radius: 25px; border: none; background-color: #e74c3c; color: white; font-size: 20px; flex-shrink: 0; }
         .mic-btn.recording { background-color: #c0392b; box-shadow: 0 0 15px #e74c3c; animation: pulse 1.5s infinite; }
+        
+        #send-btn { background-color: var(--primary-color); border: none; }
         
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
         
@@ -38,6 +48,7 @@
         <button id="btn-original" class="original-btn active" onclick="switchToOriginal()">🤖 通通沒問題</button>
         
         <div class="d-flex align-items-center">
+            <button id="stop-btn" class="btn btn-sm btn-outline-danger me-2" onclick="stopCurrentAudio()" title="停止播放">⏹️</button>
             <select id="mode-dropdown" class="personality-dropdown" onchange="switchToPersonality()">
                 <option value="" disabled selected>✨ 性格模式...</option>
                 <option value="好心情">😊 好心情</option>
@@ -56,7 +67,7 @@
     </div>
 
     <div id="chat-container">
-        <div class="message bot-message">你好呀！我是最強大的通通，現在是「通通沒問題」模式，你可以直接問我問題喔！</div>
+        <!-- Messages will be added dynamically here -->
     </div>
 
     <div id="controls-area">
@@ -67,7 +78,6 @@
 
     <div id="input-area">
         <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." style="background:#222; color:white; border:1px solid #444;">
-        <button id="stop-btn" class="btn btn-outline-danger btn-sm me-2" onclick="stopCurrentAudio()" title="停止播放">⏹️</button>
         <button id="send-btn" class="btn btn-primary btn-sm me-2">發送</button>
         <button id="mic-btn" class="mic-btn">🎤</button>
     </div>
@@ -78,6 +88,7 @@
         const sendBtn = document.getElementById('send-btn');
         const micBtn = document.getElementById('mic-btn');
         const stopBtn = document.getElementById('stop-btn');
+        const inputArea = document.getElementById('input-area');
         const voiceSelect = document.getElementById('voice-select');
         const quickActions = document.getElementById('quick-actions');
         const modeDropdown = document.getElementById('mode-dropdown');
@@ -85,7 +96,16 @@
         
         let currentMode = '通通沒問題';
         let currentAudio = null; 
-        let isProcessing = false; // Flag to track if bot is thinking
+        let isProcessing = false; 
+
+        const THEMES = {
+            '通通沒問題': { primary: '#007bff', accent: '#f9e79f', bg: '#1a1a1a', nav: '#222' },
+            '好心情': { primary: '#f39c12', accent: '#fff', bg: '#2c2305', nav: '#3e2c07' },
+            '神算師': { primary: '#9b59b6', accent: '#e0b0ff', bg: '#1c1426', nav: '#2d1b3d' },
+            '屬於我': { primary: '#e91e63', accent: '#ffc1cc', bg: '#26141a', nav: '#3d1b26' },
+            '去睡覺': { primary: '#34495e', accent: '#bdc3c7', bg: '#0f171e', nav: '#1a252f' },
+            '不知道': { primary: '#1abc9c', accent: '#a3e4d7', bg: '#0b2621', nav: '#133d36' }
+        };
 
         const MODE_ACTIONS = {
             '通通沒問題': ['你是誰？', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言', '查 台灣歷史'],
@@ -97,6 +117,15 @@
         };
 
         let thinkingBubble = null;
+
+        function applyTheme(mode) {
+            const theme = THEMES[mode] || THEMES['通通沒問題'];
+            const root = document.documentElement;
+            root.style.setProperty('--primary-color', theme.primary);
+            root.style.setProperty('--accent-color', theme.accent);
+            root.style.setProperty('--bg-dark', theme.bg);
+            root.style.setProperty('--nav-bg', theme.nav);
+        }
 
         function setUILoading(loading) {
             isProcessing = loading;
@@ -114,7 +143,6 @@
 
             if (loading) {
                 textInput.placeholder = "通通正在思考中...";
-                // Add a temporary thinking bubble
                 thinkingBubble = document.createElement('div');
                 thinkingBubble.className = 'message bot-message';
                 thinkingBubble.style.fontStyle = 'italic';
@@ -139,7 +167,10 @@
         }
 
         function updateUIForMode(mode) {
+            applyTheme(mode);
+
             if (mode === '通通沒問題') {
+                inputArea.style.display = "flex";
                 textInput.disabled = false;
                 textInput.placeholder = "輸入你想查詢的內容...";
                 sendBtn.disabled = false;
@@ -148,12 +179,7 @@
                 btnOriginal.classList.add('active');
                 modeDropdown.selectedIndex = 0; 
             } else {
-                textInput.disabled = true;
-                textInput.value = "";
-                textInput.placeholder = "此模式不開放自行輸入";
-                sendBtn.disabled = true;
-                micBtn.disabled = true;
-                micBtn.style.opacity = "0.5";
+                inputArea.style.display = "none";
                 btnOriginal.classList.remove('active');
             }
 
@@ -170,23 +196,34 @@
 
         function switchToOriginal() {
             if (isProcessing) return;
-            stopCurrentAudio();
-            currentMode = '通通沒問題';
-            updateUIForMode(currentMode);
-            sendMessage('', true);
+            window.location.href = "/?mode=" + encodeURIComponent("通通沒問題");
         }
 
         function switchToPersonality() {
             if (isProcessing) return;
-            stopCurrentAudio();
-            currentMode = modeDropdown.value;
-            if (currentMode) {
-                updateUIForMode(currentMode);
-                sendMessage('', true);
+            const selectedMode = modeDropdown.value;
+            if (selectedMode) {
+                window.location.href = "/?mode=" + encodeURIComponent(selectedMode);
             }
         }
 
-        updateUIForMode('通通沒問題');
+        currentMode = "{{ current_mode }}" || '通通沒問題';
+        updateUIForMode(currentMode);
+
+        if (currentMode !== '通通沒問題') {
+            modeDropdown.value = currentMode;
+        }
+
+        const preloadedMsg = "{{ initial_message }}";
+        const preloadedAudio = "{{ initial_audio }}";
+
+        if (preloadedMsg && preloadedMsg !== "None") {
+            addMessage('bot', preloadedMsg);
+            if (preloadedAudio && preloadedAudio !== "None") {
+                currentAudio = new Audio(preloadedAudio);
+                currentAudio.play().catch(e => console.log("Autoplay waiting for interaction"));
+            }
+        }
 
         let recognition;
         if ('webkitSpeechRecognition' in window) {
@@ -214,11 +251,10 @@
             if (text.trim()) { sendMessage(text); textInput.value = ''; }
         };
 
-        // Add Enter key support
         textInput.onkeydown = (event) => {
             if (event.key === 'Enter' && !isProcessing) {
                 sendBtn.click();
-                event.preventDefault(); // Prevent default behavior (like adding a newline)
+                event.preventDefault();
             }
         };
 
@@ -229,7 +265,7 @@
             stopCurrentAudio();
             if (text.trim()) addMessage('user', text);
             
-            setUILoading(true); // Disable inputs while bot thinks
+            setUILoading(true);
 
             try {
                 const response = await fetch('/api/chat', {
@@ -253,7 +289,7 @@
             } catch (error) {
                 if (text.trim()) addMessage('bot', '連不上大腦囉...');
             } finally {
-                setUILoading(false); // Re-enable inputs
+                setUILoading(false);
             }
         }
 

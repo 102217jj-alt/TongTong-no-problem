@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 import os
+import random
 from dotenv import load_dotenv
 from .text_utils import to_traditional, bot_clean_text
 
@@ -184,7 +185,15 @@ def bot_ask_gemini_direct(user_input, history=None):
         "心情": "通通今天心情超級好喔！因為可以跟你聊天！✨",
         "推薦": "通通覺得台式料理都很棒喔！像是滷肉飯、牛肉麵或是珍珠奶茶，你喜歡哪一種呢？😋",
         "好吃": "說到好吃的，通通口水都要流下來了！台灣的小吃世界第一，去夜市逛逛準沒錯！",
-        "勵志": "成功不是終點，失敗也不是終結，唯有前進的勇氣才是永恆。加油！💪"
+        "勵志": random.choice([
+            "成功不是終點，失敗也不是終結，唯有前進的勇氣才是永恆。加油！💪✨",
+            "不要讓昨天的困難，佔據今天太多的時間。明天會更好喔！🌟",
+            "只要你還有夢想，你就是最年輕的人！跟著通通一起努力吧！🚀💖",
+            "生命不在於你活了多久，而在於你如何揮灑。每一天都是新的開始！🌈",
+            "成功的祕訣在於永不放棄。你是最棒的！通通支持你！🤖💪",
+            "願你眼裡有星辰，心裡有大海，腳下有坦途。✨🌙",
+            "即便世界偶爾黑暗，你也要做自己的光。加油加油！💡💖"
+        ]),
     }
     
     for key, val in local_responses.items():
