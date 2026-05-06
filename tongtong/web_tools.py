@@ -202,35 +202,47 @@ def bot_enhance_with_gemini(user_input, search_result=""):
 
 def bot_ask_gemini_direct(user_input):
     """
-    Directly asks Gemini AI when search fails.
-    Used as a fallback when Wikipedia and Google searches don't work.
+    Directly asks Gemini AI, with local fallbacks and a final web search backup.
     """
+    # 1. Quick Local Fallback for common topics
+    local_responses = {
+        "你好": "你好呀！我是通通，今天有什麼我可以幫你的嗎？😊",
+        "你是誰": "我是通通！您的可愛 AI 助手。🤖",
+        "心情": "通通今天心情超級好喔！因為可以跟你聊天！✨",
+        "推薦": "通通覺得台式料理都很棒喔！像是滷肉飯、牛肉麵或是珍珠奶茶，你喜歡哪一種呢？😋",
+        "好吃": "說到好吃的，通通口水都要流下來了！台灣的小吃世界第一，去夜市逛逛準沒錯！",
+        "勵志": "成功不是終點，失敗也不是終結，唯有前進的勇氣才是永恆。加油！💪"
+    }
+    
+    for key, val in local_responses.items():
+        if key in user_input:
+            return val
+
+    # 2. Try Gemini AI
     try:
         import google.genai as genai
-        
         api_key = os.getenv('GEMINI_API_KEY')
         if not api_key or api_key == "請在這裡貼上您的API_KEY":
-            return "抱歉，我的資料庫目前無法存取。不過你可以試試其他方式來問我喔！"
+            return "抱歉，我的大腦模組還沒裝好金鑰。你可以先問我時間或天氣喔！"
         
         client = genai.Client(api_key=api_key)
-        model = 'gemini-flash-latest'  # 使用最穩定的最新 Flash 模型
+        model = 'gemini-1.5-flash' 
+        prompt = f"你是一個名叫「通通」的可愛機器人。回答要簡潔、有趣、充滿表情符號。使用者問：{user_input}"
         
-        prompt = f"""你是一个可愛且專業的機器人助手、名字叫通通。你適用繁體中文回答，推謝簡潔、清的表達，回答時常常加入有趣的表情符號。
-
-使用者問題：{user_input}
-
-請用通通的身份回答，簡潔、友善、有趣，不超過200字。如果不確定，可以說不知道："""
-        
-        response = client.models.generate_content(
-            model=model,
-            contents=prompt
-        )
-        if response.text:
-            return response.text.strip()
-        return "我需要想一下呢...請等等喔！"
-        
-    except ImportError:
-        return "抱歉，我的智能模組暫時無法使用。試試問我時間或天氣吧！"
+        try:
+            response = client.models.generate_content(model=model, contents=prompt)
+            if response.text: return response.text.strip()
+        except:
+            # If 1.5 fails, try flash-latest
+            response = client.models.generate_content(model='gemini-flash-latest', contents=prompt)
+            if response.text: return response.text.strip()
+            
     except Exception as e:
-        print(f"Gemini direct ask error: {e}")
-        return "哎呀，我出了點小問題。再問我一次試試看？"
+        print(f"Gemini API error, falling back to web: {e}")
+
+    # 3. Final Fallback: If AI fails, try one last quick web search
+    search_res = bot_get_google_search(user_input)
+    if search_res and len(search_res) > 20:
+        return search_res
+
+    return "通通現在腦袋有點打結... 你可以試著問我「台北天氣」或「現在幾點」，這些我最拿手了！"

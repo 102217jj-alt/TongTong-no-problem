@@ -35,7 +35,7 @@
 <body>
 
     <div id="top-nav">
-        <button id="btn-original" class="original-btn active" onclick="switchToOriginal()">🤖 原本的通通</button>
+        <button id="btn-original" class="original-btn active" onclick="switchToOriginal()">🤖 通通沒問題</button>
         
         <div class="d-flex align-items-center">
             <select id="mode-dropdown" class="personality-dropdown" onchange="switchToPersonality()">
@@ -56,7 +56,7 @@
     </div>
 
     <div id="chat-container">
-        <div class="message bot-message">你好呀！我是通通，現在是「原本的通通」模式，你可以直接問我問題喔！</div>
+        <div class="message bot-message">你好呀！我是最強大的通通，現在是「通通沒問題」模式，你可以直接問我問題喔！</div>
     </div>
 
     <div id="controls-area">
@@ -77,22 +77,58 @@
         const textInput = document.getElementById('text-input');
         const sendBtn = document.getElementById('send-btn');
         const micBtn = document.getElementById('mic-btn');
+        const stopBtn = document.getElementById('stop-btn');
         const voiceSelect = document.getElementById('voice-select');
         const quickActions = document.getElementById('quick-actions');
         const modeDropdown = document.getElementById('mode-dropdown');
         const btnOriginal = document.getElementById('btn-original');
         
-        let currentMode = '原本的通通';
-        let currentAudio = null; // Track currently playing audio
+        let currentMode = '通通沒問題';
+        let currentAudio = null; 
+        let isProcessing = false; // Flag to track if bot is thinking
 
         const MODE_ACTIONS = {
-            '原本的通通': ['台北天氣', '現在時間', '查 珍珠奶茶'],
+            '通通沒問題': ['你是誰?', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言', '查 台灣歷史'],
             '好心情': ['講個笑話', '陪我聊天'],
             '神算師': ['占卜運勢', '測幸運色'],
             '屬於我': ['深情告白', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊'],
             '不知道': ['考考我', '放棄']
         };
+
+        let thinkingBubble = null;
+
+        function setUILoading(loading) {
+            isProcessing = loading;
+            const elementsToDisable = [textInput, sendBtn, micBtn, modeDropdown, btnOriginal];
+            
+            elementsToDisable.forEach(el => {
+                if (loading) {
+                    el.classList.add('opacity-50');
+                    el.style.pointerEvents = 'none';
+                } else {
+                    el.classList.remove('opacity-50');
+                    el.style.pointerEvents = 'auto';
+                }
+            });
+
+            if (loading) {
+                textInput.placeholder = "通通正在思考中...";
+                // Add a temporary thinking bubble
+                thinkingBubble = document.createElement('div');
+                thinkingBubble.className = 'message bot-message';
+                thinkingBubble.style.fontStyle = 'italic';
+                thinkingBubble.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2"></span>通通正在思考...';
+                chatContainer.appendChild(thinkingBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            } else {
+                if (thinkingBubble) {
+                    thinkingBubble.remove();
+                    thinkingBubble = null;
+                }
+                updateUIForMode(currentMode); 
+            }
+        }
 
         function stopCurrentAudio() {
             if (currentAudio) {
@@ -103,8 +139,7 @@
         }
 
         function updateUIForMode(mode) {
-            // ... (same as before)
-            if (mode === '原本的通通') {
+            if (mode === '通通沒問題') {
                 textInput.disabled = false;
                 textInput.placeholder = "輸入你想查詢的內容...";
                 sendBtn.disabled = false;
@@ -128,20 +163,22 @@
                 const btn = document.createElement('button');
                 btn.className = 'action-btn';
                 btn.innerText = action;
-                btn.onclick = () => sendMessage(action, true);
+                btn.onclick = () => { if(!isProcessing) sendMessage(action, true); };
                 quickActions.appendChild(btn);
             });
         }
 
         function switchToOriginal() {
-            stopCurrentAudio(); // Stop audio when switching mode
-            currentMode = '原本的通通';
+            if (isProcessing) return;
+            stopCurrentAudio();
+            currentMode = '通通沒問題';
             updateUIForMode(currentMode);
             sendMessage('', true);
         }
 
         function switchToPersonality() {
-            stopCurrentAudio(); // Stop audio when switching mode
+            if (isProcessing) return;
+            stopCurrentAudio();
             currentMode = modeDropdown.value;
             if (currentMode) {
                 updateUIForMode(currentMode);
@@ -149,7 +186,7 @@
             }
         }
 
-        updateUIForMode('原本的通通');
+        updateUIForMode('通通沒問題');
 
         let recognition;
         if ('webkitSpeechRecognition' in window) {
@@ -157,7 +194,7 @@
             recognition.continuous = false;
             recognition.lang = 'zh-TW';
             recognition.onstart = () => {
-                stopCurrentAudio(); // Stop playback when user starts speaking
+                stopCurrentAudio();
                 micBtn.classList.add('recording');
             };
             recognition.onresult = (event) => sendMessage(event.results[0][0].transcript);
@@ -166,23 +203,34 @@
         }
 
         micBtn.onclick = () => {
-            if (currentMode !== '原本的通通') return;
+            if (isProcessing || currentMode !== '通通沒問題') return;
             if (micBtn.classList.contains('recording')) recognition.stop();
             else recognition.start();
         };
 
         sendBtn.onclick = () => {
+            if (isProcessing) return;
             const text = textInput.value;
             if (text.trim()) { sendMessage(text); textInput.value = ''; }
         };
 
-        async function sendMessage(text, isButtonClick = false) {
-            if (!isButtonClick && currentMode !== '原本的通通') return;
-            
-            stopCurrentAudio(); // Stop any currently playing audio immediately
+        // Add Enter key support
+        textInput.onkeydown = (event) => {
+            if (event.key === 'Enter' && !isProcessing) {
+                sendBtn.click();
+                event.preventDefault(); // Prevent default behavior (like adding a newline)
+            }
+        };
 
+        async function sendMessage(text, isButtonClick = false) {
+            if (isProcessing) return;
+            if (!isButtonClick && currentMode !== '通通沒問題') return;
+            
+            stopCurrentAudio();
             if (text.trim()) addMessage('user', text);
             
+            setUILoading(true); // Disable inputs while bot thinks
+
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
@@ -204,6 +252,8 @@
                 }
             } catch (error) {
                 if (text.trim()) addMessage('bot', '連不上大腦囉...');
+            } finally {
+                setUILoading(false); // Re-enable inputs
             }
         }
 

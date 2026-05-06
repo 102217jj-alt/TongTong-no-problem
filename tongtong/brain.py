@@ -4,17 +4,17 @@ from .text_utils import bot_speak_re
 
 class TongTongBrain:
     def __init__(self):
-        self.mode = "原本的通通"  # Default mode set to 'Original'
+        self.mode = "通通沒問題"  # Default mode set to 'TongTong No Problem'
         self.user_name = "主人"
-        self.modes = ["原本的通通", "好心情", "神算師", "屬於我", "去睡覺", "不知道"]
+        self.modes = ["通通沒問題", "好心情", "神算師", "屬於我", "去睡覺", "不知道"]
 
     def set_mode(self, mode_name):
         if mode_name in self.modes:
             self.mode = mode_name
             welcome_msg = f"模式已切換為：{self.mode}。\n"
             
-            if self.mode == "原本的通通":
-                welcome_msg += "我是最專業的通通！你可以直接問我任何問題，我會幫你上網查資料喔。"
+            if self.mode == "通通沒問題":
+                welcome_msg += "我是最強大的通通！有什麼問題交給我就對了，通通沒問題！"
             elif self.mode == "去睡覺":
                 welcome_msg += "呼...好睏喔。你想聽「睡前故事」，還是要跟我一起「數羊」呢？"
             elif self.mode == "神算師":
@@ -42,8 +42,12 @@ class TongTongBrain:
                 if m in user_input:
                     return self.set_mode(m)
 
-        # 1. '原本的通通' Mode - Fully featured with AI, Search and Calculation
-        if self.mode == "原本的通通":
+        # 1. '通通沒問題' Mode - Fully featured with AI, Search and Calculation
+        if self.mode == "通通沒問題":
+            # PRE-CLEAN: Remove common command prefixes to avoid confusing the search engine
+            core_input = user_input.replace("查", "").replace("查詢", "").replace("維基", "").replace("百科", "").strip()
+            if not core_input: core_input = user_input # Fallback if empty
+
             # A. Calculation (Highest Priority)
             if any(op in user_input for op in "+-*/") and any(c.isdigit() for c in user_input):
                 try:
@@ -66,27 +70,26 @@ class TongTongBrain:
             
             if "時間" in user_input: return bot_get_time()
             
-            # C. AI-First Strategy: Conversational/Abstract/Short Queries go straight to Gemini
-            # This is MUCH faster than scraping.
-            is_generic = any(g in user_input.lower() for g in ["你好", "你是誰", "哈囉", "建議", "心情", "笑話"])
-            is_short = len(user_input) < 4
+            # C. AI-First Strategy: Conversational/Abstract/Short Queries
+            if "你是誰" in core_input:
+                return "我是通通！您的可愛 AI 機器人助手。我有六種不同的性格模式，而且我有「通通沒問題」的超能力，無論是上網查資料、算數學、報天氣還是純聊天，交給我通通就對了！😊"
+
+            is_generic = any(g in user_input.lower() for g in ["你好", "哈囉", "建議", "心情", "笑話"])
+            is_short = len(core_input) < 4
             is_question = any(q in user_input for q in ["為什麼", "怎麼", "如何", "評價", "好看嗎"])
             
             if is_generic or is_short or is_question:
-                return bot_ask_gemini_direct(user_input)
+                return bot_ask_gemini_direct(core_input)
 
             # D. Search as a specialized tool for specific nouns/facts
-            keyword = user_input.replace("查", "").replace("維基", "").replace("百科", "").strip()
-            if keyword:
-                # Try Wiki (now with 2s timeout)
-                wiki_res = bot_get_wiki(keyword)
-                if wiki_res: return wiki_res
-                
-                # If wiki fails, instead of slow web search, let Gemini handle it
-                # Gemini is usually faster and smarter than scraping multiple snippets
-                return bot_ask_gemini_direct(user_input)
+            # Try Wiki first
+            wiki_res = bot_get_wiki(core_input)
+            if wiki_res: return wiki_res
+            
+            # If wiki fails, let Gemini handle the core keyword
+            return bot_ask_gemini_direct(core_input)
 
-            return "我是原本的通通，隨時準備好為您服務。"
+            return "我是「通通沒問題」，隨時準備好為您服務。"
 
         # 2. Personality Modes - Only respond to specific button actions
         if self.mode == "去睡覺":

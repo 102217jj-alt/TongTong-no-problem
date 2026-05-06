@@ -4,15 +4,18 @@ from hanziconv import HanziConv
 def bot_clean_text(text):
     """
     General purpose text cleaning.
-    Removes citations, excessive whitespace, duplicates, and non-Chinese results when possible.
+    Removes citations, markdown symbols, excessive whitespace, and duplicates.
     """
-    # 1. Remove citations
+    # 1. Remove citations [1], [2][3]
     text = re.sub(r'\[.*?\]', '', text)
     
-    # 2. Whitespace
+    # 2. Remove Markdown markers: **, *, __, _
+    text = text.replace('**', '').replace('__', '').replace('*', '').replace('_', '')
+
+    # 3. Basic whitespace cleaning
     text = re.sub(r'\s+', ' ', text).strip()
     
-    # 3. Fuzzy Sentence-level deduplication
+    # 4. Fuzzy Sentence-level deduplication
     sentences = re.split(r'([。！？.!?])', text)
     cleaned_sentences = []
     seen_prefixes = set() # Store the first 15 chars of each sentence
