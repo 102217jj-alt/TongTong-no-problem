@@ -71,6 +71,16 @@ def bot_speak_re(text):
 
     # 1. Apply general cleaning (markdown, citations, etc.)
     text = bot_clean_text(text)
+
+    # 1.25 Normalize time ranges for speech, e.g. "7:00 - 8:00" -> "7點到8點"
+    text = re.sub(r'(?:(上午|中午|下午|晚上)\s*)?(\d{1,2}):00\s*[-–—~至到]\s*(\d{1,2}):00',
+                  lambda m: f"{m.group(1) + ' ' if m.group(1) else ''}{m.group(2)}點到{m.group(3)}點",
+                  text)
+
+    # 1.5 Remove fortune disclaimer from speech, but keep it in display text
+    disclaimer = "※ 以上僅供娛樂參考，請理性看待喔！"
+    if disclaimer in text:
+        text = text.replace(disclaimer, '').strip()
     
     # 2. Remove emojis and other special symbols by iterating character by character
     # Keep: Chinese characters, English letters, numbers, common punctuation, spaces

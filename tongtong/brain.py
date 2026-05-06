@@ -9,6 +9,9 @@ class TongTongBrain:
         self.modes = ["通通沒問題", "好心情", "神算師", "屬於我", "去睡覺", "不知道"]
         self.history = [] # Store conversation context
 
+    def add_fortune_disclaimer(self, text):
+        return f"{text}\n\n※ 以上僅供娛樂參考，請理性看待喔！"
+
     def set_mode(self, mode_name):
         if mode_name in self.modes:
             self.mode = mode_name
@@ -23,9 +26,9 @@ class TongTongBrain:
             elif self.mode == "去睡覺":
                 welcome_msg += "呼...好睏喔 🥱。你想聽「睡前故事」📖，還是要跟我一起「數羊」🐑 呢？"
             elif self.mode == "神算師":
-                welcome_msg += "命運的齒輪開始轉動...🔮 你想「占卜運勢」✨，還是要「測幸運色」🎨？"
+                welcome_msg += self.add_fortune_disclaimer("命運的齒輪開始轉動...🔮 你想「占卜運勢」✨、「測幸運色」🎨、「算幸運數字」🎲、「問吉時」⏰、「財運」💰、「事業運」💼、「愛情運」💖，還是「今日建議」🌈 呢？")
             elif self.mode == "好心情":
-                welcome_msg += "嘿嘿！現在心情超棒 🌟！要我「講個笑話」😆 給你聽，還是「變個魔術」🪄 給你看？"
+                welcome_msg += "嘿嘿！現在心情超棒 🌟！要我「講個笑話」😆、「唱首歌」🎵、「給你鼓勵」💪、「變個魔術」🪄、「猜拳」✊，還是「擊掌」🤝 呢？"
             elif self.mode == "屬於我":
                 welcome_msg += f"我是專屬於你的通通 🥰。要「修改稱呼」🏷️，還是讓我「深情告白」❤️？"
             elif self.mode == "不知道":
@@ -151,11 +154,65 @@ class TongTongBrain:
         if self.mode == "神算師":
             if "幸運色" in user_input:
                 colors = ["熱情的紅色 ❤️", "憂鬱的藍色 💙", "活力的黃色 💛", "平靜的綠色 💚", "神祕的紫色 💜", "純潔的白色 🤍"]
-                return f"掐指一算，你今天的幸運色是：{random.choice(colors)}！✨"
+                return self.add_fortune_disclaimer(f"掐指一算，你今天的幸運色是：{random.choice(colors)}！✨")
+            if "幸運數字" in user_input or "幸運號碼" in user_input or "數字" in user_input:
+                lucky_numbers = random.sample(range(1, 50), 5)
+                return self.add_fortune_disclaimer(f"神諭降臨！你今天的幸運數字是：{', '.join(map(str, lucky_numbers))} 🎲✨")
+            if "吉時" in user_input or "幸運時間" in user_input:
+                lucky_times = ["上午 9:00 - 10:00", "中午 12:00 - 13:00", "下午 3:00 - 4:00", "晚上 7:00 - 8:00", "晚上 9:00 - 10:00"]
+                return self.add_fortune_disclaimer(f"我看見了時之河流... 你的吉時是：{random.choice(lucky_times)} ⏰🔮")
+            if "財運" in user_input:
+                fortunes = [
+                    "今天的財運像慢慢升起的太陽，穩穩累積就會看見成果。🌞💰",
+                    "很適合做出對自己有幫助的小決定，錢包會因為你的細心而更安心。🪙✨",
+                    "有機會遇到意料之外的小驚喜，保持開放心情，收穫會比你想像更多。🌟💵",
+                    "今天的財氣偏向穩健成長，越重視規劃，越容易把好運留住。📈💚",
+                    "如果你正在整理財務，今天會是很順手的一天，做越多整理越有成就感。📒✨",
+                    "今天很適合檢查自己的收支，越有條理，財運就越容易越來越穩。🧾🌈",
+                    "小小的節制會帶來大大的安心，今天是讓財務慢慢變漂亮的好日子。💎📊"
+                ]
+                return self.add_fortune_disclaimer(f"財運卦象：{random.choice(fortunes)}")
+            if "事業運" in user_input or "工作運" in user_input:
+                fortunes = [
+                    "今天很適合把手上的事情一件件完成，你的效率會比自己想像的更好。💼✨",
+                    "靈感和行動力都在線，適合開始一個你原本想很久的計畫。🚀📈",
+                    "工作上容易出現願意幫你的人，主動說明需求，進展會更順。🤝🌟",
+                    "這是適合穩穩發光的一天，先完成再優化，你會越做越有信心。✨💪",
+                    "今天的工作運很適合突破卡點，只要踏出第一步，後面就會慢慢打開。🔓🌈",
+                    "你今天的專注力很不錯，適合處理需要耐心的任務，越做越順手。🎯💼",
+                    "很容易在工作中找到新的節奏，今天只要穩穩向前，就會有好結果。🛤️✨"
+                ]
+                return self.add_fortune_disclaimer(f"事業運卦象：{random.choice(fortunes)}")
+            if "愛情運" in user_input or "戀愛運" in user_input:
+                fortunes = [
+                    "今天的愛情運很溫柔，真誠表達自己就會散發很迷人的光。💘✨",
+                    "適合傳一個貼心訊息，簡單的關心就能讓彼此更靠近。🌷💕",
+                    "感情氛圍偏甜，只要多一點理解與耐心，關係就會更舒服。💞🌈",
+                    "桃花能量正在慢慢靠近，保持自然和笑容，魅力會更明顯。🌸😊",
+                    "如果你正在等回應，今天很適合先照顧好自己的心情，好的互動也會跟著來。💖🌟",
+                    "今天適合多一點真誠與溫暖，輕輕的一句話也可能讓心靠得更近。💗🌙",
+                    "關係的美好正在慢慢累積，今天是讓彼此更懂彼此的好時機。🤝💐"
+                ]
+                return self.add_fortune_disclaimer(f"愛情運卦象：{random.choice(fortunes)}")
             if "運勢" in user_input or "占卜" in user_input:
-                fortunes = ["大吉！🌟", "中吉。✨", "小吉。☀️", "末吉。🍂", "平。☁️", "吉。🍀"]
-                return f"神算師占卜結果：{random.choice(fortunes)}"
-            return "我是神算師通通，想算什麼呢？🔮"
+                fortunes = [
+                    "大吉！🌟 今天很適合行動，越主動越有收穫。",
+                    "中吉。✨ 事情會順順推進，耐心一點更漂亮。",
+                    "小吉。☀️ 先做好眼前的小事，運氣會慢慢跟上。",
+                    "末吉。🍂 先別硬衝，整理思緒後再出手更穩。",
+                    "平。☁️ 今天維持節奏就好，別急著下結論。",
+                    "吉。🍀 有機會遇到小驚喜，記得留意細節。"
+                ]
+                return self.add_fortune_disclaimer(f"神算師占卜結果：{random.choice(fortunes)}")
+            if "今日建議" in user_input or "建議" in user_input or "今天適合" in user_input:
+                advices = [
+                    "今天是充滿好運的一天，勇敢開始就會有漂亮的收穫。🌟",
+                    "你的節奏會越來越順，保持微笑，事情會朝好的方向前進。✨",
+                    "很適合帶著期待出發，今天的小努力都會慢慢變成大成果。🌈",
+                    "只要照著自己的步調前進，驚喜和好消息就會悄悄靠近。💖"
+                ]
+                return self.add_fortune_disclaimer(f"神算師建議：{random.choice(advices)}")
+            return self.add_fortune_disclaimer("我是神算師通通，想算什麼呢？🔮")
 
         if self.mode == "好心情":
             if "笑話" in user_input:

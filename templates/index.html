@@ -92,6 +92,47 @@
             align-self: flex-start;
             border-bottom-left-radius: 5px;
             color: var(--accent-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .message-content {
+            flex: 1;
+            white-space: pre-wrap;
+        }
+
+        .message-disclaimer {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.78em;
+            line-height: 1.35;
+            color: rgba(255, 255, 255, 0.72);
+        }
+
+        .replay-audio-btn {
+            border: none;
+            background: transparent;
+            color: var(--accent-color);
+            font-size: 18px;
+            line-height: 1;
+            padding: 0;
+            margin-top: 1px;
+            cursor: pointer;
+            opacity: 0.85;
+            flex-shrink: 0;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .replay-audio-btn:hover {
+            opacity: 1;
+            transform: scale(1.12);
+        }
+
+        .replay-audio-btn:disabled {
+            opacity: 0.35;
+            cursor: default;
+            transform: none;
         }
 
         #controls-area {
@@ -472,7 +513,7 @@
         const MODE_ACTIONS = {
             '通通沒問題': ['你是誰？', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言', '查 台灣歷史'],
             '好心情': ['講個笑話', '唱首歌', '給我鼓勵', '變個魔術', '猜拳', '跟我擊掌'],
-            '神算師': ['占卜運勢', '測幸運色'],
+            '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '問吉時', '財運', '事業運', '愛情運', '今日建議'],
             '屬於我': ['深情告白', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊'],
             '不知道': ['考考我', '放棄']
@@ -660,6 +701,41 @@
             }
         }
 
+        function playAudioFromUrl(audioUrl) {
+            if (!audioUrl) return null;
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+            }
+            currentAudio = new Audio(audioUrl);
+            currentAudio.onended = () => {
+                currentAudio = null;
+            };
+            currentAudio.onerror = () => {
+                currentAudio = null;
+            };
+            currentAudio.play().catch(() => {
+                currentAudio = null;
+            });
+            return currentAudio;
+        }
+
+        function attachReplayButton(messageEl, audioUrl) {
+            if (!messageEl || !audioUrl) return;
+
+            const replayBtn = document.createElement('button');
+            replayBtn.type = 'button';
+            replayBtn.className = 'replay-audio-btn';
+            replayBtn.title = '重播語音';
+            replayBtn.innerText = '🔊';
+            replayBtn.onclick = (event) => {
+                event.stopPropagation();
+                playAudioFromUrl(audioUrl);
+            };
+
+            messageEl.appendChild(replayBtn);
+        }
+
         function playHighFiveSound() {
             const ctx = ensureRpsAudioContext();
             if (!ctx) return;
@@ -733,7 +809,7 @@
             stopCurrentAudio();
             triggerHighFiveCelebration();
             const highFiveSpeech = '合作愉快，我們是最棒的夥伴！';
-            addMessage('bot', `啪！✋✨ ${highFiveSpeech} 🤝💖`);
+            const messageEl = addMessage('bot', `啪！✋✨ ${highFiveSpeech} 🤝💖`);
 
             fetch('/api/chat', {
                 method: 'POST',
@@ -745,16 +821,8 @@
                 })
             }).then(response => response.json()).then(data => {
                 if (data.audio_url) {
-                    currentAudio = new Audio(data.audio_url);
-                    currentAudio.onended = () => {
-                        currentAudio = null;
-                    };
-                    currentAudio.onerror = () => {
-                        currentAudio = null;
-                    };
-                    currentAudio.play().catch(() => {
-                        currentAudio = null;
-                    });
+                    attachReplayButton(messageEl, data.audio_url);
+                    playAudioFromUrl(data.audio_url);
                 }
             }).catch(() => {
                 console.log('High five voice fetch failed');
@@ -829,7 +897,7 @@
                     rpsReplyTimer = null;
                     closeRPS();
                     // Add bot's response directly to chat without [RESULT] prefix
-                    addMessage('bot', speechResult);
+                    const messageEl = addMessage('bot', speechResult);
                     // Play voice if available - send voiceText for speech synthesis
                     fetch('/api/chat', {
                         method: 'POST',
@@ -842,22 +910,8 @@
                     }).then(response => response.json()).then(data => {
                         if (roundId !== rpsRoundId) return;
                         if (data.audio_url) {
-                            currentAudio = new Audio(data.audio_url);
-                            currentAudio.onended = () => {
-                                if (roundId === rpsRoundId) {
-                                    currentAudio = null;
-                                }
-                            };
-                            currentAudio.onerror = () => {
-                                if (roundId === rpsRoundId) {
-                                    currentAudio = null;
-                                }
-                            };
-                            currentAudio.play().catch(() => {
-                                if (roundId === rpsRoundId) {
-                                    currentAudio = null;
-                                }
-                            });
+                            attachReplayButton(messageEl, data.audio_url);
+                            playAudioFromUrl(data.audio_url);
                         }
                     }).catch(e => {
                         console.log("Voice fetch failed");
@@ -890,8 +944,9 @@
         const preloadedAudio = "{{ initial_audio }}";
 
         if (preloadedMsg && preloadedMsg !== "None") {
-            addMessage('bot', preloadedMsg);
+            const preloadedMessageEl = addMessage('bot', preloadedMsg);
             if (preloadedAudio && preloadedAudio !== "None") {
+                attachReplayButton(preloadedMessageEl, preloadedAudio);
                 currentAudio = new Audio(preloadedAudio);
                 currentAudio.play().catch(e => console.log("Autoplay waiting for interaction"));
             }
@@ -998,10 +1053,10 @@
 
                 const data = await response.json();
                 if (data.reply) {
-                    addMessage('bot', data.reply);
+                    const messageEl = addMessage('bot', data.reply);
                     if (data.audio_url) {
-                        currentAudio = new Audio(data.audio_url);
-                        currentAudio.play();
+                        attachReplayButton(messageEl, data.audio_url);
+                        playAudioFromUrl(data.audio_url);
                     }
                 }
             } catch (error) {
@@ -1017,9 +1072,32 @@
         function addMessage(sender, text) {
             const div = document.createElement('div');
             div.className = `message ${sender}-message`;
-            div.innerText = text;
+            if (sender === 'bot') {
+                const content = document.createElement('span');
+                content.className = 'message-content';
+                const disclaimerText = '※ 以上僅供娛樂參考，請理性看待喔！';
+                const disclaimerIndex = text.indexOf(disclaimerText);
+
+                if (disclaimerIndex !== -1) {
+                    const mainText = text.slice(0, disclaimerIndex).trimEnd();
+                    const disclaimer = text.slice(disclaimerIndex);
+
+                    content.innerText = mainText;
+
+                    const disclaimerSpan = document.createElement('span');
+                    disclaimerSpan.className = 'message-disclaimer';
+                    disclaimerSpan.innerText = disclaimer;
+                    content.appendChild(disclaimerSpan);
+                } else {
+                    content.innerText = text;
+                }
+                div.appendChild(content);
+            } else {
+                div.innerText = text;
+            }
             chatContainer.appendChild(div);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            return div;
         }
 
         setInterval(() => fetch('/api/cleanup', { method: 'POST' }), 600000);
