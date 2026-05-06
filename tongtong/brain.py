@@ -42,9 +42,9 @@ class TongTongBrain:
                 if m in user_input:
                     return self.set_mode(m)
 
-        # 1. '原本的通通' Mode - Fully featured with Search and Calculation
+        # 1. '原本的通通' Mode - Fully featured with AI, Search and Calculation
         if self.mode == "原本的通通":
-            # A. Calculation
+            # A. Calculation (Highest Priority)
             if any(op in user_input for op in "+-*/") and any(c.isdigit() for c in user_input):
                 try:
                     allowed_chars = "0123456789+-*/(). "
@@ -54,37 +54,37 @@ class TongTongBrain:
                         return f"專業通通算出來了，結果是：{result}"
                 except: pass
             
-            # B. Specific Tools
-            if "天氣" in user_input: return bot_get_weather()
+            # B. Specific Tools (Weather/Time)
+            if "天氣" in user_input:
+                city = "台北"
+                taiwan_cities = ["台北", "台中", "台南", "高雄", "新北", "桃園", "新竹", "苗栗", "彰化", "南投", "雲林", "嘉義", "屏東", "宜蘭", "花蓮", "台東"]
+                for potential_city in taiwan_cities:
+                    if potential_city in user_input:
+                        city = potential_city
+                        break
+                return bot_get_weather(city)
+            
             if "時間" in user_input: return bot_get_time()
             
-            # C. Basic Greetings (Optional, to prevent searching "你好")
-            greetings = ["你好", "嗨", "哈囉", "hello", "hi"]
-            if any(g == user_input.lower() for g in greetings):
-                return "你好，我是原始版本的通通，有什麼想查詢的知識嗎？可以直接輸入關鍵字喔！"
+            # C. AI-First Strategy: Conversational/Abstract/Short Queries go straight to Gemini
+            # This is MUCH faster than scraping.
+            is_generic = any(g in user_input.lower() for g in ["你好", "你是誰", "哈囉", "建議", "心情", "笑話"])
+            is_short = len(user_input) < 4
+            is_question = any(q in user_input for q in ["為什麼", "怎麼", "如何", "評價", "好看嗎"])
             
-            # D. Automatic Wiki Search (Default) with Google Fallback and Gemini Direct
+            if is_generic or is_short or is_question:
+                return bot_ask_gemini_direct(user_input)
+
+            # D. Search as a specialized tool for specific nouns/facts
             keyword = user_input.replace("查", "").replace("維基", "").replace("百科", "").strip()
             if keyword:
-                # Try Wiki first
+                # Try Wiki (now with 2s timeout)
                 wiki_res = bot_get_wiki(keyword)
-                if wiki_res and "找不到" not in wiki_res and "沒辦法讀取" not in wiki_res:
-                    # Enhance with Gemini for better quality
-                    enhanced = bot_enhance_with_gemini(user_input, wiki_res)
-                    return enhanced
+                if wiki_res: return wiki_res
                 
-                # Fallback to general web search
-                search_res = bot_get_google_search(keyword)
-                
-                # Check if search failed (returns error message)
-                if "暫時沒辦法直接讀取內容" in search_res or "上網找資料時發生" in search_res:
-                    # Use Gemini to answer directly when search fails
-                    gemini_res = bot_ask_gemini_direct(user_input)
-                    return gemini_res
-                else:
-                    # Enhance successful search results with Gemini
-                    enhanced = bot_enhance_with_gemini(user_input, search_res)
-                    return enhanced
+                # If wiki fails, instead of slow web search, let Gemini handle it
+                # Gemini is usually faster and smarter than scraping multiple snippets
+                return bot_ask_gemini_direct(user_input)
 
             return "我是原本的通通，隨時準備好為您服務。"
 
