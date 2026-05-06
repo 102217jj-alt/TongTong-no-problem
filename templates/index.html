@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>通通 (TongTong) 語音聊天</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #1a1a1a; color: white; font-family: 'Heiti TC', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        
+        /* Top Navigation Bar */
+        #top-nav { background-color: #222; padding: 10px 15px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between; }
+        .original-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: bold; transition: 0.2s; }
+        .original-btn.active { background: #0056b3; box-shadow: 0 0 10px rgba(0,123,255,0.5); border: 1px solid #fff; }
+        .personality-dropdown { background: #333; color: #f9e79f; border: 1px solid #555; padding: 6px; border-radius: 8px; font-size: 14px; width: 140px; }
+        
+        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
+        .message { margin-bottom: 15px; max-width: 85%; padding: 10px 15px; border-radius: 20px; word-wrap: break-word; }
+        .user-message { background-color: #007bff; align-self: flex-end; margin-left: auto; border-bottom-right-radius: 5px; }
+        .bot-message { background-color: #333; align-self: flex-start; border-bottom-left-radius: 5px; color: #f9e79f; }
+        
+        #controls-area { background-color: #222; border-top: 1px solid #444; padding: 10px; }
+        #quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; justify-content: center; }
+        .action-btn { background: #444; color: #f9e79f; border: 1px solid #666; padding: 8px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; }
+        
+        #input-area { background-color: #111; padding: 15px; display: flex; align-items: center; }
+        .mic-btn { width: 50px; height: 50px; border-radius: 25px; border: none; background-color: #e74c3c; color: white; font-size: 20px; flex-shrink: 0; }
+        .mic-btn.recording { background-color: #c0392b; box-shadow: 0 0 15px #e74c3c; animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        
+        .voice-settings select { background:#333; color:white; border:none; width:60px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div id="top-nav">
+        <button id="btn-original" class="original-btn active" onclick="switchToOriginal()">🤖 原本的通通</button>
+        
+        <div class="d-flex align-items-center">
+            <select id="mode-dropdown" class="personality-dropdown" onchange="switchToPersonality()">
+                <option value="" disabled selected>✨ 性格模式...</option>
+                <option value="好心情">😊 好心情</option>
+                <option value="神算師">🔮 神算師</option>
+                <option value="屬於我">👤 屬於我</option>
+                <option value="去睡覺">😴 去睡覺</option>
+                <option value="不知道">❓ 不知道</option>
+            </select>
+            <div class="voice-settings ms-2">
+                <select id="voice-select" class="form-select form-select-sm">
+                    <option value="female">👧女</option>
+                    <option value="male">👦男</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-container">
+        <div class="message bot-message">你好呀！我是通通，現在是「原本的通通」模式，你可以直接問我問題喔！</div>
+    </div>
+
+    <div id="controls-area">
+        <div id="quick-actions">
+            <!-- Dynamic buttons go here -->
+        </div>
+    </div>
+
+    <div id="input-area">
+        <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." style="background:#222; color:white; border:1px solid #444;">
+        <button id="stop-btn" class="btn btn-outline-danger btn-sm me-2" onclick="stopCurrentAudio()" title="停止播放">⏹️</button>
+        <button id="send-btn" class="btn btn-primary btn-sm me-2">發送</button>
+        <button id="mic-btn" class="mic-btn">🎤</button>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chat-container');
+        const textInput = document.getElementById('text-input');
+        const sendBtn = document.getElementById('send-btn');
+        const micBtn = document.getElementById('mic-btn');
+        const voiceSelect = document.getElementById('voice-select');
+        const quickActions = document.getElementById('quick-actions');
+        const modeDropdown = document.getElementById('mode-dropdown');
+        const btnOriginal = document.getElementById('btn-original');
+        
+        let currentMode = '原本的通通';
+        let currentAudio = null; // Track currently playing audio
+
+        const MODE_ACTIONS = {
+            '原本的通通': ['台北天氣', '現在時間', '查 珍珠奶茶'],
+            '好心情': ['講個笑話', '陪我聊天'],
+            '神算師': ['占卜運勢', '測幸運色'],
+            '屬於我': ['深情告白', '修改稱呼'],
+            '去睡覺': ['睡前故事', '數羊'],
+            '不知道': ['考考我', '放棄']
+        };
+
+        function stopCurrentAudio() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                currentAudio = null;
+            }
+        }
+
+        function updateUIForMode(mode) {
+            // ... (same as before)
+            if (mode === '原本的通通') {
+                textInput.disabled = false;
+                textInput.placeholder = "輸入你想查詢的內容...";
+                sendBtn.disabled = false;
+                micBtn.disabled = false;
+                micBtn.style.opacity = "1";
+                btnOriginal.classList.add('active');
+                modeDropdown.selectedIndex = 0; 
+            } else {
+                textInput.disabled = true;
+                textInput.value = "";
+                textInput.placeholder = "此模式不開放自行輸入";
+                sendBtn.disabled = true;
+                micBtn.disabled = true;
+                micBtn.style.opacity = "0.5";
+                btnOriginal.classList.remove('active');
+            }
+
+            quickActions.innerHTML = '';
+            const actions = MODE_ACTIONS[mode] || [];
+            actions.forEach(action => {
+                const btn = document.createElement('button');
+                btn.className = 'action-btn';
+                btn.innerText = action;
+                btn.onclick = () => sendMessage(action, true);
+                quickActions.appendChild(btn);
+            });
+        }
+
+        function switchToOriginal() {
+            stopCurrentAudio(); // Stop audio when switching mode
+            currentMode = '原本的通通';
+            updateUIForMode(currentMode);
+            sendMessage('', true);
+        }
+
+        function switchToPersonality() {
+            stopCurrentAudio(); // Stop audio when switching mode
+            currentMode = modeDropdown.value;
+            if (currentMode) {
+                updateUIForMode(currentMode);
+                sendMessage('', true);
+            }
+        }
+
+        updateUIForMode('原本的通通');
+
+        let recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'zh-TW';
+            recognition.onstart = () => {
+                stopCurrentAudio(); // Stop playback when user starts speaking
+                micBtn.classList.add('recording');
+            };
+            recognition.onresult = (event) => sendMessage(event.results[0][0].transcript);
+            recognition.onerror = () => micBtn.classList.remove('recording');
+            recognition.onend = () => micBtn.classList.remove('recording');
+        }
+
+        micBtn.onclick = () => {
+            if (currentMode !== '原本的通通') return;
+            if (micBtn.classList.contains('recording')) recognition.stop();
+            else recognition.start();
+        };
+
+        sendBtn.onclick = () => {
+            const text = textInput.value;
+            if (text.trim()) { sendMessage(text); textInput.value = ''; }
+        };
+
+        async function sendMessage(text, isButtonClick = false) {
+            if (!isButtonClick && currentMode !== '原本的通通') return;
+            
+            stopCurrentAudio(); // Stop any currently playing audio immediately
+
+            if (text.trim()) addMessage('user', text);
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        mode: currentMode,
+                        voice_type: voiceSelect.value
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.reply) {
+                    addMessage('bot', data.reply);
+                    if (data.audio_url) {
+                        currentAudio = new Audio(data.audio_url);
+                        currentAudio.play();
+                    }
+                }
+            } catch (error) {
+                if (text.trim()) addMessage('bot', '連不上大腦囉...');
+            }
+        }
+
+        function addMessage(sender, text) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}-message`;
+            div.innerText = text;
+            chatContainer.appendChild(div);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        setInterval(() => fetch('/api/cleanup', {method: 'POST'}), 600000);
+    </script>
+</body>
+</html>
