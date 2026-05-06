@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>通通 (TongTong) 語音聊天</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #007bff;
@@ -13,42 +15,369 @@
             --nav-bg: #222;
         }
 
-        body { background-color: var(--bg-dark); color: white; font-family: 'Heiti TC', sans-serif; height: 100vh; display: flex; flex-direction: column; overflow: hidden; transition: background-color 0.5s; }
-        
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Heiti TC', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.5s;
+        }
+
         /* Top Navigation Bar */
-        #top-nav { background-color: var(--nav-bg); padding: 10px 15px; border-bottom: 1px solid #444; display: flex; align-items: center; justify-content: space-between; transition: background-color 0.5s; }
-        .original-btn { background: var(--primary-color); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: bold; transition: 0.3s; }
-        .original-btn.active { box-shadow: 0 0 15px var(--primary-color); border: 1px solid #fff; }
-        .personality-dropdown { background: #333; color: var(--accent-color); border: 1px solid #555; padding: 6px; border-radius: 8px; font-size: 14px; width: 140px; }
-        
-        #chat-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; }
-        .message { margin-bottom: 15px; max-width: 85%; padding: 10px 15px; border-radius: 20px; word-wrap: break-word; transition: 0.3s; }
-        .user-message { background-color: var(--primary-color); align-self: flex-end; margin-left: auto; border-bottom-right-radius: 5px; }
-        .bot-message { background-color: #333; align-self: flex-start; border-bottom-left-radius: 5px; color: var(--accent-color); }
-        
-        #controls-area { background-color: var(--nav-bg); border-top: 1px solid #444; padding: 10px; transition: background-color 0.5s; }
-        #quick-actions { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; justify-content: center; }
-        .action-btn { background: #444; color: var(--accent-color); border: 1px solid #666; padding: 8px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; transition: 0.3s; }
-        .action-btn:hover { transform: scale(1.05); background: #555; }
-        
-        #input-area { background-color: #111; padding: 15px; display: flex; align-items: center; transition: background-color 0.5s; }
-        .mic-btn { width: 50px; height: 50px; border-radius: 25px; border: none; background-color: #e74c3c; color: white; font-size: 20px; flex-shrink: 0; }
-        .mic-btn.recording { background-color: #c0392b; box-shadow: 0 0 15px #e74c3c; animation: pulse 1.5s infinite; }
-        
-        #send-btn { background-color: var(--primary-color); border: none; }
-        
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        
-        .voice-settings select { background:#333; color:white; border:none; width:60px; font-size: 12px; }
+        #top-nav {
+            background-color: var(--nav-bg);
+            padding: 10px 15px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.5s;
+        }
+
+        .original-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .original-btn.active {
+            box-shadow: 0 0 15px var(--primary-color);
+            border: 1px solid #fff;
+        }
+
+        .personality-dropdown {
+            background: #333;
+            color: var(--accent-color);
+            border: 1px solid #555;
+            padding: 6px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 140px;
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 85%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            word-wrap: break-word;
+            transition: 0.3s;
+        }
+
+        .user-message {
+            background-color: var(--primary-color);
+            align-self: flex-end;
+            margin-left: auto;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-message {
+            background-color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            color: var(--accent-color);
+        }
+
+        #controls-area {
+            background-color: var(--nav-bg);
+            border-top: 1px solid #444;
+            padding: 10px;
+            transition: background-color 0.5s;
+        }
+
+        #quick-actions {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            background: #444;
+            color: var(--accent-color);
+            border: 1px solid #666;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+            background: #555;
+        }
+
+        .highfive-overlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.42);
+            z-index: 2500;
+            pointer-events: none;
+            animation: highfiveFadeIn 0.18s ease-out;
+        }
+
+        .highfive-card {
+            position: relative;
+            width: min(380px, 88vw);
+            height: 230px;
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
+            backdrop-filter: blur(10px);
+            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+        }
+
+        .highfive-hand {
+            position: absolute;
+            top: 74px;
+            font-size: 4.1rem;
+            filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
+        }
+
+        .highfive-hand.left {
+            left: 30px;
+            transform-origin: right center;
+            animation: highfiveLeft 1.2s ease-in-out forwards;
+        }
+
+        .highfive-hand.right {
+            right: 30px;
+            transform-origin: left center;
+            animation: highfiveRight 1.2s ease-in-out forwards;
+        }
+
+        .highfive-burst {
+            position: absolute;
+            left: 50%;
+            top: 74px;
+            transform: translateX(-50%) scale(0.2);
+            font-size: 3rem;
+            opacity: 0;
+            animation: highfiveBurst 1.2s ease-out forwards;
+        }
+
+        .highfive-text {
+            position: absolute;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%) translateY(10px);
+            width: calc(100% - 32px);
+            text-align: center;
+            color: white;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+            font-size: 1.15rem;
+            font-weight: 700;
+            opacity: 0;
+            animation: highfiveText 1.2s ease-out forwards;
+        }
+
+        .highfive-sparkle {
+            position: absolute;
+            font-size: 1.3rem;
+            opacity: 0;
+            animation: highfiveSparkle 1.2s ease-out forwards;
+        }
+
+        .highfive-sparkle.one {
+            left: 52px;
+            top: 40px;
+            animation-delay: 0.03s;
+        }
+
+        .highfive-sparkle.two {
+            right: 52px;
+            top: 52px;
+            animation-delay: 0.08s;
+        }
+
+        .highfive-sparkle.three {
+            left: 50%;
+            bottom: 60px;
+            transform: translateX(-50%);
+            animation-delay: 0.12s;
+        }
+
+        @keyframes highfiveFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes highfiveLeft {
+            0% {
+                transform: translateX(0) rotate(-8deg) scale(0.95);
+            }
+
+            40% {
+                transform: translateX(70px) rotate(6deg) scale(1.04);
+            }
+
+            60% {
+                transform: translateX(88px) rotate(0deg) scale(1.08);
+            }
+
+            100% {
+                transform: translateX(26px) rotate(-4deg) scale(0.98);
+            }
+        }
+
+        @keyframes highfiveRight {
+            0% {
+                transform: translateX(0) rotate(8deg) scale(0.95);
+            }
+
+            40% {
+                transform: translateX(-70px) rotate(-6deg) scale(1.04);
+            }
+
+            60% {
+                transform: translateX(-88px) rotate(0deg) scale(1.08);
+            }
+
+            100% {
+                transform: translateX(-26px) rotate(4deg) scale(0.98);
+            }
+        }
+
+        @keyframes highfiveBurst {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) scale(0.2);
+            }
+
+            45% {
+                opacity: 1;
+                transform: translateX(-50%) scale(1.15);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) scale(1.35);
+            }
+        }
+
+        @keyframes highfiveText {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(12px);
+            }
+
+            35% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        @keyframes highfiveSparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0.4) rotate(-10deg);
+            }
+
+            35% {
+                opacity: 1;
+                transform: scale(1.1) rotate(10deg);
+            }
+
+            100% {
+                opacity: 0;
+                transform: scale(0.7) rotate(16deg);
+            }
+        }
+
+        #input-area {
+            background-color: #111;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.5s;
+        }
+
+        .mic-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            border: none;
+            background-color: #e74c3c;
+            color: white;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .mic-btn.recording {
+            background-color: #c0392b;
+            box-shadow: 0 0 15px #e74c3c;
+            animation: pulse 1.5s infinite;
+        }
+
+        #send-btn {
+            background-color: var(--primary-color);
+            border: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .voice-settings select {
+            background: #333;
+            color: white;
+            border: none;
+            width: 60px;
+            font-size: 12px;
+        }
     </style>
 </head>
+
 <body>
 
     <div id="top-nav">
         <button id="btn-original" class="original-btn active" onclick="switchToOriginal()">🤖 通通沒問題</button>
-        
+
         <div class="d-flex align-items-center">
-            <button id="stop-btn" class="btn btn-sm btn-outline-danger me-2" onclick="stopCurrentAudio()" title="停止播放">⏹️</button>
+            <button id="stop-btn" class="btn btn-sm btn-outline-danger me-2" onclick="stopCurrentAudio()"
+                title="停止播放">⏹️</button>
             <select id="mode-dropdown" class="personality-dropdown" onchange="switchToPersonality()">
                 <option value="" disabled selected>✨ 性格模式...</option>
                 <option value="好心情">😊 好心情</option>
@@ -77,9 +406,36 @@
     </div>
 
     <div id="input-area">
-        <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." style="background:#222; color:white; border:1px solid #444;">
+        <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..."
+            style="background:#222; color:white; border:1px solid #444;">
         <button id="send-btn" class="btn btn-primary btn-sm me-2">發送</button>
         <button id="mic-btn" class="mic-btn">🎤</button>
+    </div>
+
+    <!-- RPS Modal -->
+    <div class="modal fade" id="rpsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="background: #333; color: white; border: 2px solid var(--primary-color); border-radius: 20px;">
+                <div class="modal-header" style="border-bottom: 1px solid #444;">
+                    <h5 class="modal-title">✌️ 跟通通猜拳！</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-modal="modal" onclick="closeRPS()"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <p id="rps-status" class="fs-5">通通準備好了，你呢？😏</p>
+                    <div class="d-flex justify-content-around mt-4">
+                        <button class="btn btn-outline-light p-3 fs-2" onclick="playRPS('✊')">✊<br><small
+                                class="fs-6">石頭</small></button>
+                        <button class="btn btn-outline-light p-3 fs-2" onclick="playRPS('✌️')">✌️<br><small
+                                class="fs-6">剪刀</small></button>
+                        <button class="btn btn-outline-light p-3 fs-2" onclick="playRPS('🖐️')">🖐️<br><small
+                                class="fs-6">布</small></button>
+                    </div>
+                    <div id="rps-result" class="mt-4 h3 fw-bold" style="display:none; transition: 0.3s;"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -93,10 +449,16 @@
         const quickActions = document.getElementById('quick-actions');
         const modeDropdown = document.getElementById('mode-dropdown');
         const btnOriginal = document.getElementById('btn-original');
-        
+
         let currentMode = '通通沒問題';
-        let currentAudio = null; 
-        let isProcessing = false; 
+        let currentAudio = null;
+        let isProcessing = false;
+        let abortController = null;
+        let highFiveOverlay = null;
+        let highFiveTimer = null;
+        let rpsRoundId = 0;
+        let rpsRevealTimer = null;
+        let rpsReplyTimer = null;
 
         const THEMES = {
             '通通沒問題': { primary: '#007bff', accent: '#f9e79f', bg: '#1a1a1a', nav: '#222' },
@@ -109,7 +471,7 @@
 
         const MODE_ACTIONS = {
             '通通沒問題': ['你是誰？', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言', '查 台灣歷史'],
-            '好心情': ['講個笑話', '陪我聊天'],
+            '好心情': ['講個笑話', '唱首歌', '給我鼓勵', '變個魔術', '猜拳', '跟我擊掌'],
             '神算師': ['占卜運勢', '測幸運色'],
             '屬於我': ['深情告白', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊'],
@@ -130,7 +492,7 @@
         function setUILoading(loading) {
             isProcessing = loading;
             const elementsToDisable = [textInput, sendBtn, micBtn, modeDropdown, btnOriginal];
-            
+
             elementsToDisable.forEach(el => {
                 if (loading) {
                     el.classList.add('opacity-50');
@@ -154,15 +516,27 @@
                     thinkingBubble.remove();
                     thinkingBubble = null;
                 }
-                updateUIForMode(currentMode); 
+                updateUIForMode(currentMode);
             }
         }
 
         function stopCurrentAudio() {
+            // Stop audio playback
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 currentAudio = null;
+            }
+
+            // Cancel ongoing thinking (fetch request)
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+            }
+
+            // Clear thinking state
+            if (isProcessing) {
+                setUILoading(false);
             }
         }
 
@@ -177,7 +551,7 @@
                 micBtn.disabled = false;
                 micBtn.style.opacity = "1";
                 btnOriginal.classList.add('active');
-                modeDropdown.selectedIndex = 0; 
+                modeDropdown.selectedIndex = 0;
             } else {
                 inputArea.style.display = "none";
                 btnOriginal.classList.remove('active');
@@ -189,9 +563,307 @@
                 const btn = document.createElement('button');
                 btn.className = 'action-btn';
                 btn.innerText = action;
-                btn.onclick = () => { if(!isProcessing) sendMessage(action, true); };
+                btn.onclick = () => {
+                    if (isProcessing) return;
+                    if (action === '猜拳') {
+                        stopCurrentAudio(); // SILENCE TONGTONG IMMEDIATELY
+                        openRPSGame();
+                    }
+                    else sendMessage(action, true);
+                };
                 quickActions.appendChild(btn);
             });
+        }
+
+        // RPS Game Logic
+        let rpsModal;
+        function openRPSGame() {
+            if (!rpsModal) rpsModal = new bootstrap.Modal(document.getElementById('rpsModal'));
+            document.getElementById('rps-status').innerText = "通通準備好了，你呢？😏";
+            document.getElementById('rps-result').style.display = "none";
+            rpsModal.show();
+        }
+
+        function closeRPS() {
+            if (rpsModal) rpsModal.hide();
+        }
+
+        function clearRpsTimers() {
+            if (rpsRevealTimer) {
+                clearTimeout(rpsRevealTimer);
+                rpsRevealTimer = null;
+            }
+            if (rpsReplyTimer) {
+                clearTimeout(rpsReplyTimer);
+                rpsReplyTimer = null;
+            }
+        }
+
+        let rpsAudioContext = null;
+
+        function ensureRpsAudioContext() {
+            if (!rpsAudioContext) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return null;
+                rpsAudioContext = new AudioContextClass();
+            }
+            if (rpsAudioContext.state === 'suspended') {
+                rpsAudioContext.resume().catch(() => { });
+            }
+            return rpsAudioContext;
+        }
+
+        function playRpsTone(type) {
+            const ctx = ensureRpsAudioContext();
+            if (!ctx) return;
+
+            const now = ctx.currentTime;
+
+            const makeBeep = (startTime, frequency, duration, volume, typeName = 'sine', gainCurve = 'exponential') => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = typeName;
+                osc.frequency.setValueAtTime(frequency, startTime);
+                gain.gain.setValueAtTime(0.0001, startTime);
+                gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(startTime);
+                osc.stop(startTime + duration + 0.02);
+            };
+
+            if (type === 'win') {
+                makeBeep(now, 523.25, 0.10, 0.16, 'triangle');
+                makeBeep(now + 0.10, 659.25, 0.10, 0.18, 'triangle');
+                makeBeep(now + 0.20, 783.99, 0.12, 0.20, 'sine');
+                makeBeep(now + 0.33, 1046.5, 0.14, 0.22, 'sine');
+            } else if (type === 'lose') {
+                makeBeep(now, 220, 0.18, 0.15, 'sawtooth');
+                makeBeep(now + 0.20, 174.61, 0.20, 0.13, 'triangle');
+                makeBeep(now + 0.43, 130.81, 0.28, 0.10, 'triangle');
+            } else {
+                makeBeep(now, 523.25, 0.10, 0.16, 'triangle');
+                makeBeep(now + 0.12, 659.25, 0.10, 0.18, 'triangle');
+                makeBeep(now + 0.24, 523.25, 0.12, 0.16, 'sine');
+            }
+        }
+
+        function clearHighFiveAnimation() {
+            if (highFiveTimer) {
+                clearTimeout(highFiveTimer);
+                highFiveTimer = null;
+            }
+            if (highFiveOverlay) {
+                highFiveOverlay.remove();
+                highFiveOverlay = null;
+            }
+        }
+
+        function playHighFiveSound() {
+            const ctx = ensureRpsAudioContext();
+            if (!ctx) return;
+
+            const now = ctx.currentTime;
+
+            const makeClap = (startTime, volume) => {
+                const duration = 0.16;
+                const bufferSize = Math.floor(ctx.sampleRate * duration);
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+
+                for (let i = 0; i < bufferSize; i++) {
+                    const decay = Math.pow(1 - i / bufferSize, 2.5);
+                    data[i] = (Math.random() * 2 - 1) * decay;
+                }
+
+                const source = ctx.createBufferSource();
+                const bandPass = ctx.createBiquadFilter();
+                const gain = ctx.createGain();
+
+                source.buffer = buffer;
+                bandPass.type = 'bandpass';
+                bandPass.frequency.setValueAtTime(1800, startTime);
+                bandPass.Q.setValueAtTime(0.9, startTime);
+                gain.gain.setValueAtTime(0.0001, startTime);
+                gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+                source.connect(bandPass);
+                bandPass.connect(gain);
+                gain.connect(ctx.destination);
+                source.start(startTime);
+                source.stop(startTime + duration + 0.02);
+            };
+
+            makeClap(now, 0.22);
+            makeClap(now + 0.10, 0.16);
+        }
+
+        function triggerHighFiveCelebration() {
+            clearHighFiveAnimation();
+            ensureRpsAudioContext();
+            playHighFiveSound();
+
+            const overlay = document.createElement('div');
+            overlay.className = 'highfive-overlay';
+            overlay.innerHTML = `
+                <div class="highfive-card">
+                    <div class="highfive-hand left">✋</div>
+                    <div class="highfive-hand right">🖐️</div>
+                    <div class="highfive-burst">💥</div>
+                    <div class="highfive-sparkle one">✨</div>
+                    <div class="highfive-sparkle two">✨</div>
+                    <div class="highfive-sparkle three">🤝</div>
+                    <div class="highfive-text">啪！擊掌成功！🤝💖</div>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+            highFiveOverlay = overlay;
+
+            highFiveTimer = setTimeout(() => {
+                if (highFiveOverlay !== overlay) return;
+                overlay.remove();
+                highFiveOverlay = null;
+                highFiveTimer = null;
+            }, 1350);
+        }
+
+        function handleHighFive() {
+            stopCurrentAudio();
+            triggerHighFiveCelebration();
+            const highFiveSpeech = '合作愉快，我們是最棒的夥伴！';
+            addMessage('bot', `啪！✋✨ ${highFiveSpeech} 🤝💖`);
+
+            fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: `[RESULT]${highFiveSpeech}`,
+                    mode: currentMode,
+                    voice_type: voiceSelect.value
+                })
+            }).then(response => response.json()).then(data => {
+                if (data.audio_url) {
+                    currentAudio = new Audio(data.audio_url);
+                    currentAudio.onended = () => {
+                        currentAudio = null;
+                    };
+                    currentAudio.onerror = () => {
+                        currentAudio = null;
+                    };
+                    currentAudio.play().catch(() => {
+                        currentAudio = null;
+                    });
+                }
+            }).catch(() => {
+                console.log('High five voice fetch failed');
+            });
+        }
+
+        function playRPS(userChoice) {
+            const roundId = ++rpsRoundId;
+            stopCurrentAudio();
+            clearRpsTimers();
+
+            const choices = ['✊', '✌️', '🖐️'];
+            const resultDiv = document.getElementById('rps-result');
+            const statusP = document.getElementById('rps-status');
+
+            ensureRpsAudioContext();
+
+            // First show "我出 ?" to build suspense
+            statusP.innerText = `你出 ${userChoice}，我出 ?`;
+            resultDiv.style.display = "none";
+
+            // After a short delay, reveal the bot's choice
+            rpsRevealTimer = setTimeout(() => {
+                if (roundId !== rpsRoundId) return;
+                rpsRevealTimer = null;
+                const botChoice = choices[Math.floor(Math.random() * choices.length)];
+
+                let outcome = "";
+                let colorClass = "";
+                let speechResult = "";
+                let voiceText = ""; // Text for voice synthesis (with emoji converted to Chinese)
+
+                // Emoji to Chinese mapping for voice
+                const emojiToChinese = {
+                    '✊': '石頭',
+                    '✌️': '剪刀',
+                    '🖐️': '布'
+                };
+
+                if (userChoice === botChoice) {
+                    outcome = "平手！😮";
+                    speechResult = `我們都出 ${userChoice}，是平手耶！再玩一次嘛！`;
+                    voiceText = `我們都出 ${emojiToChinese[userChoice]}，是平手耶！再玩一次嘛！`;
+                    colorClass = "text-warning";
+                    playRpsTone('tie');
+                } else if (
+                    (userChoice === '✊' && botChoice === '✌️') ||
+                    (userChoice === '✌️' && botChoice === '🖐️') ||
+                    (userChoice === '🖐️' && botChoice === '✊')
+                ) {
+                    outcome = "你贏了！🎉✨";
+                    speechResult = `嗚嗚，你出 ${userChoice}，我出 ${botChoice}。恭喜你贏過通通了！你太厲害啦！`;
+                    voiceText = `嗚嗚，你出 ${emojiToChinese[userChoice]}，我出 ${emojiToChinese[botChoice]}。恭喜你贏過通通了！你太厲害啦！`;
+                    colorClass = "text-success";
+                    playRpsTone('win');
+                } else {
+                    outcome = "通通贏了！😜💖";
+                    speechResult = `嘿嘿！你出 ${userChoice}，我出 ${botChoice}。這局是通通贏囉！承讓承讓！`;
+                    voiceText = `嘿嘿！你出 ${emojiToChinese[userChoice]}，我出 ${emojiToChinese[botChoice]}。這局是通通贏囉！承讓承讓！`;
+                    colorClass = "text-danger";
+                    playRpsTone('lose');
+                }
+
+                statusP.innerText = `你出 ${userChoice}，我出 ${botChoice}`;
+                resultDiv.innerText = outcome;
+                resultDiv.style.display = "block";
+                resultDiv.className = "mt-4 h3 fw-bold " + colorClass;
+
+                // Log to chat and Speak after a short delay
+                rpsReplyTimer = setTimeout(() => {
+                    if (roundId !== rpsRoundId) return;
+                    rpsReplyTimer = null;
+                    closeRPS();
+                    // Add bot's response directly to chat without [RESULT] prefix
+                    addMessage('bot', speechResult);
+                    // Play voice if available - send voiceText for speech synthesis
+                    fetch('/api/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            message: `[RESULT]${voiceText}`,
+                            mode: currentMode,
+                            voice_type: voiceSelect.value
+                        })
+                    }).then(response => response.json()).then(data => {
+                        if (roundId !== rpsRoundId) return;
+                        if (data.audio_url) {
+                            currentAudio = new Audio(data.audio_url);
+                            currentAudio.onended = () => {
+                                if (roundId === rpsRoundId) {
+                                    currentAudio = null;
+                                }
+                            };
+                            currentAudio.onerror = () => {
+                                if (roundId === rpsRoundId) {
+                                    currentAudio = null;
+                                }
+                            };
+                            currentAudio.play().catch(() => {
+                                if (roundId === rpsRoundId) {
+                                    currentAudio = null;
+                                }
+                            });
+                        }
+                    }).catch(e => {
+                        console.log("Voice fetch failed");
+                    });
+                }, 1500);
+            }, 700);
         }
 
         function switchToOriginal() {
@@ -261,13 +933,58 @@
         async function sendMessage(text, isButtonClick = false) {
             if (isProcessing) return;
             if (!isButtonClick && currentMode !== '通通沒問題') return;
-            
+
             stopCurrentAudio();
+
+            if (currentMode === '好心情') {
+                const normalizedInput = text.trim();
+                if (normalizedInput === '擊掌' || normalizedInput === '跟我擊掌' || normalizedInput.includes('擊掌')) {
+                    handleHighFive();
+                    return;
+                }
+            }
+
             if (text.trim()) addMessage('user', text);
-            
+
+            // Check if user input is a rock-paper-scissors choice in good mood mode
+            if (currentMode === '好心情') {
+                const rpsMap = {
+                    '石頭': '✊',
+                    'stone': '✊',
+                    '✊': '✊',
+                    '剪刀': '✌️',
+                    'scissors': '✌️',
+                    '✌️': '✌️',
+                    '布': '🖐️',
+                    'paper': '🖐️',
+                    '🖐️': '🖐️'
+                };
+
+                const normalizedInput = text.trim();
+
+                // Check direct match
+                if (rpsMap[normalizedInput]) {
+                    playRPS(rpsMap[normalizedInput]);
+                    return;
+                }
+
+                // Check "我出 X" format
+                const myChoiceMatch = normalizedInput.match(/我出\s*([✊✌️🖐️石頭剪刀布])/);
+                if (myChoiceMatch) {
+                    const choice = myChoiceMatch[1];
+                    if (rpsMap[choice]) {
+                        playRPS(rpsMap[choice]);
+                        return;
+                    }
+                }
+            }
+
             setUILoading(true);
 
             try {
+                // Create new abort controller for this request
+                abortController = new AbortController();
+
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -275,9 +992,10 @@
                         message: text,
                         mode: currentMode,
                         voice_type: voiceSelect.value
-                    })
+                    }),
+                    signal: abortController.signal
                 });
-                
+
                 const data = await response.json();
                 if (data.reply) {
                     addMessage('bot', data.reply);
@@ -287,7 +1005,10 @@
                     }
                 }
             } catch (error) {
-                if (text.trim()) addMessage('bot', '連不上大腦囉...');
+                // Only show error if it's not an abort (user cancellation)
+                if (error.name !== 'AbortError' && text.trim()) {
+                    addMessage('bot', '連不上大腦囉...');
+                }
             } finally {
                 setUILoading(false);
             }
@@ -301,7 +1022,8 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
 
-        setInterval(() => fetch('/api/cleanup', {method: 'POST'}), 600000);
+        setInterval(() => fetch('/api/cleanup', { method: 'POST' }), 600000);
     </script>
 </body>
+
 </html>

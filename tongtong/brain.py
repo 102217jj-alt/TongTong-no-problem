@@ -25,7 +25,7 @@ class TongTongBrain:
             elif self.mode == "神算師":
                 welcome_msg += "命運的齒輪開始轉動...🔮 你想「占卜運勢」✨，還是要「測幸運色」🎨？"
             elif self.mode == "好心情":
-                welcome_msg += "嘿嘿！現在心情超棒 🌟！要我「講個笑話」😆 給你聽，還是「陪我聊天」💬？"
+                welcome_msg += "嘿嘿！現在心情超棒 🌟！要我「講個笑話」😆 給你聽，還是「變個魔術」🪄 給你看？"
             elif self.mode == "屬於我":
                 welcome_msg += f"我是專屬於你的通通 🥰。要「修改稱呼」🏷️，還是讓我「深情告白」❤️？"
             elif self.mode == "不知道":
@@ -41,6 +41,10 @@ class TongTongBrain:
     def process_input(self, user_input):
         user_input = user_input.strip()
         
+        # Hidden command for game results or direct speech
+        if user_input.startswith("[RESULT]"):
+            return user_input.replace("[RESULT]", "").strip()
+
         # Check for mode switching commands
         if "切換模式" in user_input or "模式" in user_input:
             for m in self.modes:
@@ -52,6 +56,9 @@ class TongTongBrain:
             # PRE-CLEAN: Remove common command prefixes to avoid confusing the search engine
             core_input = user_input.replace("查", "").replace("查詢", "").replace("維基", "").replace("百科", "").strip()
             if not core_input: core_input = user_input # Fallback if empty
+            
+            # Check if user explicitly requested search (with "查" or "查詢" prefix)
+            is_explicit_search = any(prefix in user_input for prefix in ["查", "查詢", "維基", "百科"])
 
             response = ""
 
@@ -78,18 +85,29 @@ class TongTongBrain:
                 elif "時間" in user_input: 
                     response = bot_get_time() + " ⏰"
             
-            # C. AI-First Strategy: Conversational/Abstract/Short Queries
+            # C. Search-First for explicit search queries (with "查" prefix), then polish with AI
+            if not response and is_explicit_search:
+                search_res = bot_get_google_search(core_input)
+                if search_res and len(search_res) > 30:
+                    # Polish search result with AI for better presentation
+                    response = bot_enhance_with_gemini(core_input, search_res)
+                else:
+                    # If search fails, try AI as backup
+                    response = bot_ask_gemini_direct(core_input, self.history)
+            
+            # D. AI-First for conversational queries (without "查" prefix) for better answer quality
             if not response:
                 if "你是誰" in core_input:
                     response = "我是通通！您的可愛機器人助手 🤖✨。我有五種不同的性格模式，而且我有「通通沒問題」的超能力，無論是上網查資料、算數學、報天氣還是純聊天，交給我通通就對了！🌈💖"
                 else:
-                    # Try Wiki first for specific nouns
-                    wiki_res = bot_get_wiki(core_input)
-                    if wiki_res:
-                        response = wiki_res
-                    else:
-                        # Fallback to AI with context history
-                        response = bot_ask_gemini_direct(core_input, self.history)
+                    # Try AI first for better answer quality
+                    response = bot_ask_gemini_direct(core_input, self.history)
+                    
+                    # If AI fails with fallback message, try web search as backup
+                    if response and "腦袋轉得有點慢" in response:
+                        search_res = bot_get_google_search(core_input)
+                        if search_res and len(search_res) > 30:
+                            response = search_res
 
             # Record history
             if response:
@@ -143,9 +161,64 @@ class TongTongBrain:
             if "笑話" in user_input:
                 jokes = [
                     "有一天，有一隻企鵝跌倒了，另一隻企鵝笑牠說：『你是不是沒穿鞋子？』🐧🤣",
-                    "為什麼企鵝只有肚子是白的？因為手短洗不到背。❄️🐧"
+                    "為什麼企鵝只有肚子是白的？因為手短洗不到背。❄️🐧",
+                    "小明跟媽媽說：『我不想去上學！』媽媽說：『不行，你必須去，因為你已經是校長了。』🏫😆",
+                    "為什麼電腦很冷？因為它有很多視窗（window）。💻❄️",
+                    "有一天，小豬去買藥，老闆問：『你要什麼藥？』小豬說：『我要豬古力（巧克力）。』🍫🐷",
+                    "咖啡跟可樂誰比較長壽？答案是咖啡，因為咖啡可以續杯（續命）。☕️🥤",
+                    "為什麼魚不能在陸地上走路？因為牠沒有腳踏實地。🐟💨",
+                    "有一天，紅豆跟綠豆吵架，紅豆大罵：『你這個綠豆！』綠豆回罵：『你才紅豆咧！』結果他們都變成了大紅大紫。🫘✨",
+                    "螃蟹出門為什麼不看紅綠燈？因為牠橫行霸道。🦀🚦",
+                    "為什麼吸血鬼不吃大蒜？因為那是他的大『蒜』命。🧛‍♂️🧄",
+                    "有一天，麵包走在路上覺得肚子餓了，於是牠就把自己吃了。🍞😋",
+                    "為什麼衛生紙不能過馬路？因為它會被捲走。🧻🚗",
+                    "為什麼螞蟻不去看醫生？因為牠們有螞蟻（免疫）系統。🐜💉",
+                    "有一天，皮卡丘走路不小心跌倒了，變成了什麼？變成了皮卡丘（皮卡、揪一聲）。⚡️🥴",
+                    "為什麼海是藍色的？因為魚一直在裡面吐泡泡（Blue Blue Blue）。🐟🌊",
+                    "有一天，綠豆摔倒了，變成了什麼？變成了紅豆，因為它流血了。🫘🩸",
+                    "為什麼手機不能去健身房？因為它會變『機』肉男。📱💪",
+                    "有一天，大福和饅頭吵架，結果饅頭輸了，因為大福很有『料』。🥯✨",
+                    "為什麼香蕉不用防曬？因為它會自己脫皮。🍌☀️",
+                    "有一天，有一隻老虎去抓兔子，結果沒抓到，因為老虎說：『我還沒準老虎（備好）呢！』🐯🐰",
+                    "為什麼月亮不跟星星玩？因為星星會『眨』眼，月亮會『臉』紅。🌙⭐"
                 ]
                 return f"嘿嘿，聽這個：{random.choice(jokes)}"
+            
+            if "唱首歌" in user_input:
+                songs = [
+                    "拉~拉~拉~🎶 我是快樂的小機器人~🤖 每天都要開開心心~🌈",
+                    "兩隻老虎~🐯 兩隻老虎~🐯 跑得快~💨 跑得快~💨",
+                    "小星星~✨ 亮晶晶~⭐ 滿天都是小眼睛~👁️👁️",
+                    "通通沒問題~💪 通通沒問題~💪 我是最棒的通通~🏆✨"
+                ]
+                return f"好喔！通通獻醜了：{random.choice(songs)}"
+                
+            if "給我鼓勵" in user_input:
+                cheers = [
+                    "你是最棒的！通通永遠支持你！加油加油！💪💖",
+                    "別忘了，你比你想像中更勇敢，也比你表現出來的更強大喔！🌟",
+                    "通通送你一個大大的擁抱！🤗 今天的你也很努力呢！✨",
+                    "不管發生什麼事，通通都會陪在你身邊，為你加油打氣！🤖💕"
+                ]
+                return random.choice(cheers)
+
+                
+            if "變個魔術" in user_input:
+                magics = [
+                    "看我的厲害！✨ 嗶嗶—— 🎩 把你的煩惱都變不見了！🪄🌈",
+                    "注意看喔！👀 手中有一顆紅豆... 🫘 變！現在變成一朵花送給你！🌹✨",
+                    "通通現在要表演讀心術... 🧠 我猜你現在一定覺得通通很可愛對不對！😜💖"
+                ]
+                return random.choice(magics)
+                
+            if "猜拳" in user_input:
+                choices = ["剪刀 ✌️", "石頭 ✊", "布 🖐️"]
+                bot_choice = random.choice(choices)
+                return f"好啊！來挑戰吧！通通出：{bot_choice}！你出什麼呢？😜✨"
+                
+            if "擊掌" in user_input:
+                return "啪！✋✨ 合作愉快！我們是最棒的夥伴喔！🤝💖"
+
             return "今天心情超棒！🌈✨"
 
         return "請使用上方的按鈕來跟我互動喔！👆💖"

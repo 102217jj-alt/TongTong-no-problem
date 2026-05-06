@@ -12,81 +12,116 @@ def bot_clean_text(text):
     text = re.sub(r'\[.*?\]', '', text)
     
     # 2. Aggressively remove Markdown markers: **, *, __, _, #, `
-    # Using regex to handle patterns like **bold** or *italic*
     text = re.sub(r'\*\*|__|\*|_|#|`|>', '', text)
 
     # 3. Basic whitespace cleaning
     text = re.sub(r'\s+', ' ', text).strip()
     
-    # 4. Fuzzy Sentence-level deduplication
+    # 4. Protect ellipsis before sentence splitting
+    ELLIPSIS_PLACEHOLDER = "<<<ELLIPSIS>>>"
+    text = text.replace("...", ELLIPSIS_PLACEHOLDER)
+    
+    # 5. Fuzzy Sentence-level deduplication
     sentences = re.split(r'([。！？.!?])', text)
     cleaned_sentences = []
-    seen_prefixes = set() # Store the first 15 chars of each sentence
+    seen_prefixes = set() 
     
     for i in range(0, len(sentences)-1, 2):
         s = sentences[i].strip()
         punc = sentences[i+1] if i+1 < len(sentences) else ""
         if not s: continue
         
-        # Fuzzy check: If the first 15 characters are nearly identical, skip
         prefix = s[:15].lower()
         if prefix not in seen_prefixes:
             cleaned_sentences.append(s + punc)
             seen_prefixes.add(prefix)
     
-    # IMPORTANT: Handle the remaining text if there's no punctuation at the end
     if len(sentences) > 0 and len(sentences) % 2 != 0:
         last_s = sentences[-1].strip()
         if last_s and last_s[:15].lower() not in seen_prefixes:
             cleaned_sentences.append(last_s)
     
-    # Final check: If there's any Chinese content, remove purely English sentences
-    has_any_chinese = any(any('\u4e00' <= char <= '\u9fff' for char in s) for s in cleaned_sentences)
+    # 6. Language check: ONLY filter out purely English sentences if they are long/noisy
+    # We want to KEEP emojis and mixed Chinese/English content
     final_list = []
-    
-    if has_any_chinese:
-        for s in cleaned_sentences:
-            if any('\u4e00' <= char <= '\u9fff' for char in s):
-                final_list.append(s)
-    else:
-        # If NO Chinese was found but we expected it (checked by presence of Chinese in query usually, 
-        # but here we just check if it's longer than a certain threshold or purely alphanumeric)
-        # For safety, if it's 100% English and longer than 50 chars, it's likely a bad search result
-        is_pure_english = all(ord(c) < 128 for c in text.replace(' ', ''))
-        if is_pure_english and len(text) > 50:
-            return "我幫你上網找了資料，但看到的好像都是英文網頁，暫時沒辦法為您總結中文答案喔。"
-        final_list = cleaned_sentences
+    for s in cleaned_sentences:
+        has_chinese = any('\u4e00' <= char <= '\u9fff' for char in s)
+        # Check for emoji characters (broad range)
+        has_emoji = any(ord(char) > 0x2000 for char in s if not ('\u4e00' <= char <= '\u9fff'))
+        
+        # Keep if it has Chinese OR Emoji OR it's short (like "OK" or "123")
+        if has_chinese or has_emoji or len(s.replace(' ', '')) < 20:
+            final_list.append(s)
+        else:
+            # It's a long sentence with NO Chinese and NO Emoji -> likely noise
+            pass
 
     final_text = "".join(final_list)
+    
+    # 7. Restore ellipsis
+    final_text = final_text.replace(ELLIPSIS_PLACEHOLDER, "...")
     return final_text.strip()
 
 def bot_speak_re(text):
     """
     Cleans up text specifically for speech synthesis.
+    Removes emojis and special symbols while keeping Chinese, English, and numbers.
     """
-    # First apply general cleaning
+    if not text: return ""
+
+    # 1. Apply general cleaning (markdown, citations, etc.)
     text = bot_clean_text(text)
     
-    # Remove URLs
-    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+    # 2. Remove emojis and other special symbols by iterating character by character
+    # Keep: Chinese characters, English letters, numbers, common punctuation, spaces
+    result = []
+    for char in text:
+        code = ord(char)
+        # Chinese characters (CJK Unified Ideographs)
+        if 0x4e00 <= code <= 0x9fff:
+            result.append(char)
+        # English letters and numbers
+        elif (0x41 <= code <= 0x5a) or (0x61 <= code <= 0x7a) or (0x30 <= code <= 0x39):
+            result.append(char)
+        # Common punctuation and spaces
+        elif char in '，。！？、：；（）()「」『』\s\t\n\r -–—～':
+            result.append(char)
+        # Chinese punctuation marks that might not be in the above list
+        elif code in [65292, 65294, 65281, 65311, 12289, 12290, 12291]:  # Chinese punctuation
+            result.append(char)
     
-    # Remove special brackets and contents found in wiki/news (parentheses)
-    text = re.sub(r'\(.*?\)', '', text)  
+    text = "".join(result).strip()
     
-    # Remove some special characters but keep punctuation
-    text = re.sub(r'[^\w\s\u4e00-\u9fff，。！？、：]', '', text)
-    
-    # Limit length
+    # 3. Limit length
     if len(text) > 300:
         text = text[:300] + "，內容太長了，我先唸到這裡。"
         
     return text.strip()
 
+def normalize_chars(text):
+    """
+    Fixes common character errors from web scraping.
+    Examples: 颱灣 -> 臺灣 (typhoon 'tai' vs Taiwan 'tai')
+    """
+    # Common OCR/encoding errors
+    char_mapping = {
+        '颱': '臺',  # typhoon tai -> Taiwan tai
+        '滣': '灣',  # wrong char -> wan
+        '灿': '璀',  # brightness issues
+    }
+    
+    for wrong_char, correct_char in char_mapping.items():
+        text = text.replace(wrong_char, correct_char)
+    
+    return text
+
 def to_traditional(text):
     """
-    Converts text to Traditional Chinese.
+    Converts text to Traditional Chinese and normalizes character errors.
     """
-    return HanziConv.toTraditional(text)
+    text = HanziConv.toTraditional(text)
+    text = normalize_chars(text)
+    return text
 
 def bot_get_google(text):
     """
