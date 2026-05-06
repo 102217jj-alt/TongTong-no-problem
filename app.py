@@ -6,7 +6,7 @@ import time
 from dotenv import load_dotenv
 from tongtong.brain import TongTongBrain
 from tongtong.voice import generate_bot_audio
-from tongtong.text_utils import bot_speak_re
+from tongtong.text_utils import bot_speak_re, bot_clean_text
 
 # Load environment variables from .env file
 load_dotenv()
@@ -41,11 +41,14 @@ def chat():
     # Clean text for speech
     cleaned_text = bot_speak_re(response_text)
     
+    # Clean text for UI display
+    display_text = bot_clean_text(response_text)
+    
     # Generate audio file
     audio_url = generate_bot_audio(cleaned_text, voice_type)
 
     return jsonify({
-        'reply': response_text,
+        'reply': display_text,
         'audio_url': audio_url
     })
 

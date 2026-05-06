@@ -6,11 +6,14 @@ def bot_clean_text(text):
     General purpose text cleaning.
     Removes citations, markdown symbols, excessive whitespace, and duplicates.
     """
-    # 1. Remove citations [1], [2][3]
+    if not text: return ""
+
+    # 1. Remove citations [1], [2][3], [note 1]
     text = re.sub(r'\[.*?\]', '', text)
     
-    # 2. Remove Markdown markers: **, *, __, _
-    text = text.replace('**', '').replace('__', '').replace('*', '').replace('_', '')
+    # 2. Aggressively remove Markdown markers: **, *, __, _, #, `
+    # Using regex to handle patterns like **bold** or *italic*
+    text = re.sub(r'\*\*|__|\*|_|#|`|>', '', text)
 
     # 3. Basic whitespace cleaning
     text = re.sub(r'\s+', ' ', text).strip()
@@ -35,17 +38,21 @@ def bot_clean_text(text):
             cleaned_sentences.append(s + punc)
             seen_prefixes.add(prefix)
     
-    # Final check: If we have multiple sentences and some are English while others are Chinese,
-    # consider filtering out the English ones to keep it consistent (as requested by user).
-    final_list = []
+    # Final check: If there's any Chinese content, remove purely English sentences
     has_any_chinese = any(any('\u4e00' <= char <= '\u9fff' for char in s) for s in cleaned_sentences)
+    final_list = []
     
     if has_any_chinese:
-        # If there's Chinese content, remove purely English sentences
         for s in cleaned_sentences:
             if any('\u4e00' <= char <= '\u9fff' for char in s):
                 final_list.append(s)
     else:
+        # If NO Chinese was found but we expected it (checked by presence of Chinese in query usually, 
+        # but here we just check if it's longer than a certain threshold or purely alphanumeric)
+        # For safety, if it's 100% English and longer than 50 chars, it's likely a bad search result
+        is_pure_english = all(ord(c) < 128 for c in text.replace(' ', ''))
+        if is_pure_english and len(text) > 50:
+            return "我幫你上網找了資料，但看到的好像都是英文網頁，暫時沒辦法為您總結中文答案喔。"
         final_list = cleaned_sentences
 
     final_text = "".join(final_list)
