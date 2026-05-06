@@ -1,9 +1,13 @@
 import customtkinter as ctk
 import threading
+from dotenv import load_dotenv
 from tongtong.brain import TongTongBrain
 from tongtong.voice import bot_listen, bot_speak
 from tongtong.text_utils import bot_speak_re
 from games.gomoku import GomokuGame
+
+# Load environment variables
+load_dotenv()
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")

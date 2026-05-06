@@ -3,9 +3,13 @@ from flask_cors import CORS
 import os
 import glob
 import time
+from dotenv import load_dotenv
 from tongtong.brain import TongTongBrain
 from tongtong.voice import generate_bot_audio
 from tongtong.text_utils import bot_speak_re
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)

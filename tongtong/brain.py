@@ -1,5 +1,5 @@
 import random
-from .web_tools import bot_get_time, bot_get_weather, bot_get_wiki, bot_get_google_search
+from .web_tools import bot_get_time, bot_get_weather, bot_get_wiki, bot_get_google_search, bot_enhance_with_gemini, bot_ask_gemini_direct
 from .text_utils import bot_speak_re
 
 class TongTongBrain:
@@ -63,16 +63,28 @@ class TongTongBrain:
             if any(g == user_input.lower() for g in greetings):
                 return "你好，我是原始版本的通通，有什麼想查詢的知識嗎？可以直接輸入關鍵字喔！"
             
-            # D. Automatic Wiki Search (Default) with Google Fallback
+            # D. Automatic Wiki Search (Default) with Google Fallback and Gemini Direct
             keyword = user_input.replace("查", "").replace("維基", "").replace("百科", "").strip()
             if keyword:
                 # Try Wiki first
                 wiki_res = bot_get_wiki(keyword)
                 if wiki_res and "找不到" not in wiki_res and "沒辦法讀取" not in wiki_res:
-                    return wiki_res
+                    # Enhance with Gemini for better quality
+                    enhanced = bot_enhance_with_gemini(user_input, wiki_res)
+                    return enhanced
                 
-                # Fallback to general web search (using improved bot_get_google_search)
-                return bot_get_google_search(keyword)
+                # Fallback to general web search
+                search_res = bot_get_google_search(keyword)
+                
+                # Check if search failed (returns error message)
+                if "暫時沒辦法直接讀取內容" in search_res or "上網找資料時發生" in search_res:
+                    # Use Gemini to answer directly when search fails
+                    gemini_res = bot_ask_gemini_direct(user_input)
+                    return gemini_res
+                else:
+                    # Enhance successful search results with Gemini
+                    enhanced = bot_enhance_with_gemini(user_input, search_res)
+                    return enhanced
 
             return "我是原本的通通，隨時準備好為您服務。"
 

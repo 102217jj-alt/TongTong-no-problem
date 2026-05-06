@@ -3,16 +3,50 @@ from hanziconv import HanziConv
 
 def bot_clean_text(text):
     """
-    General purpose text cleaning for both display and speech.
-    Removes Wikipedia citations [1], [2][3], [note 1] etc.
+    General purpose text cleaning.
+    Removes citations, excessive whitespace, duplicates, and non-Chinese results when possible.
     """
-    # Remove any content inside square brackets (common wiki citations)
+    # 1. Remove citations
     text = re.sub(r'\[.*?\]', '', text)
     
-    # Remove excessive spaces
-    text = re.sub(r'\s+', ' ', text)
+    # 2. Whitespace
+    text = re.sub(r'\s+', ' ', text).strip()
     
-    return text.strip()
+    # 3. Fuzzy Sentence-level deduplication
+    sentences = re.split(r'([。！？.!?])', text)
+    cleaned_sentences = []
+    seen_prefixes = set() # Store the first 15 chars of each sentence
+    
+    for i in range(0, len(sentences)-1, 2):
+        s = sentences[i].strip()
+        punc = sentences[i+1] if i+1 < len(sentences) else ""
+        if not s: continue
+        
+        # Fuzzy check: If the first 15 characters are nearly identical, skip
+        prefix = s[:15].lower()
+        if prefix not in seen_prefixes:
+            # Language check: If we have multiple results, prefer those with Chinese characters
+            # (Only applies if there's a mix of Chinese and English)
+            has_chinese = any('\u4e00' <= char <= '\u9fff' for char in s)
+            
+            cleaned_sentences.append(s + punc)
+            seen_prefixes.add(prefix)
+    
+    # Final check: If we have multiple sentences and some are English while others are Chinese,
+    # consider filtering out the English ones to keep it consistent (as requested by user).
+    final_list = []
+    has_any_chinese = any(any('\u4e00' <= char <= '\u9fff' for char in s) for s in cleaned_sentences)
+    
+    if has_any_chinese:
+        # If there's Chinese content, remove purely English sentences
+        for s in cleaned_sentences:
+            if any('\u4e00' <= char <= '\u9fff' for char in s):
+                final_list.append(s)
+    else:
+        final_list = cleaned_sentences
+
+    final_text = "".join(final_list)
+    return final_text.strip()
 
 def bot_speak_re(text):
     """
