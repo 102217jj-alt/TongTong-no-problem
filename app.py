@@ -52,19 +52,47 @@ def chat():
         # No change and no input
         return jsonify({'status': 'ignored'})
     
-    # Clean text for speech
-    cleaned_text = bot_speak_re(response_text)
+    # Handle special audio markers
+    import re
+    audio_url = None
+    next_audio_url = None
+    payload_text = response_text
     
-    # Clean text for UI display
-    display_text = bot_clean_text(response_text)
+    # Check for [AUDIO:...] marker (legacy)
+    if isinstance(response_text, str) and response_text.startswith("[AUDIO:"):
+        end_idx = response_text.find("]")
+        if end_idx != -1:
+            audio_url = response_text[len("[AUDIO:"):end_idx]
+            payload_text = response_text[end_idx+1:].strip()
     
-    # Generate audio file
-    audio_url = generate_bot_audio(cleaned_text, voice_type)
+    # Check for [NEXT_AUDIO:...] marker (for nature sounds)
+    if "[NEXT_AUDIO:" in payload_text:
+        match = re.search(r'\[NEXT_AUDIO:(.*?)\]', payload_text)
+        if match:
+            next_audio_url = match.group(1)
+            payload_text = payload_text.replace(match.group(0), '').strip()
 
-    return jsonify({
+    # Prepare UI text
+    display_text = bot_clean_text(payload_text)
+
+    # Generate TTS from cleaned text
+    cleaned_text = bot_speak_re(payload_text)
+    audio_url = generate_bot_audio(cleaned_text, voice_type)
+    
+    # If next audio URL exists, verify it exists; otherwise clear it
+    if next_audio_url:
+        fs_path = next_audio_url.lstrip('/')
+        if not os.path.exists(fs_path):
+            next_audio_url = None
+
+    result = {
         'reply': display_text,
         'audio_url': audio_url
-    })
+    }
+    if next_audio_url:
+        result['next_audio_url'] = next_audio_url
+    
+    return jsonify(result)
 
 @app.route('/api/cleanup', methods=['POST'])
 def cleanup():

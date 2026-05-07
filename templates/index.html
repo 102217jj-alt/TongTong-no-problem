@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -270,7 +270,7 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
-            padding: 0 15px 10px 15px;
+            padding: 8px 15px 10px 15px;
             justify-content: flex-start;
             scrollbar-width: none;
             /* Firefox */
@@ -1538,10 +1538,9 @@
                 <div class="modal-body">
                     <p class="mb-3">選擇一個喜歡的環境音，陪你放鬆入睡：</p>
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="rain" data-url="https://cdn.pixabay.com/audio/2022/10/16/audio_12dfe0e2bc.mp3">🌧️ 森林微雨 (Rain)</button>
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="forest" data-url="https://cdn.pixabay.com/audio/2022/03/23/audio_07b2a04be3.mp3">🍃 溪流鳥鳴 (Forest)</button>
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="waves" data-url="https://cdn.pixabay.com/audio/2022/04/25/audio_5d61b5204f.mp3">🌊 寧靜海浪 (Waves)</button>
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="lullaby" data-url="https://cdn.pixabay.com/audio/2022/01/21/audio_317424466d.mp3">🎵 柔和搖籃曲 (Lullaby)</button>
+                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="rain" data-url="/static/audio/nature/rain_thunder1.mp3">🌧️ 森林微雨 (Rain)</button>
+                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="forest" data-url="/static/audio/nature/fall_morning_river.mp3">🍃 溪流鳥鳴 (Forest)</button>
+                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="waves" data-url="/static/audio/nature/ocean_wave1.mp3">🌊 寧靜海浪 (Waves)</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1565,6 +1564,7 @@
 
         let currentMode = '通通沒問題';
         let currentAudio = null;
+        let nextAudioToPlay = null; // for playing nature sounds after TTS
         let isProcessing = false;
         let abortController = null;
         let highFiveOverlay = null;
@@ -1594,7 +1594,7 @@
             '好心情': ['講個笑話', '唱首歌', '給我鼓勵', '變個魔術', '猜拳', '跟我擊掌'],
             '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '問吉時', '財運', '事業運', '愛情運', '今日建議'],
             '屬於我': ['甜言蜜語', '親親', '抱抱', '土味情話', '專屬稱號', '修改稱呼'],
-            '去睡覺': ['睡前故事', '數羊', '冥想引導', '大自然聲音', '聽催眠曲', '晚安吻'],
+            '去睡覺': ['睡前故事', '數羊', '冥想引導', '大自然聲音', '晚安寄語'],
             '不知道': ['考考我', '猜數字', '提示', '亂答模式', '放棄']
         };
 
@@ -1772,18 +1772,39 @@
             natureSoundModal.show();
         }
 
-        document.querySelectorAll('.nature-choice-btn').forEach(btn => {
+                document.querySelectorAll('.nature-choice-btn').forEach(btn => {
             btn.onclick = () => {
-                const url = btn.getAttribute('data-url');
-                const soundName = btn.innerText;
+                const soundType = btn.getAttribute('data-sound');
 
                 if (natureSoundModal) {
                     natureSoundModal.hide();
                 }
 
                 stopCurrentAudio();
-                addMessage('bot', `好的，現在為你播放：${soundName}。閉上眼睛，放鬆入睡吧... 😴🌲`);
-                playAudioFromUrl(url);
+
+                // 發送訊息到後端，獲取提示語 TTS 和設置下一個音檔
+                fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: `大自然${soundType}`,
+                        mode: currentMode,
+                        voice_type: voiceSelect.value
+                    })
+                }).then(response => response.json()).then(data => {
+                    if (data.reply) {
+                        const messageEl = addMessage('bot', data.reply);
+                        if (data.next_audio_url) {
+                            nextAudioToPlay = data.next_audio_url;
+                        }
+                        if (data.audio_url) {
+                            attachReplayButton(messageEl, data.audio_url);
+                            playAudioFromUrl(data.audio_url);
+                        }
+                    }
+                }).catch(err => {
+                    console.log('Nature sound fetch failed', err);
+                });
             };
         });
 
@@ -2018,6 +2039,11 @@
             currentAudio = new Audio(audioUrl);
             currentAudio.onended = () => {
                 currentAudio = null;
+                if (nextAudioToPlay) {
+                    const tmp = nextAudioToPlay;
+                    nextAudioToPlay = null;
+                    playAudioFromUrl(tmp);
+                }
             };
             currentAudio.onerror = () => {
                 currentAudio = null;
@@ -2664,3 +2690,5 @@
 </body>
 
 </html>
+
+
