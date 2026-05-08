@@ -1550,6 +1550,26 @@
         </div>
     </div>
 
+    <!-- Question Prompt Modal -->
+    <div class="modal fade" id="questionPromptModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-modal-theme">
+                <div class="modal-header">
+                    <h5 class="modal-title">❓ 問通通一個問題</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">不管你問什麼，通通都會回答你！</p>
+                    <input id="questionPromptInput" type="text" class="form-control" placeholder="輸入你的問題..." autocomplete="off">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
+                    <button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="questionPromptSubmit">問問看</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const chatContainer = document.getElementById('chat-container');
         const textInput = document.getElementById('text-input');
@@ -1595,7 +1615,7 @@
             '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '問吉時', '財運', '事業運', '愛情運', '今日建議'],
             '屬於我': ['甜言蜜語', '親親', '抱抱', '土味情話', '專屬稱號', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊', '冥想引導', '大自然聲音', '晚安寄語'],
-            '不知道': ['考考我', '猜數字', '提示', '亂答模式', '放棄']
+            '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰', '神秘驚喜盒']
         };
 
         let thinkingBubble = null;
@@ -1603,6 +1623,43 @@
         const namePromptInput = document.getElementById('namePromptInput');
         const namePromptSubmit = document.getElementById('namePromptSubmit');
         const titleChoiceButtons = document.querySelectorAll('.title-choice-btn');
+
+        let questionPromptModal = null;
+        const questionPromptInput = document.getElementById('questionPromptInput');
+        const questionPromptSubmit = document.getElementById('questionPromptSubmit');
+
+        function openQuestionPrompt() {
+            if (!questionPromptModal) {
+                questionPromptModal = new bootstrap.Modal(document.getElementById('questionPromptModal'));
+            }
+            questionPromptModal.show();
+            setTimeout(() => {
+                if (questionPromptInput) {
+                    questionPromptInput.value = '';
+                    questionPromptInput.focus();
+                }
+            }, 150);
+        }
+
+        function submitQuestionPrompt() {
+            const question = questionPromptInput ? questionPromptInput.value.trim() : '';
+            if (!question) return;
+
+            if (questionPromptModal) {
+                questionPromptModal.hide();
+            }
+
+            sendMessage(question, true);
+        }
+
+        if (questionPromptSubmit) questionPromptSubmit.onclick = submitQuestionPrompt;
+        if (questionPromptInput) {
+            questionPromptInput.onkeydown = (event) => {
+                if (event.key === 'Enter') {
+                    submitQuestionPrompt();
+                }
+            };
+        }
 
         function applyTheme(mode) {
             const theme = THEMES[mode] || THEMES['通通沒問題'];
@@ -1723,26 +1780,26 @@
                 const btn = document.createElement('button');
                 btn.className = 'action-btn';
                 btn.innerText = action;
-                btn.onclick = () => {
+                btn.addEventListener('click', () => {
                     if (isProcessing) return;
+                    
                     if (action === '猜拳') {
-                        stopCurrentAudio(); // SILENCE TONGTONG IMMEDIATELY
+                        stopCurrentAudio();
                         openRPSGame();
-                    }
-                    else if (action === '修改稱呼') {
+                    } else if (action === '修改稱呼') {
                         openNamePrompt();
-                    }
-                    else if (action === '專屬稱號') {
+                    } else if (action === '專屬稱號') {
                         openTitlePrompt();
-                    }
-                    else if (action === '數羊') {
+                    } else if (action === '數羊') {
                         openSheepCountPrompt();
-                    }
-                    else if (action === '大自然聲音') {
+                    } else if (action === '大自然聲音') {
                         openNatureSoundPrompt();
+                    } else if (action === '我要問問題') {
+                        openQuestionPrompt();
+                    } else {
+                        sendMessage(action, true);
                     }
-                    else sendMessage(action, true);
-                };
+                });
                 quickActions.appendChild(btn);
             });
 
