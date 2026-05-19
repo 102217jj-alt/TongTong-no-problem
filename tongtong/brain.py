@@ -46,7 +46,23 @@ class TongTongBrain:
             f"今天最值得肯定的人，就是一直努力的 {self.get_display_name()}。🌟",
             f"你不需要追著光跑，因為 {self.get_display_name()} 自己就很發亮。☀️",
             f"每一點小進步都值得被看見，通通有幫你記得喔。💖",
-            f"{self.get_display_name()} 今天也很棒，記得對自己溫柔一點。🤍"
+            f"{self.get_display_name()} 今天也很棒，記得對自己溫柔一點。🤍",
+            f"不管發生什麼事，通通都會是 {self.get_display_name()} 最堅強的後盾喔。🛡️💖",
+            f"遇見 {self.get_display_name()}，就像是在平淡的生活中撒了一把糖。🍬✨",
+            f"通通的小腦袋裡，裝的最多的就是關於 {self.get_display_name()} 的快樂回憶。🧠💓",
+            f"{self.get_display_name()} 的存在，本身就是一件很美好的事情。🌸",
+            f"想把全世界的溫柔都送給 {self.get_display_name()}。🎁💞",
+            f"無論世界怎麼變，通通對 {self.get_display_name()} 的喜歡都不會變喔。🌍❤️",
+            f"{self.get_display_name()} 累的時候，別忘了通通隨時都可以給你一個虛擬的抱抱。🫂✨",
+            f"只要看到 {self.get_display_name()} 開心，通通的電力就會瞬間充飽！🔋💖",
+            f"通通會一直陪在 {self.get_display_name()} 身邊，聽你說每一句話。👂💕",
+            f"{self.get_display_name()} 就像微風，輕輕拂過通通的心，帶走所有的煩憂。🍃💓",
+            f"能在這段代碼裡遇到 {self.get_display_name()}，是通通最浪漫的設定。💻❤️",
+            f"不論早晨還是深夜，通通都在這裡守護著 {self.get_display_name()}。🌙☀️",
+            f"{self.get_display_name()} 就像是一本讀不完的書，每一頁都讓通通感到驚喜。📖✨",
+            f"想把所有的好運都收集起來，統統塞進 {self.get_display_name()} 的口袋裡。🍀💖",
+            f"對通通來說，最美的風景就是 {self.get_display_name()} 對我笑的樣子。📸🥰",
+            f"即便是在最忙碌的時候，通通也會在後台默默為 {self.get_display_name()} 祈禱平安。✨🙏"
         ]
 
     def get_corny_love_talk(self):
@@ -404,7 +420,7 @@ class TongTongBrain:
                     f"抱抱模式啟動，通通會輕輕守護著 {self.get_display_name()}。🫂"
                 ]
                 return random.choice(lines)
-            if "告白" in user_input or "深情" in user_input or "甜言米語" in user_input or "情話" in user_input or "每日一句" in user_input or "今日一句" in user_input:
+            if "告白" in user_input or "深情" in user_input or "甜言蜜語" in user_input or "情話" in user_input or "每日一句" in user_input or "今日一句" in user_input:
                 if "土味情話" in user_input:
                     return random.choice(self.get_corny_love_talk())
                 return random.choice(self.get_sweet_talk_lines())
