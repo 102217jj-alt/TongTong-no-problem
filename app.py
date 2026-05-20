@@ -140,6 +140,18 @@ def tts_preview():
         print(f"[tts_preview] exception: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+
+@app.route('/games')
+def games_index():
+    """Render the games index page."""
+    return render_template('games_index.html')
+
+
+@app.route('/games/gomoku')
+def games_gomoku():
+    """Render the Gomoku game page for embedding or direct access."""
+    return render_template('games/gomoku.html')
+
 @app.route('/api/cleanup', methods=['POST'])
 def cleanup():
     """Cleanup old audio files."""
