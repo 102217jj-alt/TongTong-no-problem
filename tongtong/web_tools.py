@@ -22,10 +22,28 @@ def bot_get_weather(city="台北"):
     """
     weather_translations = {
         "Sunny": "晴天", "Clear": "晴朗", "Partly cloudy": "多雲", "Cloudy": "陰天",
-        "Overcast": "陰沈", "Rainy": "下雨", "Light rain": "小雨", "Moderate rain": "中雨",
-        "Heavy rain": "大雨", "Thunderstorm": "雷暴", "Snowy": "下雪", "Light snow": "小雪",
-        "Moderate snow": "中雪", "Heavy snow": "大雪", "Mist": "霧氣", "Fog": "濃霧",
-        "Drizzle": "毛毛雨", "Windy": "多風"
+        "Overcast": "陰沈", "Mist": "有霧", "Patchy rain nearby": "局部地區陣雨",
+        "Patchy rain possible": "局部陣雨",
+        "Patchy snow nearby": "局部地區下雪", "Patchy sleet nearby": "局部地區雨夾雪",
+        "Patchy freezing drizzle nearby": "局部地區毛毛凍雨", "Thundery outbreaks nearby": "雷陣雨",
+        "Blowing snow": "吹雪", "Blizzard": "暴風雪", "Fog": "濃霧", "Freezing fog": "凍霧",
+        "Patchy light drizzle": "局部輕微毛毛雨", "Light drizzle": "輕微毛毛雨",
+        "Freezing drizzle": "毛毛凍雨", "Heavy freezing drizzle": "大毛毛凍雨",
+        "Patchy light rain": "局部小雨", "Light rain": "小雨", "Moderate rain at times": "陣雨",
+        "Moderate rain": "中雨", "Heavy rain at times": "大陣雨", "Heavy rain": "大雨",
+        "Light freezing rain": "小凍雨", "Moderate or heavy freezing rain": "中到大凍雨",
+        "Light sleet": "小雨夾雪", "Moderate or heavy sleet": "中到大雨夾雪",
+        "Patchy light snow": "局部小雪", "Light snow": "小雪", "Patchy moderate snow": "局部中雪",
+        "Moderate snow": "中雪", "Patchy heavy snow": "局部大雪", "Heavy snow": "大雪",
+        "Ice pellets": "冰雹", "Light rain shower": "小雨", "Moderate or heavy rain shower": "中到大雨",
+        "Torrential rain shower": "豪雨", "Light snow showers": "小雪",
+        "Moderate or heavy snow showers": "中到大雪", "Light showers of ice pellets": "小冰雹",
+        "Moderate or heavy showers of ice pellets": "中到大冰雹",
+        "Patchy light rain with thunder": "局部雷陣雨",
+        "Moderate or heavy rain with thunder": "大雷陣雨",
+        "Patchy light snow with thunder": "局部雷陣雪",
+        "Moderate or heavy snow with thunder": "大雷陣雪",
+        "Rainy": "下雨", "Drizzle": "毛毛雨", "Windy": "多風"
     }
     
     try:
@@ -36,7 +54,29 @@ def bot_get_weather(city="台北"):
         current = data['current_condition'][0]
         temp = current['temp_C']
         description = current['weatherDesc'][0]['value']
-        translated_desc = weather_translations.get(description, description)
+        
+        # 進行翻譯，支援大小寫模糊匹配
+        translated_desc = ""
+        for key, val in weather_translations.items():
+            if key.lower() == description.lower():
+                translated_desc = val
+                break
+        
+        if not translated_desc:
+            # 如果找不到完全匹配，嘗試部分匹配
+            for key, val in weather_translations.items():
+                if key.lower() in description.lower():
+                    translated_desc = val
+                    break
+        
+        # 最終保險：如果還是有英文，強制過濾掉英文單字
+        import re
+        if not translated_desc or re.search(r'[a-zA-Z]', translated_desc):
+            translated_desc = translated_desc if translated_desc else description
+            # 將所有英文替換為「天氣狀況良好」或清空
+            translated_desc = re.sub(r'[a-zA-Z]', '', translated_desc).strip()
+            if not translated_desc: translated_desc = "天氣穩定"
+            
         return f"{city}現在的天氣：氣溫 {temp}°C，{translated_desc}，濕度 {current['humidity']}%。"
     except:
         return f"查詢天氣時出錯了呢，你可以試著直接問我其他問題喔！"
