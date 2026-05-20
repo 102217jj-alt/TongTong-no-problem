@@ -1400,9 +1400,12 @@
                 <option value="不知道">❓ 不知道</option>
             </select>
             <div class="voice-settings ms-2">
-                <select id="voice-select" class="form-select form-select-sm">
-                    <option value="female">👧女</option>
-                    <option value="male">👦男</option>
+                <select id="voice-select" class="form-select form-select-sm" style="width: 100px;">
+                    <option value="female">👧 女生</option>
+                    <option value="male">👦 男生</option>
+                    <option value="loli">🎒 蘿莉音</option>
+                    <option value="sister">👩 溫柔姐姐</option>
+                    <option value="sunny">🧢 陽光男孩</option>
                 </select>
             </div>
         </div>
@@ -1581,6 +1584,21 @@
         const quickActions = document.getElementById('quick-actions');
         const modeDropdown = document.getElementById('mode-dropdown');
         const btnOriginal = document.getElementById('btn-original');
+
+        // 初始化語音選擇：優先從伺服器傳來的變數，次之從 localStorage
+        const serverVoice = "{{ current_voice }}";
+        if (serverVoice && serverVoice !== "None") {
+            voiceSelect.value = serverVoice;
+            localStorage.setItem('tongtong_voice', serverVoice);
+        } else {
+            const savedVoice = localStorage.getItem('tongtong_voice') || 'female';
+            voiceSelect.value = savedVoice;
+        }
+
+        voiceSelect.addEventListener('change', () => {
+            localStorage.setItem('tongtong_voice', voiceSelect.value);
+            // 當手動換聲音時，如果當前是歡迎語，可以考慮重新載入或直接套用
+        });
 
         let currentMode = '通通沒問題';
         let currentAudio = null;
@@ -2542,14 +2560,14 @@
 
         function switchToOriginal() {
             if (isProcessing) return;
-            window.location.href = "/?mode=" + encodeURIComponent("通通沒問題");
+            window.location.href = "/?mode=" + encodeURIComponent("通通沒問題") + "&voice=" + encodeURIComponent(voiceSelect.value);
         }
 
         function switchToPersonality() {
             if (isProcessing) return;
             const selectedMode = modeDropdown.value;
             if (selectedMode) {
-                window.location.href = "/?mode=" + encodeURIComponent(selectedMode);
+                window.location.href = "/?mode=" + encodeURIComponent(selectedMode) + "&voice=" + encodeURIComponent(voiceSelect.value);
             }
         }
 
