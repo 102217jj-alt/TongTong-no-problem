@@ -290,6 +290,7 @@
         <h2 class="mb-4 fw-bold" style="color: #0984e3; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">🎮 通通遊戲專區</h2>
         <p class="mb-5 fs-4" style="color: #154360;">選擇一個遊戲開始挑戰吧！</p>
         <div class="d-flex gap-4 flex-wrap justify-content-center">
+            <!-- 五子棋 -->
             <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
                 style="width: 220px; min-height: 180px; border: 3px solid #2980b9; background-color: #ffffff; color: #1565c0; transition: transform 0.2s;" 
                 onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f0f8ff';" 
@@ -299,6 +300,18 @@
                     <span>⚪</span><span>⚫</span>
                 </div>
                 <div class="fw-bold fs-3">五子棋</div>
+            </button>
+
+            <!-- 飛鳥遊戲 -->
+            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                style="width: 220px; min-height: 180px; border: 3px solid #27ae60; background-color: #ffffff; color: #1e8449; transition: transform 0.2s;" 
+                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f1f9f1';" 
+                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                onclick="stopCurrentAudio(); openBirdGame()">
+                <div style="font-size: 60px; margin-bottom: 10px; line-height: 1;">
+                    <span>🐦</span>
+                </div>
+                <div class="fw-bold fs-3">飛鳥挑戰</div>
             </button>
         </div>
     </div>
@@ -417,7 +430,30 @@
         </div>
     </div>
 
+    <!-- Flying Bird Modal -->
+    <div class="modal fade" id="birdModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-modal-theme" style="background: #70c5ce;">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-white">🐦 飛鳥挑戰</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" onclick="closeBirdGame()"></button>
+                </div>
+                <div class="modal-body p-0 position-relative" style="overflow: hidden; height: 500px;">
+                    <canvas id="birdCanvas" width="360" height="500" style="display: block; margin: 0 auto; cursor: pointer;"></canvas>
+                    <div id="bird-start-screen" class="position-absolute top-50 start-50 translate-middle text-center w-100">
+                        <h1 class="text-white fw-bold mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">點擊開始</h1>
+                        <p class="text-white fs-5">點擊畫面讓小鳥拍打翅膀！</p>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center bg-white p-2">
+                    <div class="fs-4 fw-bold text-primary">得分：<span id="bird-score">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ... (existing script starts here) ...
         // DOM Elements
         const chatContainer = document.getElementById('chat-container');
         const textInput = document.getElementById('text-input');
@@ -460,6 +496,129 @@
             '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰'],
             '遊戲專區': ['五子棋']
         };
+
+        // Flying Bird Game Variables
+        let birdModal = null, birdCanvas = null, birdCtx = null, birdAnimationFrame = null;
+        let birdX = 50, birdY = 200, birdVelocity = 0, birdGravity = 0.4, birdLift = -6;
+        let birdPipes = [], birdPipeWidth = 50, birdPipeGap = 150, birdPipeSpeed = 2;
+        let birdScore = 0, birdGameState = 'start'; // 'start', 'playing', 'over'
+
+        function openBirdGame() {
+            if (!birdModal) {
+                birdModal = new bootstrap.Modal(document.getElementById('birdModal'));
+                birdCanvas = document.getElementById('birdCanvas');
+                birdCtx = birdCanvas.getContext('2d');
+                birdCanvas.addEventListener('mousedown', handleBirdInput);
+                birdCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleBirdInput(); });
+            }
+            birdModal.show();
+            resetBirdGame();
+        }
+
+        function closeBirdGame() {
+            if (birdAnimationFrame) cancelAnimationFrame(birdAnimationFrame);
+            if (birdModal) birdModal.hide();
+        }
+
+        function resetBirdGame() {
+            birdY = 200; birdVelocity = 0; birdPipes = []; birdScore = 0;
+            birdGameState = 'start';
+            document.getElementById('bird-score').innerText = '0';
+            document.getElementById('bird-start-screen').style.display = 'block';
+            drawBirdGame();
+        }
+
+        function handleBirdInput() {
+            if (birdGameState === 'start') {
+                birdGameState = 'playing';
+                document.getElementById('bird-start-screen').style.display = 'none';
+                birdGameLoop();
+            } else if (birdGameState === 'playing') {
+                birdVelocity = birdLift;
+                playBeep(400, 600, 0.05);
+            } else if (birdGameState === 'over') {
+                resetBirdGame();
+            }
+        }
+
+        function birdGameLoop() {
+            if (birdGameState !== 'playing') return;
+            updateBirdGame();
+            drawBirdGame();
+            birdAnimationFrame = requestAnimationFrame(birdGameLoop);
+        }
+
+        function updateBirdGame() {
+            birdVelocity += birdGravity;
+            birdY += birdVelocity;
+
+            // Pipe spawning
+            if (birdPipes.length === 0 || birdPipes[birdPipes.length - 1].x < 180) {
+                const minH = 50, maxH = birdCanvas.height - birdPipeGap - 50;
+                const h = Math.floor(Math.random() * (maxH - minH + 1)) + minH;
+                birdPipes.push({ x: birdCanvas.width, top: h, passed: false });
+            }
+
+            // Pipe movement & collision
+            for (let i = birdPipes.length - 1; i >= 0; i--) {
+                birdPipes[i].x -= birdPipeSpeed;
+
+                // Collision detection
+                const bRect = { left: birdX + 5, right: birdX + 35, top: birdY + 5, bottom: birdY + 35 };
+                const pTop = { left: birdPipes[i].x, right: birdPipes[i].x + birdPipeWidth, top: 0, bottom: birdPipes[i].top };
+                const pBot = { left: birdPipes[i].x, right: birdPipes[i].x + birdPipeWidth, top: birdPipes[i].top + birdPipeGap, bottom: birdCanvas.height };
+
+                if (checkRectOverlap(bRect, pTop) || checkRectOverlap(bRect, pBot) || birdY < 0 || birdY + 40 > birdCanvas.height) {
+                    gameOverBird();
+                }
+
+                // Scoring
+                if (!birdPipes[i].passed && birdPipes[i].x + birdPipeWidth < birdX) {
+                    birdPipes[i].passed = true;
+                    birdScore++;
+                    document.getElementById('bird-score').innerText = birdScore;
+                    playBeep(800, 1000, 0.1);
+                }
+
+                if (birdPipes[i].x + birdPipeWidth < 0) birdPipes.splice(i, 1);
+            }
+        }
+
+        function checkRectOverlap(r1, r2) {
+            return !(r1.right < r2.left || r1.left > r2.right || r1.bottom < r2.top || r1.top > r2.bottom);
+        }
+
+        function drawBirdGame() {
+            birdCtx.fillStyle = '#70c5ce'; birdCtx.fillRect(0, 0, birdCanvas.width, birdCanvas.height);
+            
+            // Draw Pipes
+            birdCtx.fillStyle = '#2ecc71';
+            birdPipes.forEach(p => {
+                birdCtx.fillRect(p.x, 0, birdPipeWidth, p.top);
+                birdCtx.fillRect(p.x, p.top + birdPipeGap, birdPipeWidth, birdCanvas.height);
+                birdCtx.strokeStyle = '#27ae60'; birdCtx.lineWidth = 3;
+                birdCtx.strokeRect(p.x, 0, birdPipeWidth, p.top);
+                birdCtx.strokeRect(p.x, p.top + birdPipeGap, birdPipeWidth, birdCanvas.height);
+            });
+
+            // Draw Bird (🐦 Emoji)
+            birdCtx.font = "40px serif";
+            birdCtx.textBaseline = 'top';
+            birdCtx.fillText('🐦', birdX, birdY);
+        }
+
+        function gameOverBird() {
+            birdGameState = 'over';
+            cancelAnimationFrame(birdAnimationFrame);
+            playRpsTone('lose');
+            
+            let msg = "";
+            if (birdScore === 0) msg = "哎呀！通通覺得你可能還沒睡醒喔～再試一次吧！💤";
+            else if (birdScore < 5) msg = `不錯喔！拿到了 ${birdScore} 分，下次挑戰 10 分吧！💪`;
+            else msg = `太神啦！你竟然拿到了 ${birdScore} 分！通通對你刮目相看！✨🏆`;
+            
+            sendMessage(`[RESULT]${msg}`, true);
+        }
 
         function applyTheme(mode) {
             const theme = THEMES[mode] || THEMES['通通沒問題'];
