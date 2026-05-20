@@ -1357,13 +1357,13 @@
             height: 60px;
             border-radius: 30px;
             border: none;
-            background-color: #a29bfe; /* Light Purple */
+            background-color: #74b9ff; /* Light Blue - Fixed */
             color: white;
             font-size: 28px;
             position: absolute;
-            bottom: 110px; /* Positioned even higher above the input area */
+            bottom: 110px;
             right: 15px;
-            box-shadow: 0 4px 15px rgba(162, 155, 254, 0.4);
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.4);
             transition: 0.3s;
             z-index: 1000;
             display: flex;
@@ -1373,8 +1373,8 @@
 
         #game-zone-btn:hover {
             transform: scale(1.1);
-            background-color: #6c5ce7; /* Darker Purple on hover */
-            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
+            background-color: #0984e3; /* Deep Blue on hover */
+            box-shadow: 0 6px 20px rgba(9, 132, 227, 0.6);
         }
 
         @keyframes pulse {
@@ -1448,13 +1448,19 @@
     </div>
 
     <!-- Game Dashboard (Only shown in 遊戲專區 mode) -->
-    <div id="game-dashboard" style="display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; background-color: var(--bg-light); text-align: center;">
-        <h2 class="mb-4 fw-bold" style="color: var(--primary-color);">🎮 通通遊戲專區</h2>
-        <p class="mb-5 text-muted fs-5">選擇一個遊戲開始挑戰吧！</p>
+    <div id="game-dashboard" style="display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; background-color: transparent; text-align: center;">
+        <h2 class="mb-4 fw-bold" style="color: #0984e3; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">🎮 通通遊戲專區</h2>
+        <p class="mb-5 fs-4" style="color: #154360;">選擇一個遊戲開始挑戰吧！</p>
         <div class="d-flex gap-4 flex-wrap justify-content-center">
-            <button class="btn btn-outline-primary p-4 rounded-4 shadow-sm" style="width: 180px; border-width: 2px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="openGomokuGame()">
-                <div style="font-size: 60px; margin-bottom: 15px; line-height: 1;">⚪⚫</div>
-                <div class="fw-bold fs-4">五子棋</div>
+            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                style="width: 220px; min-height: 180px; border: 3px solid #2980b9; background-color: #ffffff; color: #1565c0; transition: transform 0.2s;" 
+                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f0f8ff';" 
+                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                onclick="openGomokuGame()">
+                <div style="font-size: 60px; margin-bottom: 10px; display: flex; gap: 10px; line-height: 1;">
+                    <span>⚪</span><span>⚫</span>
+                </div>
+                <div class="fw-bold fs-3">五子棋</div>
             </button>
         </div>
     </div>
@@ -1683,7 +1689,8 @@
             '神算師': { primary: '#9b59b6', accent: '#333', bg: '#f8f0ff', nav: '#fbf8ff' },
             '屬於我': { primary: '#e91e63', accent: '#333', bg: '#fff0f5', nav: '#fff8fa' },
             '去睡覺': { primary: '#34495e', accent: '#333', bg: '#f0f4f8', nav: '#f8fafd' },
-            '不知道': { primary: '#1abc9c', accent: '#333', bg: '#f0fff4', nav: '#f8fffb' }
+            '不知道': { primary: '#1abc9c', accent: '#333', bg: '#f0fff4', nav: '#f8fffb' },
+            '遊戲專區': { primary: '#2980b9', accent: '#333', bg: '#e3f2fd', nav: '#bbdefb' }
         };
 
         const MODE_ACTIONS = {
