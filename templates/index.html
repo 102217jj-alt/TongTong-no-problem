@@ -1322,11 +1322,12 @@
         }
 
         #input-area {
-            background-color: #111;
+            background-color: var(--nav-bg);
             padding: 15px;
             display: flex;
             align-items: center;
             transition: background-color 0.5s;
+            border-top: 1px solid var(--border-color);
         }
 
         .mic-btn {
@@ -1349,6 +1350,31 @@
         #send-btn {
             background-color: var(--primary-color);
             border: none;
+        }
+
+        #game-zone-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            border: none;
+            background-color: #a29bfe; /* Light Purple */
+            color: white;
+            font-size: 28px;
+            position: absolute;
+            bottom: 110px; /* Positioned even higher above the input area */
+            right: 15px;
+            box-shadow: 0 4px 15px rgba(162, 155, 254, 0.4);
+            transition: 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #game-zone-btn:hover {
+            transform: scale(1.1);
+            background-color: #6c5ce7; /* Darker Purple on hover */
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.6);
         }
 
         @keyframes pulse {
@@ -1420,6 +1446,20 @@
             <!-- Dynamic buttons go here -->
         </div>
     </div>
+
+    <!-- Game Dashboard (Only shown in 遊戲專區 mode) -->
+    <div id="game-dashboard" style="display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; background-color: var(--bg-light); text-align: center;">
+        <h2 class="mb-4 fw-bold" style="color: var(--primary-color);">🎮 通通遊戲專區</h2>
+        <p class="mb-5 text-muted fs-5">選擇一個遊戲開始挑戰吧！</p>
+        <div class="d-flex gap-4 flex-wrap justify-content-center">
+            <button class="btn btn-outline-primary p-4 rounded-4 shadow-sm" style="width: 180px; border-width: 2px; transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="openGomokuGame()">
+                <div style="font-size: 60px; margin-bottom: 15px; line-height: 1;">⚪⚫</div>
+                <div class="fw-bold fs-4">五子棋</div>
+            </button>
+        </div>
+    </div>
+
+    <button id="game-zone-btn" onclick="switchToGameZone()" title="開啟遊戲專區">🎮</button>
 
     <div id="input-area">
         <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." autocomplete="off"
@@ -1573,6 +1613,25 @@
         </div>
     </div>
 
+    <!-- Gomoku Game Modal -->
+    <div class="modal fade" id="gomokuModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content custom-modal-theme">
+                <div class="modal-header">
+                    <h5 class="modal-title">🎮 通通遊戲專區 - 五子棋</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="gomoku-info" class="mb-2 fw-bold">輪到：黑棋 (Black)</div>
+                    <canvas id="gomokuCanvas" width="400" height="400" style="background: #DEB887; border: 2px solid #8B4513; cursor: crosshair; max-width: 100%;"></canvas>
+                    <div class="mt-3">
+                        <button class="btn btn-secondary btn-sm" id="gomokuReset">重新開始</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         const chatContainer = document.getElementById('chat-container');
         const textInput = document.getElementById('text-input');
@@ -1633,7 +1692,8 @@
             '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '問吉時', '財運', '事業運', '愛情運', '今日建議'],
             '屬於我': ['甜言蜜語', '親親', '抱抱', '土味情話', '專屬稱號', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊', '冥想引導', '大自然聲音', '晚安寄語'],
-            '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰', '神秘驚喜盒']
+            '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰', '神秘驚喜盒'],
+            '遊戲專區': ['五子棋']
         };
 
         let thinkingBubble = null;
@@ -1768,18 +1828,40 @@
         function updateUIForMode(mode) {
             applyTheme(mode);
 
-            if (mode === '通通沒問題') {
-                inputArea.style.display = "flex";
-                textInput.disabled = false;
-                textInput.placeholder = "輸入你想查詢的內容...";
-                sendBtn.disabled = false;
-                micBtn.disabled = false;
-                micBtn.style.opacity = "1";
-                btnOriginal.classList.add('active');
-                modeDropdown.selectedIndex = 0;
-            } else {
-                inputArea.style.display = "none";
+            const gameBtn = document.getElementById('game-zone-btn');
+            const chatContainer = document.getElementById('chat-container');
+            const controlsArea = document.getElementById('controls-area');
+            const gameDashboard = document.getElementById('game-dashboard');
+
+            if (mode === '遊戲專區') {
+                gameBtn.style.display = 'none';
+                chatContainer.style.display = 'none';
+                controlsArea.style.display = 'none';
+                inputArea.style.display = 'none';
                 btnOriginal.classList.remove('active');
+                gameDashboard.style.display = 'flex';
+            } else {
+                gameBtn.style.display = 'flex';
+                chatContainer.style.display = 'flex';
+                controlsArea.style.display = 'block';
+                gameDashboard.style.display = 'none';
+
+                if (mode === '通通沒問題') {
+                    inputArea.style.display = "flex";
+                    textInput.style.display = "block";
+                    sendBtn.style.display = "block";
+                    micBtn.style.display = "block";
+                    textInput.disabled = false;
+                    textInput.placeholder = "輸入你想查詢的內容...";
+                    sendBtn.disabled = false;
+                    micBtn.disabled = false;
+                    micBtn.style.opacity = "1";
+                    btnOriginal.classList.add('active');
+                    modeDropdown.selectedIndex = 0;
+                } else {
+                    inputArea.style.display = "none";
+                    btnOriginal.classList.remove('active');
+                }
             }
 
             if (mode !== '屬於我') {
@@ -1814,6 +1896,8 @@
                         openNatureSoundPrompt();
                     } else if (action === '我要問問題') {
                         openQuestionPrompt();
+                    } else if (action === '五子棋') {
+                        openGomokuGame();
                     } else {
                         sendMessage(action, true);
                     }
@@ -2571,10 +2655,19 @@
             }
         }
 
+        function switchToGameZone() {
+            if (isProcessing) return;
+            window.location.href = "/?mode=" + encodeURIComponent("遊戲專區") + "&voice=" + encodeURIComponent(voiceSelect.value);
+        }
+
         currentMode = "{{ current_mode }}" || '通通沒問題';
         updateUIForMode(currentMode);
 
-        if (currentMode !== '通通沒問題') {
+        // 只有「通通沒問題」和「遊戲專區」時，下拉選單顯示預設的「✨ 性格模式」
+        // 其他模式（如好心情、神算師等）則顯示該模式名稱
+        if (currentMode === '通通沒問題' || currentMode === '遊戲專區') {
+            modeDropdown.selectedIndex = 0;
+        } else {
             modeDropdown.value = currentMode;
         }
 

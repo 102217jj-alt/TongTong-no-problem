@@ -42,7 +42,7 @@ def chat():
     data = request.json
     user_input = data.get('message', '').strip()
     voice_type = data.get('voice_type', 'female') # 'female' or 'male'
-    mode = data.get('mode', '好心情')
+    mode = data.get('mode', '通通沒問題')
 
     # If mode changed, return the welcome message for the new mode
     if mode != brain.mode:
