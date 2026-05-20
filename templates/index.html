@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -68,7 +68,7 @@
             border: 1px solid var(--border-color);
             padding: 6px;
             border-radius: 8px;
-            font-size: 16px; /* 增大字體讓表情符號變大 */
+            font-size: 16px;
             width: 130px;
             font-weight: 500;
         }
@@ -106,98 +106,6 @@
             word-wrap: break-word;
             transition: 0.3s;
             font-size: 15px;
-        }
-
-        @media (max-width: 480px) {
-            #top-nav {
-                padding: 8px 10px;
-            }
-
-            .personality-dropdown {
-                width: 100px;
-                font-size: 13px;
-            }
-
-            .original-btn {
-                padding: 5px 10px;
-                font-size: 13px;
-            }
-
-            #chat-container {
-                padding: 10px;
-            }
-
-            .message {
-                max-width: 95%;
-                padding: 8px 12px;
-                font-size: 14.5px;
-            }
-
-            .affection-card {
-                height: 220px;
-            }
-
-            .emoji-face.left,
-            .emoji-face.right {
-                width: 100px;
-                height: 100px;
-                font-size: 3.5rem;
-            }
-
-            .emoji-face.hug-left,
-            .emoji-face.hug-right {
-                width: 110px;
-                height: 110px;
-                font-size: 3.2rem;
-            }
-
-            .emoji-face.hug-left span,
-            .emoji-face.hug-right span {
-                font-size: 3.2rem;
-            }
-
-            .emoji-face.kiss-left,
-            .emoji-face.kiss-right {
-                width: 100px;
-                height: 100px;
-                font-size: 3.5rem;
-            }
-
-            @keyframes emojiKissLeft {
-                0% {
-                    transform: translateX(0) scale(0.98);
-                }
-
-                44% {
-                    transform: translateX(40px) scale(1.05);
-                }
-
-                70% {
-                    transform: translateX(50px) scale(1.07);
-                }
-
-                100% {
-                    transform: translateX(10px) scale(0.98);
-                }
-            }
-
-            @keyframes emojiKissRight {
-                0% {
-                    transform: translateX(0) scale(0.98);
-                }
-
-                44% {
-                    transform: translateX(-40px) scale(1.05);
-                }
-
-                70% {
-                    transform: translateX(-50px) scale(1.07);
-                }
-
-                100% {
-                    transform: translateX(-10px) scale(0.98);
-                }
-            }
         }
 
         .user-message {
@@ -253,12 +161,6 @@
             transform: scale(1.12);
         }
 
-        .replay-audio-btn:disabled {
-            opacity: 0.35;
-            cursor: default;
-            transform: none;
-        }
-
         #controls-area {
             background-color: var(--nav-bg);
             border-top: 1px solid var(--border-color);
@@ -273,18 +175,12 @@
             padding: 8px 15px 10px 15px;
             justify-content: flex-start;
             scrollbar-width: none;
-            /* Firefox */
         }
 
         @media (min-width: 768px) {
             #quick-actions {
                 justify-content: center;
             }
-        }
-
-        #quick-actions::-webkit-scrollbar {
-            display: none;
-            /* Chrome, Safari, Opera */
         }
 
         .action-btn {
@@ -304,1021 +200,6 @@
             background: var(--bg-light);
             color: var(--primary-color);
             border-color: var(--primary-color);
-        }
-
-        .affection-overlay {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(11, 16, 28, 0.42);
-            z-index: 2500;
-            pointer-events: none;
-            animation: affectionFadeIn 0.2s ease-out;
-        }
-
-        .affection-card {
-            position: relative;
-            width: min(420px, 90vw);
-            height: 250px;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05));
-            backdrop-filter: blur(12px);
-            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.36);
-        }
-
-        .affection-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 54%);
-            pointer-events: none;
-        }
-
-        .affection-title {
-            position: absolute;
-            left: 50%;
-            top: 20px;
-            transform: translateX(-50%);
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.32);
-            font-size: 1.08rem;
-            font-weight: 800;
-            letter-spacing: 0.02em;
-            opacity: 0;
-            animation: affectionTitle 1.25s ease-out forwards;
-        }
-
-        .emoji-stage {
-            position: absolute;
-            inset: 62px 22px 42px;
-        }
-
-        .emoji-face {
-            position: absolute;
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 32% 28%, #fff8b9 0 10%, #ffe96c 18%, #f8ce34 66%, #eebc0a 100%);
-            box-shadow: inset 0 -7px 0 rgba(0, 0, 0, 0.08), 0 12px 18px rgba(0, 0, 0, 0.18);
-            border: 2px solid rgba(0, 0, 0, 0.10);
-        }
-
-        /* 在親親/抱抱 overlay 中移除黃色圓圈背景 */
-        .affection-overlay .emoji-face {
-            background: transparent !important;
-            box-shadow: none !important;
-            border: none !important;
-        }
-
-        .affection-overlay .emoji-face::before {
-            display: none !important;
-        }
-
-        .emoji-face.left {
-            left: 32px;
-        }
-
-        .emoji-face.right {
-            right: 32px;
-        }
-
-        .emoji-face.kiss-left {
-            animation: emojiKissLeft 1.3s ease-in-out forwards;
-        }
-
-        .emoji-face.kiss-right {
-            animation: emojiKissRight 1.3s ease-in-out forwards;
-        }
-
-        .emoji-face.kiss-left,
-        .emoji-face.kiss-right {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4.4rem;
-            line-height: 1;
-            width: 130px;
-            height: 130px;
-        }
-
-        /* 放大抱抱表情 */
-        .emoji-face.hug-left,
-        .emoji-face.hug-right {
-            width: 140px;
-            height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-        }
-
-        .emoji-face.hug-left span,
-        .emoji-face.hug-right span {
-            position: relative;
-            z-index: 1;
-            transform: translateY(0);
-            font-size: 4rem;
-        }
-
-        .emoji-face.kiss-left::before,
-        .emoji-face.kiss-right::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at 32% 28%, #fff8b9 0 10%, #ffe96c 18%, #f8ce34 66%, #eebc0a 100%);
-            z-index: 0;
-        }
-
-        .emoji-face.kiss-left span,
-        .emoji-face.kiss-right span {
-            position: relative;
-            z-index: 1;
-            transform: translateY(1px);
-        }
-
-        /* 翻轉右側親親表情（水平鏡像） */
-        .emoji-face.kiss-right span {
-            transform: translateY(1px) scaleX(-1);
-        }
-
-        .emoji-face.hug-left {
-            animation: emojiHugLeft 1.35s ease-in-out forwards;
-        }
-
-        .emoji-face.hug-right {
-            animation: emojiHugRight 1.35s ease-in-out forwards;
-        }
-
-        /* 飄浮愛心與嘴唇樣式 */
-        .floating {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0;
-            font-size: 1.05rem;
-            transform-origin: center;
-            animation: floatUp 2.2s ease-out forwards;
-        }
-
-        .float-heart.one {
-            left: 36%;
-            top: 24px;
-            animation-delay: 0.08s;
-        }
-
-        .float-heart.two {
-            left: 58%;
-            top: 48px;
-            animation-delay: 0.18s;
-            transform: scale(0.95);
-        }
-
-        .float-heart.three {
-            left: 50%;
-            top: 12px;
-            animation-delay: 0.28s;
-            transform: scale(0.9);
-        }
-
-        .float-heart.four {
-            left: 28%;
-            top: 58px;
-            animation-delay: 0.06s;
-            transform: scale(0.88);
-        }
-
-        .float-heart.five {
-            left: 70%;
-            top: 22px;
-            animation-delay: 0.22s;
-            transform: scale(0.82);
-        }
-
-        .float-lip.one {
-            left: 46%;
-            top: 34px;
-            animation-delay: 0.14s;
-        }
-
-        .float-lip.two {
-            left: 62%;
-            top: 62px;
-            animation-delay: 0.30s;
-            transform: scale(0.92);
-        }
-
-        .float-lip.three {
-            left: 40%;
-            top: 62px;
-            animation-delay: 0.36s;
-            transform: scale(0.88);
-        }
-
-        @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(0.9);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-120px) scale(1.15);
-                opacity: 0;
-            }
-        }
-
-        /* Hug background (faint 🫶) */
-        .hug-bg {
-            position: absolute;
-            left: 50%;
-            top: 42%;
-            transform: translate(-50%, -20%);
-            font-size: 5.2rem;
-            opacity: 0.12;
-            pointer-events: none;
-            filter: blur(0.6px);
-            animation: hugBgPulse 1.6s ease-out forwards;
-        }
-
-        @keyframes hugBgPulse {
-            0% {
-                transform: translate(-50%, -20%) scale(0.9);
-                opacity: 0;
-            }
-
-            18% {
-                opacity: 0.14;
-            }
-
-            100% {
-                transform: translate(-50%, -60%) scale(1.05);
-                opacity: 0;
-            }
-        }
-
-        /* 背景慢速漂浮愛心（更稀疏、更淡） */
-        .bg-heart {
-            position: absolute;
-            pointer-events: none;
-            font-size: 2.2rem;
-            opacity: 0.08;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bgFloat 3.2s ease-out forwards;
-        }
-
-        .bg-heart.one {
-            left: 18%;
-            top: 18px;
-            animation-delay: 0.02s;
-            font-size: 2.6rem;
-        }
-
-        .bg-heart.two {
-            left: 82%;
-            top: 28px;
-            animation-delay: 0.12s;
-            font-size: 2.4rem;
-        }
-
-        .bg-heart.three {
-            left: 12%;
-            top: 72px;
-            animation-delay: 0.18s;
-            font-size: 2.0rem;
-        }
-
-        .bg-heart.four {
-            left: 86%;
-            top: 82px;
-            animation-delay: 0.26s;
-            font-size: 2.2rem;
-        }
-
-        @keyframes bgFloat {
-            0% {
-                transform: translateY(0) translateX(-50%) scale(0.95);
-                opacity: 0;
-            }
-
-            20% {
-                opacity: 0.08;
-            }
-
-            100% {
-                transform: translateY(-160px) translateX(-50%) scale(1.05);
-                opacity: 0;
-            }
-        }
-
-        .emoji-eyes {
-            position: absolute;
-            left: 50%;
-            top: 26px;
-            width: 46px;
-            height: 18px;
-            transform: translateX(-50%);
-        }
-
-        .emoji-eye {
-            position: absolute;
-            top: 0;
-            width: 10px;
-            height: 14px;
-            border-radius: 50%;
-            background: #5b4300;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18);
-        }
-
-        .emoji-eye.left {
-            left: 8px;
-        }
-
-        .emoji-eye.right {
-            right: 8px;
-        }
-
-        .emoji-mouth {
-            position: absolute;
-            left: 50%;
-            top: 55px;
-            transform: translateX(-50%);
-            width: 34px;
-            height: 18px;
-            border-bottom: 4px solid #7d4b00;
-            border-radius: 0 0 24px 24px;
-        }
-
-        .emoji-mouth.kiss {
-            width: 26px;
-            height: 18px;
-            border: 0;
-            border-radius: 50%;
-            background: radial-gradient(circle at 50% 45%, #ffb7c8 0 32%, #ff6f9d 33% 100%);
-            box-shadow: 0 0 0 2px rgba(125, 75, 0, 0.06);
-        }
-
-        .emoji-mouth.kiss::before,
-        .emoji-mouth.kiss::after {
-            content: '';
-            position: absolute;
-            top: 4px;
-            width: 10px;
-            height: 8px;
-            border-top: 2px solid rgba(125, 75, 0, 0.6);
-            border-radius: 50%;
-        }
-
-        .emoji-mouth.kiss::before {
-            left: 3px;
-            transform: rotate(-20deg);
-        }
-
-        .emoji-mouth.kiss::after {
-            right: 3px;
-            transform: rotate(20deg);
-        }
-
-        .emoji-blush {
-            position: absolute;
-            top: 43px;
-            width: 15px;
-            height: 9px;
-            border-radius: 50%;
-            background: rgba(255, 114, 155, 0.26);
-            filter: blur(1px);
-        }
-
-        .emoji-blush.left {
-            left: 10px;
-        }
-
-        .emoji-blush.right {
-            right: 10px;
-        }
-
-        .emoji-arm {
-            position: absolute;
-            top: 60px;
-            width: 18px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(180deg, #f7cf46 0%, #efb90a 100%);
-            border: 2px solid rgba(0, 0, 0, 0.07);
-            transform-origin: top center;
-        }
-
-        .emoji-arm.left {
-            left: -4px;
-        }
-
-        .emoji-arm.right {
-            right: -4px;
-        }
-
-        .emoji-hands {
-            position: absolute;
-            bottom: 2px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 62px;
-            height: 20px;
-        }
-
-        .emoji-hand {
-            position: absolute;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: linear-gradient(180deg, #ffd85e 0%, #efbe13 100%);
-            border: 2px solid rgba(0, 0, 0, 0.07);
-        }
-
-        .emoji-hand.left {
-            left: 4px;
-        }
-
-        .emoji-hand.right {
-            right: 4px;
-        }
-
-        .emoji-arm.left.kiss {
-            animation: emojiKissArmLeft 1.3s ease-in-out forwards;
-        }
-
-        .emoji-arm.right.kiss {
-            animation: emojiKissArmRight 1.3s ease-in-out forwards;
-        }
-
-        .emoji-arm.left.hug,
-        .emoji-arm.right.hug {
-            animation: emojiHugArm 1.35s ease-in-out forwards;
-        }
-
-        .emoji-hands.hug .emoji-hand.left {
-            animation: emojiHugHandsLeft 1.35s ease-in-out forwards;
-        }
-
-        .emoji-hands.hug .emoji-hand.right {
-            animation: emojiHugHandsRight 1.35s ease-in-out forwards;
-        }
-
-        .kiss-heart,
-        .hug-heart,
-        .kiss-bubble,
-        .hug-bubble {
-            position: absolute;
-            opacity: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .kiss-heart.one {
-            top: 72px;
-            font-size: 1.4rem;
-            animation: kissHeart 1.3s ease-out forwards;
-        }
-
-        .kiss-heart.two {
-            top: 98px;
-            font-size: 1.15rem;
-            animation: kissHeart 1.3s ease-out forwards;
-            animation-delay: 0.08s;
-        }
-
-        .kiss-bubble {
-            top: 42px;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.55rem;
-            background: rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(4px);
-            animation: kissBubble 1.3s ease-out forwards;
-        }
-
-        .hug-heart.one {
-            top: 68px;
-            font-size: 1.4rem;
-            animation: hugHeart 1.35s ease-out forwards;
-        }
-
-        .hug-heart.two {
-            top: 92px;
-            font-size: 1.1rem;
-            animation: hugHeart 1.35s ease-out forwards;
-            animation-delay: 0.08s;
-        }
-
-        .hug-heart.three {
-            top: 116px;
-            font-size: 0.95rem;
-            animation: hugHeart 1.35s ease-out forwards;
-            animation-delay: 0.16s;
-        }
-
-        .hug-bubble {
-            top: 52px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.14);
-            backdrop-filter: blur(4px);
-            font-size: 1.25rem;
-            animation: hugBubble 1.35s ease-out forwards;
-        }
-
-        .affection-text {
-            position: absolute;
-            left: 50%;
-            bottom: 26px;
-            transform: translateX(-50%) translateY(10px);
-            width: calc(100% - 30px);
-            text-align: center;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
-            font-size: 1.05rem;
-            font-weight: 700;
-            opacity: 0;
-            animation: affectionText 1.25s ease-out forwards;
-        }
-
-        @keyframes affectionFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes affectionTitle {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-8px) scale(0.98);
-            }
-
-            30% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1.02);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1);
-            }
-        }
-
-        @keyframes emojiKissLeft {
-            0% {
-                transform: translateX(0) scale(0.98) rotate(-3deg);
-            }
-
-            44% {
-                transform: translateX(62px) scale(1.05) rotate(4deg);
-            }
-
-            70% {
-                transform: translateX(76px) scale(1.07) rotate(0deg);
-            }
-
-            100% {
-                transform: translateX(16px) scale(0.98) rotate(-2deg);
-            }
-        }
-
-        @keyframes emojiKissRight {
-            0% {
-                transform: translateX(0) scale(0.98) rotate(3deg);
-            }
-
-            44% {
-                transform: translateX(-62px) scale(1.05) rotate(-4deg);
-            }
-
-            70% {
-                transform: translateX(-76px) scale(1.07) rotate(0deg);
-            }
-
-            100% {
-                transform: translateX(-16px) scale(0.98) rotate(2deg);
-            }
-        }
-
-        @keyframes emojiHugLeft {
-            0% {
-                transform: translateX(0) scale(0.96) rotate(-2deg);
-            }
-
-            45% {
-                transform: translateX(56px) scale(1.04) rotate(2deg);
-            }
-
-            70% {
-                transform: translateX(70px) scale(1.06) rotate(0deg);
-            }
-
-            100% {
-                transform: translateX(14px) scale(0.98) rotate(-1deg);
-            }
-        }
-
-        @keyframes emojiHugRight {
-            0% {
-                transform: translateX(0) scale(0.96) rotate(2deg);
-            }
-
-            45% {
-                transform: translateX(-56px) scale(1.04) rotate(-2deg);
-            }
-
-            70% {
-                transform: translateX(-70px) scale(1.06) rotate(0deg);
-            }
-
-            100% {
-                transform: translateX(-14px) scale(0.98) rotate(1deg);
-            }
-        }
-
-        @keyframes emojiKissArmLeft {
-            0% {
-                transform: rotate(-8deg) scaleY(1);
-            }
-
-            45% {
-                transform: rotate(-28deg) scaleY(1.08);
-            }
-
-            70% {
-                transform: rotate(-14deg) scaleY(1.03);
-            }
-
-            100% {
-                transform: rotate(-6deg) scaleY(1);
-            }
-        }
-
-        @keyframes emojiKissArmRight {
-            0% {
-                transform: rotate(8deg) scaleY(1);
-            }
-
-            45% {
-                transform: rotate(28deg) scaleY(1.08);
-            }
-
-            70% {
-                transform: rotate(14deg) scaleY(1.03);
-            }
-
-            100% {
-                transform: rotate(6deg) scaleY(1);
-            }
-        }
-
-        @keyframes emojiHugArm {
-            0% {
-                transform: rotate(0deg) scaleY(1);
-            }
-
-            45% {
-                transform: rotate(14deg) scaleY(1.08);
-            }
-
-            70% {
-                transform: rotate(8deg) scaleY(1.04);
-            }
-
-            100% {
-                transform: rotate(2deg) scaleY(1);
-            }
-        }
-
-        @keyframes emojiHugHandsLeft {
-            0% {
-                transform: translateY(0) rotate(4deg) scale(1);
-            }
-
-            45% {
-                transform: translateY(-3px) rotate(18deg) scale(1.06);
-            }
-
-            70% {
-                transform: translateY(-1px) rotate(8deg) scale(1.03);
-            }
-
-            100% {
-                transform: translateY(0) rotate(4deg) scale(1);
-            }
-        }
-
-        @keyframes emojiHugHandsRight {
-            0% {
-                transform: translateY(0) rotate(-4deg) scale(1);
-            }
-
-            45% {
-                transform: translateY(-3px) rotate(-18deg) scale(1.06);
-            }
-
-            70% {
-                transform: translateY(-1px) rotate(-8deg) scale(1.03);
-            }
-
-            100% {
-                transform: translateY(0) rotate(-4deg) scale(1);
-            }
-        }
-
-        @keyframes kissBubble {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.35) translateY(10px);
-            }
-
-            35% {
-                opacity: 1;
-                transform: translateX(-50%) scale(1.08) translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.9) translateY(-10px);
-            }
-        }
-
-        @keyframes hugBubble {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.34) translateY(10px);
-            }
-
-            32% {
-                opacity: 1;
-                transform: translateX(-50%) scale(1.06) translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.9) translateY(-10px);
-            }
-        }
-
-        @keyframes kissHeart {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(18px) scale(0.4);
-            }
-
-            30% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1.1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-24px) scale(0.75);
-            }
-        }
-
-        @keyframes hugHeart {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(18px) scale(0.4);
-            }
-
-            32% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0) scale(1.08);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(-24px) scale(0.75);
-            }
-        }
-
-        @keyframes affectionText {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(12px);
-            }
-
-            36% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        .highfive-overlay {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.42);
-            z-index: 2500;
-            pointer-events: none;
-            animation: highfiveFadeIn 0.18s ease-out;
-        }
-
-        .highfive-card {
-            position: relative;
-            width: min(380px, 88vw);
-            height: 230px;
-            border-radius: 28px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
-            backdrop-filter: blur(10px);
-            box-shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
-        }
-
-        .highfive-hand {
-            position: absolute;
-            top: 74px;
-            font-size: 4.1rem;
-            filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.28));
-        }
-
-        .highfive-hand.left {
-            left: 30px;
-            transform-origin: right center;
-            animation: highfiveLeft 1.2s ease-in-out forwards;
-        }
-
-        .highfive-hand.right {
-            right: 30px;
-            transform-origin: left center;
-            animation: highfiveRight 1.2s ease-in-out forwards;
-        }
-
-        .highfive-burst {
-            position: absolute;
-            left: 50%;
-            top: 74px;
-            transform: translateX(-50%) scale(0.2);
-            font-size: 3rem;
-            opacity: 0;
-            animation: highfiveBurst 1.2s ease-out forwards;
-        }
-
-        .highfive-text {
-            position: absolute;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%) translateY(10px);
-            width: calc(100% - 32px);
-            text-align: center;
-            color: white;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            font-size: 1.15rem;
-            font-weight: 700;
-            opacity: 0;
-            animation: highfiveText 1.2s ease-out forwards;
-        }
-
-        .highfive-sparkle {
-            position: absolute;
-            font-size: 1.3rem;
-            opacity: 0;
-            animation: highfiveSparkle 1.2s ease-out forwards;
-        }
-
-        .highfive-sparkle.one {
-            left: 52px;
-            top: 40px;
-            animation-delay: 0.03s;
-        }
-
-        .highfive-sparkle.two {
-            right: 52px;
-            top: 52px;
-            animation-delay: 0.08s;
-        }
-
-        .highfive-sparkle.three {
-            left: 50%;
-            bottom: 60px;
-            transform: translateX(-50%);
-            animation-delay: 0.12s;
-        }
-
-        @keyframes highfiveFadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes highfiveLeft {
-            0% {
-                transform: translateX(0) rotate(-8deg) scale(0.95);
-            }
-
-            40% {
-                transform: translateX(70px) rotate(6deg) scale(1.04);
-            }
-
-            60% {
-                transform: translateX(88px) rotate(0deg) scale(1.08);
-            }
-
-            100% {
-                transform: translateX(26px) rotate(-4deg) scale(0.98);
-            }
-        }
-
-        @keyframes highfiveRight {
-            0% {
-                transform: translateX(0) rotate(8deg) scale(0.95);
-            }
-
-            40% {
-                transform: translateX(-70px) rotate(-6deg) scale(1.04);
-            }
-
-            60% {
-                transform: translateX(-88px) rotate(0deg) scale(1.08);
-            }
-
-            100% {
-                transform: translateX(-26px) rotate(4deg) scale(0.98);
-            }
-        }
-
-        @keyframes highfiveBurst {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) scale(0.2);
-            }
-
-            45% {
-                opacity: 1;
-                transform: translateX(-50%) scale(1.15);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateX(-50%) scale(1.35);
-            }
-        }
-
-        @keyframes highfiveText {
-            0% {
-                opacity: 0;
-                transform: translateX(-50%) translateY(12px);
-            }
-
-            35% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-
-        @keyframes highfiveSparkle {
-            0% {
-                opacity: 0;
-                transform: scale(0.4) rotate(-10deg);
-            }
-
-            35% {
-                opacity: 1;
-                transform: scale(1.1) rotate(10deg);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0.7) rotate(16deg);
-            }
         }
 
         #input-area {
@@ -1357,7 +238,7 @@
             height: 60px;
             border-radius: 30px;
             border: none;
-            background-color: #74b9ff; /* Light Blue - Fixed */
+            background-color: #74b9ff;
             color: white;
             font-size: 28px;
             position: absolute;
@@ -1373,38 +254,24 @@
 
         #game-zone-btn:hover {
             transform: scale(1.1);
-            background-color: #0984e3; /* Deep Blue on hover */
+            background-color: #0984e3;
             box-shadow: 0 6px 20px rgba(9, 132, 227, 0.6);
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.1);
-            }
-
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .voice-settings select {
             background: #ffffff;
             color: #333;
             border: 1px solid var(--border-color);
-            width: 75px;
+            width: 100px;
             font-size: 14px;
             border-radius: 8px;
             padding: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .voice-settings select:focus {
-            outline: none;
-            border-color: var(--primary-color);
         }
     </style>
 </head>
@@ -1426,7 +293,7 @@
                 <option value="不知道">❓ 不知道</option>
             </select>
             <div class="voice-settings ms-2">
-                <select id="voice-select" class="form-select form-select-sm" style="width: 100px;">
+                <select id="voice-select" class="form-select form-select-sm">
                     <option value="female">👧 女生</option>
                     <option value="male">👦 男生</option>
                     <option value="loli">🎒 蘿莉音</option>
@@ -1437,17 +304,13 @@
         </div>
     </div>
 
-    <div id="chat-container">
-        <!-- Messages will be added dynamically here -->
-    </div>
+    <div id="chat-container"></div>
 
     <div id="controls-area">
-        <div id="quick-actions">
-            <!-- Dynamic buttons go here -->
-        </div>
+        <div id="quick-actions"></div>
     </div>
 
-    <!-- Game Dashboard (Only shown in 遊戲專區 mode) -->
+    <!-- Game Dashboard -->
     <div id="game-dashboard" style="display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; background-color: transparent; text-align: center;">
         <h2 class="mb-4 fw-bold" style="color: #0984e3; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">🎮 通通遊戲專區</h2>
         <p class="mb-5 fs-4" style="color: #154360;">選擇一個遊戲開始挑戰吧！</p>
@@ -1469,32 +332,28 @@
 
     <div id="input-area">
         <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." autocomplete="off"
-            autocapitalize="off" autocorrect="off" spellcheck="false"
             style="background:#fff; color:#333; border:1px solid var(--border-color);">
         <button id="send-btn" class="btn btn-primary btn-sm me-2">發送</button>
         <button id="mic-btn" class="mic-btn">🎤</button>
     </div>
 
+    <!-- Modals -->
     <!-- RPS Modal -->
     <div class="modal fade" id="rpsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
                 <div class="modal-header">
                     <h5 class="modal-title">✌️ 跟通通猜拳！</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeRPS()"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeRPS()"></button>
                 </div>
                 <div class="modal-body text-center">
                     <p id="rps-status" class="fs-5">通通準備好了，你呢？😏</p>
                     <div class="d-flex justify-content-around mt-4">
-                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn" onclick="playRPS('✊')">✊<br><small
-                                class="fs-6">石頭</small></button>
-                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn"
-                            onclick="playRPS('✌️')">✌️<br><small class="fs-6">剪刀</small></button>
-                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn"
-                            onclick="playRPS('🖐️')">🖐️<br><small class="fs-6">布</small></button>
+                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn" onclick="playRPS('✊')">✊</button>
+                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn" onclick="playRPS('✌️')">✌️</button>
+                        <button class="btn btn-outline-dark p-3 fs-2 rps-choice-btn" onclick="playRPS('🖐️')">🖐️</button>
                     </div>
-                    <div id="rps-result" class="mt-4 h3 fw-bold" style="display:none; transition: 0.3s;"></div>
+                    <div id="rps-result" class="mt-4 h3 fw-bold" style="display:none;"></div>
                 </div>
             </div>
         </div>
@@ -1504,20 +363,12 @@
     <div class="modal fade" id="namePromptModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">👤 通通想認識你</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">👤 通通想認識你</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <p class="mb-3">請輸入你的名字，通通就可以專屬叫你喔！</p>
-                    <input id="namePromptInput" type="text" class="form-control" placeholder="例如：小明" autocomplete="off"
-                        autocapitalize="off" autocorrect="off" spellcheck="false">
+                    <input id="namePromptInput" type="text" class="form-control" placeholder="例如：小明">
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
-                    <button type="button" class="btn btn-primary btn-sm theme-submit-btn"
-                        id="namePromptSubmit">送出</button>
-                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="namePromptSubmit">送出</button></div>
             </div>
         </div>
     </div>
@@ -1526,31 +377,12 @@
     <div class="modal fade" id="titlePromptModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">👑 選一個專屬稱號</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">👑 選一個專屬稱號</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <p class="mb-3">挑一個你喜歡的稱號，通通之後就會這樣叫你喔！</p>
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="親愛的">親愛的</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="小寶貝">小寶貝</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="小太陽">小太陽</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="心上人">心上人</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="最棒的你">最棒的你</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="甜心">甜心</button>
-                        <button type="button" class="btn btn-outline-primary title-choice-btn"
-                            data-title="小可愛">小可愛</button>
+                        <button class="btn btn-outline-primary title-choice-btn" data-title="親愛的">親愛的</button>
+                        <button class="btn btn-outline-primary title-choice-btn" data-title="小可愛">小可愛</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
                 </div>
             </div>
         </div>
@@ -1560,18 +392,9 @@
     <div class="modal fade" id="sheepCountModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">🐑 想數幾隻羊呢？</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-3">輸入你想數的羊兒數量，通通陪你一起數！</p>
-                    <input id="sheepCountInput" type="number" class="form-control" placeholder="輸入數字 (例如：10)" min="1" max="100" autocomplete="off">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
-                    <button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="sheepCountSubmit">開始數羊</button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">🐑 想數幾隻羊呢？</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body"><input id="sheepCountInput" type="number" class="form-control" placeholder="10"></div>
+                <div class="modal-footer"><button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="sheepCountSubmit">開始</button></div>
             </div>
         </div>
     </div>
@@ -1580,108 +403,66 @@
     <div class="modal fade" id="natureSoundModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">🌲 想要聽什麼大自然的聲音？</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">🌲 大自然聲音</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
-                    <p class="mb-3">選擇一個喜歡的環境音，陪你放鬆入睡：</p>
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="rain" data-url="/static/audio/nature/rain_thunder1.mp3">🌧️ 森林微雨 (Rain)</button>
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="forest" data-url="/static/audio/nature/fall_morning_river.mp3">🍃 溪流鳥鳴 (Forest)</button>
-                        <button type="button" class="btn btn-outline-primary nature-choice-btn" data-sound="waves" data-url="/static/audio/nature/ocean_wave1.mp3">🌊 寧靜海浪 (Waves)</button>
+                        <button class="btn btn-outline-primary nature-choice-btn" data-sound="rain">🌧️ 森林微雨</button>
+                        <button class="btn btn-outline-primary nature-choice-btn" data-sound="forest">🍃 溪流鳥鳴</button>
+                        <button class="btn btn-outline-primary nature-choice-btn" data-sound="waves">🌊 寧靜海浪</button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Question Prompt Modal -->
+    <!-- Question Modal -->
     <div class="modal fade" id="questionPromptModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">❓ 問通通一個問題</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p class="mb-3">不管你問什麼，通通都會回答你！</p>
-                    <input id="questionPromptInput" type="text" class="form-control" placeholder="輸入你的問題..." autocomplete="off">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">先不要</button>
-                    <button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="questionPromptSubmit">問問看</button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">❓ 問個問題</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body"><input id="questionPromptInput" type="text" class="form-control" placeholder="輸入問題..."></div>
+                <div class="modal-footer"><button type="button" class="btn btn-primary btn-sm theme-submit-btn" id="questionPromptSubmit">問問看</button></div>
             </div>
         </div>
     </div>
 
-    <!-- Gomoku Game Modal -->
+    <!-- Gomoku Modal -->
     <div class="modal fade" id="gomokuModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content custom-modal-theme">
-                <div class="modal-header">
-                    <h5 class="modal-title">🎮 通通遊戲專區 - 五子棋</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+                <div class="modal-header"><h5 class="modal-title">🎮 五子棋</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body text-center">
-                    <div id="gomoku-info" class="mb-2 fw-bold">輪到：黑棋 (Black)</div>
-                    <canvas id="gomokuCanvas" width="400" height="400" style="background: #DEB887; border: 2px solid #8B4513; cursor: crosshair; max-width: 100%;"></canvas>
-                    <div class="mt-3">
-                        <button class="btn btn-secondary btn-sm" id="gomokuReset">重新開始</button>
-                    </div>
+                    <div id="gomoku-info" class="mb-2 fw-bold">輪到：黑棋</div>
+                    <canvas id="gomokuCanvas" width="400" height="400" style="background: #DEB887; border: 2px solid #8B4513; max-width: 100%;"></canvas>
+                    <div class="mt-3"><button class="btn btn-secondary btn-sm" id="gomokuReset">重新開始</button></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        // DOM Elements
         const chatContainer = document.getElementById('chat-container');
         const textInput = document.getElementById('text-input');
         const sendBtn = document.getElementById('send-btn');
         const micBtn = document.getElementById('mic-btn');
-        const stopBtn = document.getElementById('stop-btn');
         const inputArea = document.getElementById('input-area');
         const voiceSelect = document.getElementById('voice-select');
         const quickActions = document.getElementById('quick-actions');
         const modeDropdown = document.getElementById('mode-dropdown');
         const btnOriginal = document.getElementById('btn-original');
+        const gameDashboard = document.getElementById('game-dashboard');
+        const gameBtn = document.getElementById('game-zone-btn');
+        const controlsArea = document.getElementById('controls-area');
 
-        // 初始化語音選擇：優先從伺服器傳來的變數，次之從 localStorage
+        // State
+        let currentMode = '通通沒問題', currentAudio = null, nextAudioToPlay = null, isProcessing = false, abortController = null;
+        let rpsModal = null, namePromptModal = null, titlePromptModal = null, sheepCountModal = null, natureSoundModal = null, questionPromptModal = null, gomokuModal = null;
+
+        // Init Voice
         const serverVoice = "{{ current_voice }}";
-        if (serverVoice && serverVoice !== "None") {
-            voiceSelect.value = serverVoice;
-            localStorage.setItem('tongtong_voice', serverVoice);
-        } else {
-            const savedVoice = localStorage.getItem('tongtong_voice') || 'female';
-            voiceSelect.value = savedVoice;
-        }
-
-        voiceSelect.addEventListener('change', () => {
-            localStorage.setItem('tongtong_voice', voiceSelect.value);
-            // 當手動換聲音時，如果當前是歡迎語，可以考慮重新載入或直接套用
-        });
-
-        let currentMode = '通通沒問題';
-        let currentAudio = null;
-        let nextAudioToPlay = null; // for playing nature sounds after TTS
-        let isProcessing = false;
-        let abortController = null;
-        let highFiveOverlay = null;
-        let highFiveTimer = null;
-        let namePromptShownForMode = null;
-        let titlePromptModal = null;
-        let rpsRoundId = 0;
-        let rpsRevealTimer = null;
-        let rpsReplyTimer = null;
-        let sheepCountModal = null;
-        const sheepCountInput = document.getElementById('sheepCountInput');
-        const sheepCountSubmit = document.getElementById('sheepCountSubmit');
-
-        let natureSoundModal = null;
+        voiceSelect.value = (serverVoice && serverVoice !== "None") ? serverVoice : (localStorage.getItem('tongtong_voice') || 'female');
+        voiceSelect.onchange = () => localStorage.setItem('tongtong_voice', voiceSelect.value);
 
         const THEMES = {
             '通通沒問題': { primary: '#007bff', accent: '#333', bg: '#f8f9fa', nav: '#ffffff' },
@@ -1690,1180 +471,199 @@
             '屬於我': { primary: '#e91e63', accent: '#333', bg: '#fff0f5', nav: '#fff8fa' },
             '去睡覺': { primary: '#34495e', accent: '#333', bg: '#f0f4f8', nav: '#f8fafd' },
             '不知道': { primary: '#1abc9c', accent: '#333', bg: '#f0fff4', nav: '#f8fffb' },
-            '遊戲專區': { primary: '#2980b9', accent: '#333', bg: '#e3f2fd', nav: '#bbdefb' }
+            '遊戲專專': { primary: '#2980b9', accent: '#fff', bg: '#aed6f1', nav: '#85c1e9' }
         };
 
         const MODE_ACTIONS = {
-            '通通沒問題': ['你是誰？', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言', '查 台灣歷史'],
-            '好心情': ['講個笑話', '唱首歌', '給我鼓勵', '變個魔術', '猜拳', '跟我擊掌'],
-            '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '問吉時', '財運', '事業運', '愛情運', '今日建議'],
-            '屬於我': ['甜言蜜語', '親親', '抱抱', '土味情話', '專屬稱號', '修改稱呼'],
+            '通通沒問題': ['你是誰？', '台北天氣', '現在時間', '推薦好吃的', '說個勵志名言'],
+            '好心情': ['講個笑話', '唱首歌', '給我鼓勵', '猜拳', '跟我擊掌'],
+            '神算師': ['占卜運勢', '測幸運色', '算幸運數字', '今日建議'],
+            '屬於我': ['甜言米語', '親親', '抱抱', '專屬稱號', '修改稱呼'],
             '去睡覺': ['睡前故事', '數羊', '冥想引導', '大自然聲音', '晚安寄語'],
-            '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰', '神秘驚喜盒'],
+            '不知道': ['我要問問題', '不知道世界新聞', '冷知識大挑戰'],
             '遊戲專區': ['五子棋']
         };
-
-        let thinkingBubble = null;
-        let namePromptModal = null;
-        const namePromptInput = document.getElementById('namePromptInput');
-        const namePromptSubmit = document.getElementById('namePromptSubmit');
-        const titleChoiceButtons = document.querySelectorAll('.title-choice-btn');
-
-        let questionPromptModal = null;
-        const questionPromptInput = document.getElementById('questionPromptInput');
-        const questionPromptSubmit = document.getElementById('questionPromptSubmit');
-
-        function openQuestionPrompt() {
-            if (!questionPromptModal) {
-                questionPromptModal = new bootstrap.Modal(document.getElementById('questionPromptModal'));
-            }
-            questionPromptModal.show();
-            setTimeout(() => {
-                if (questionPromptInput) {
-                    questionPromptInput.value = '';
-                    questionPromptInput.focus();
-                }
-            }, 150);
-        }
-
-        function submitQuestionPrompt() {
-            const question = questionPromptInput ? questionPromptInput.value.trim() : '';
-            if (!question) return;
-
-            if (questionPromptModal) {
-                questionPromptModal.hide();
-            }
-
-            sendMessage(question, true);
-        }
-
-        if (questionPromptSubmit) questionPromptSubmit.onclick = submitQuestionPrompt;
-        if (questionPromptInput) {
-            questionPromptInput.onkeydown = (event) => {
-                if (event.key === 'Enter') {
-                    submitQuestionPrompt();
-                }
-            };
-        }
 
         function applyTheme(mode) {
             const theme = THEMES[mode] || THEMES['通通沒問題'];
             const root = document.documentElement;
             root.style.setProperty('--primary-color', theme.primary);
-            root.style.setProperty('--accent-color', theme.accent);
             root.style.setProperty('--bg-light', theme.bg);
             root.style.setProperty('--nav-bg', theme.nav);
-
-            // 動態更新所有彈出視窗的顏色
-            const modalContents = document.querySelectorAll('.custom-modal-theme');
-            modalContents.forEach(mc => {
+            document.querySelectorAll('.custom-modal-theme').forEach(mc => {
                 mc.style.borderColor = theme.primary;
-                const title = mc.querySelector('.modal-title');
-                if (title) {
-                    title.style.color = theme.primary;
-                    title.style.fontWeight = 'bold';
-                }
+                const t = mc.querySelector('.modal-title'); if(t) t.style.color = theme.primary;
             });
-
-            // 更新彈出視窗內的按鈕顏色
-            const submitBtns = document.querySelectorAll('.theme-submit-btn');
-            submitBtns.forEach(btn => {
-                btn.style.backgroundColor = theme.primary;
-                btn.style.border = 'none';
-            });
-
-            const choiceBtns = document.querySelectorAll('.title-choice-btn, .rps-choice-btn');
-            choiceBtns.forEach(btn => {
-                btn.style.borderColor = theme.primary;
-                btn.style.color = theme.primary;
-                btn.onmouseover = () => { btn.style.backgroundColor = theme.primary; btn.style.color = '#fff'; };
-                btn.onmouseout = () => { btn.style.backgroundColor = 'transparent'; btn.style.color = theme.primary; };
-            });
-        }
-
-        function setUILoading(loading) {
-            isProcessing = loading;
-            const elementsToDisable = [textInput, sendBtn, micBtn, modeDropdown, btnOriginal];
-
-            elementsToDisable.forEach(el => {
-                if (loading) {
-                    el.classList.add('opacity-50');
-                    el.style.pointerEvents = 'none';
-                } else {
-                    el.classList.remove('opacity-50');
-                    el.style.pointerEvents = 'auto';
-                }
-            });
-
-            if (loading) {
-                textInput.placeholder = "通通正在思考中...";
-                thinkingBubble = document.createElement('div');
-                thinkingBubble.className = 'message bot-message';
-                thinkingBubble.style.fontStyle = 'italic';
-                thinkingBubble.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2"></span>通通正在思考...';
-                chatContainer.appendChild(thinkingBubble);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            } else {
-                if (thinkingBubble) {
-                    thinkingBubble.remove();
-                    thinkingBubble = null;
-                }
-                updateUIForMode(currentMode);
-            }
-        }
-
-        function stopCurrentAudio() {
-            // Stop audio playback
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-                currentAudio = null;
-            }
-
-            // Cancel ongoing thinking (fetch request)
-            if (abortController) {
-                abortController.abort();
-                abortController = null;
-            }
-
-            // Clear thinking state
-            if (isProcessing) {
-                setUILoading(false);
-            }
+            document.querySelectorAll('.theme-submit-btn').forEach(b => b.style.backgroundColor = theme.primary);
         }
 
         function updateUIForMode(mode) {
             applyTheme(mode);
-
-            const gameBtn = document.getElementById('game-zone-btn');
-            const chatContainer = document.getElementById('chat-container');
-            const controlsArea = document.getElementById('controls-area');
-            const gameDashboard = document.getElementById('game-dashboard');
-
-            if (mode === '遊戲專區') {
-                gameBtn.style.display = 'none';
-                chatContainer.style.display = 'none';
-                controlsArea.style.display = 'none';
-                inputArea.style.display = 'none';
-                btnOriginal.classList.remove('active');
-                gameDashboard.style.display = 'flex';
-            } else {
-                gameBtn.style.display = 'flex';
-                chatContainer.style.display = 'flex';
-                controlsArea.style.display = 'block';
-                gameDashboard.style.display = 'none';
-
+            const isGame = mode === '遊戲專區';
+            gameBtn.style.display = isGame ? 'none' : 'flex';
+            chatContainer.style.display = isGame ? 'none' : 'flex';
+            controlsArea.style.display = isGame ? 'none' : 'block';
+            gameDashboard.style.display = isGame ? 'flex' : 'none';
+            
+            if (!isGame) {
                 if (mode === '通通沒問題') {
-                    inputArea.style.display = "flex";
-                    textInput.style.display = "block";
-                    sendBtn.style.display = "block";
-                    micBtn.style.display = "block";
-                    textInput.disabled = false;
-                    textInput.placeholder = "輸入你想查詢的內容...";
-                    sendBtn.disabled = false;
-                    micBtn.disabled = false;
-                    micBtn.style.opacity = "1";
-                    btnOriginal.classList.add('active');
-                    modeDropdown.selectedIndex = 0;
+                    inputArea.style.display = "flex"; textInput.style.display = "block"; sendBtn.style.display = "block"; micBtn.style.display = "block";
+                    btnOriginal.classList.add('active'); modeDropdown.selectedIndex = 0;
                 } else {
-                    inputArea.style.display = "none";
-                    btnOriginal.classList.remove('active');
-                }
-            }
-
-            if (mode !== '屬於我') {
-                namePromptShownForMode = null;
-                if (namePromptModal) {
-                    namePromptModal.hide();
-                }
-                if (titlePromptModal) {
-                    titlePromptModal.hide();
+                    inputArea.style.display = "none"; btnOriginal.classList.remove('active'); modeDropdown.value = mode;
                 }
             }
 
             quickActions.innerHTML = '';
-            const actions = MODE_ACTIONS[mode] || [];
-            actions.forEach(action => {
-                const btn = document.createElement('button');
-                btn.className = 'action-btn';
-                btn.innerText = action;
-                btn.addEventListener('click', () => {
+            (MODE_ACTIONS[mode] || []).forEach(action => {
+                const btn = document.createElement('button'); btn.className = 'action-btn'; btn.innerText = action;
+                btn.onclick = () => {
                     if (isProcessing) return;
-                    
-                    if (action === '猜拳') {
-                        stopCurrentAudio();
-                        openRPSGame();
-                    } else if (action === '修改稱呼') {
-                        openNamePrompt();
-                    } else if (action === '專屬稱號') {
-                        openTitlePrompt();
-                    } else if (action === '數羊') {
-                        openSheepCountPrompt();
-                    } else if (action === '大自然聲音') {
-                        openNatureSoundPrompt();
-                    } else if (action === '我要問問題') {
-                        openQuestionPrompt();
-                    } else if (action === '五子棋') {
-                        openGomokuGame();
-                    } else {
-                        sendMessage(action, true);
-                    }
-                });
+                    if (action === '猜拳') { stopCurrentAudio(); openRPSGame(); }
+                    else if (action === '修改稱呼') openNamePrompt();
+                    else if (action === '專屬稱號') openTitlePrompt();
+                    else if (action === '數羊') openSheepCountPrompt();
+                    else if (action === '大自然聲音') openNatureSoundPrompt();
+                    else if (action === '我要問問題') openQuestionPrompt();
+                    else if (action === '五子棋') openGomokuGame();
+                    else sendMessage(action, true);
+                };
                 quickActions.appendChild(btn);
             });
-
-            if (mode === '屬於我' && namePromptShownForMode !== mode) {
-                namePromptShownForMode = mode;
-                openNamePrompt();
-            }
         }
 
-        function openSheepCountPrompt() {
-            if (!sheepCountModal) {
-                sheepCountModal = new bootstrap.Modal(document.getElementById('sheepCountModal'));
+        // --- Audio ---
+        let audioCtx = null;
+        function getCtx() { if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); return audioCtx; }
+        function playAudioFromUrl(url) {
+            if(!url) return; stopCurrentAudio(); currentAudio = new Audio(url);
+            currentAudio.onended = () => { currentAudio = null; if(nextAudioToPlay) { let t=nextAudioToPlay; nextAudioToPlay=null; playAudioFromUrl(t); } };
+            currentAudio.play().catch(()=>{});
+        }
+        function stopCurrentAudio() { if(currentAudio){currentAudio.pause(); currentAudio.currentTime=0; currentAudio=null;} if(abortController) abortController.abort(); }
+
+        // --- Gomoku ---
+        let gomokuBoard = [], gomokuCurrentPlayer = 1, gomokuGameOver = false;
+        const gomokuGridSize = 15, gomokuCellSize = 25, gomokuPadding = 25;
+        function openGomokuGame() {
+            if(!gomokuModal) { 
+                gomokuModal = new bootstrap.Modal(document.getElementById('gomokuModal'));
+                document.getElementById('gomokuCanvas').onclick = handleGomokuClick;
+                document.getElementById('gomokuReset').onclick = initGomoku;
             }
-            sheepCountModal.show();
-            setTimeout(() => {
-                if (sheepCountInput) {
-                    sheepCountInput.value = '';
-                    sheepCountInput.focus();
+            gomokuModal.show(); initGomoku();
+        }
+        function initGomoku() {
+            gomokuBoard = Array(gomokuGridSize).fill().map(() => Array(gomokuGridSize).fill(0));
+            gomokuCurrentPlayer = 1; gomokuGameOver = false; updateGomokuInfo(); drawGomokuBoard();
+        }
+        function drawGomokuBoard() {
+            const canvas = document.getElementById('gomokuCanvas'), ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height); ctx.strokeStyle='#8B4513';
+            for(let i=0;i<gomokuGridSize;i++){
+                ctx.beginPath(); ctx.moveTo(gomokuPadding, gomokuPadding+i*gomokuCellSize); ctx.lineTo(gomokuPadding+(gomokuGridSize-1)*gomokuCellSize, gomokuPadding+i*gomokuCellSize); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(gomokuPadding+i*gomokuCellSize, gomokuPadding); ctx.lineTo(gomokuPadding+i*gomokuCellSize, gomokuPadding+(gomokuGridSize-1)*gomokuCellSize); ctx.stroke();
+            }
+            for(let y=0;y<gomokuGridSize;y++) for(let x=0;x<gomokuGridSize;x++) if(gomokuBoard[y][x]) drawGomokuPiece(ctx, x, y, gomokuBoard[y][x]);
+        }
+        function drawGomokuPiece(ctx, x, y, p) {
+            const px=gomokuPadding+x*gomokuCellSize, py=gomokuPadding+y*gomokuCellSize;
+            ctx.beginPath(); ctx.arc(px, py, gomokuCellSize*0.4, 0, Math.PI*2);
+            const g = ctx.createRadialGradient(px-2, py-2, 2, px, py, gomokuCellSize*0.4);
+            if(p===1){ g.addColorStop(0,'#666'); g.addColorStop(1,'#000'); } else { g.addColorStop(0,'#fff'); g.addColorStop(1,'#ddd'); }
+            ctx.fillStyle=g; ctx.fill(); ctx.strokeStyle=p===1?'#000':'#999'; ctx.stroke();
+        }
+        function handleGomokuClick(e) {
+            if(gomokuGameOver) return;
+            const canvas = document.getElementById('gomokuCanvas'), rect = canvas.getBoundingClientRect();
+            const x = Math.round((e.clientX - rect.left - gomokuPadding)/gomokuCellSize), y = Math.round((e.clientY - rect.top - gomokuPadding)/gomokuCellSize);
+            if(x>=0 && x<gomokuGridSize && y>=0 && y<gomokuGridSize && !gomokuBoard[y][x]) {
+                gomokuBoard[y][x] = gomokuCurrentPlayer; drawGomokuBoard(); playBeep(150, 40, 0.1);
+                if(checkWin(x,y)) {
+                    playWinMelody(); gomokuGameOver=true; const w = gomokuCurrentPlayer===1?"黑棋":"白棋";
+                    document.getElementById('gomoku-info').innerText = `🎉 ${w}獲勝！`;
+                    sendMessage(`[RESULT]遊戲結束，恭喜${w}獲勝！`, true); return;
                 }
-            }, 150);
-        }
-
-        function openNatureSoundPrompt() {
-            if (!natureSoundModal) {
-                natureSoundModal = new bootstrap.Modal(document.getElementById('natureSoundModal'));
+                gomokuCurrentPlayer = 3 - gomokuCurrentPlayer; updateGomokuInfo();
             }
-            natureSoundModal.show();
         }
-
-                document.querySelectorAll('.nature-choice-btn').forEach(btn => {
-            btn.onclick = () => {
-                const soundType = btn.getAttribute('data-sound');
-
-                if (natureSoundModal) {
-                    natureSoundModal.hide();
+        function updateGomokuInfo() { document.getElementById('gomoku-info').innerText = `輪到：${gomokuCurrentPlayer===1?"黑棋":"白棋"}`; }
+        function checkWin(x,y) {
+            const p = gomokuBoard[y][x], dirs = [[1,0],[0,1],[1,1],[1,-1]];
+            for(let [dx,dy] of dirs) {
+                let c = 1;
+                for(let s of [1,-1]) {
+                    let tx=x+dx*s, ty=y+dy*s;
+                    while(tx>=0 && tx<gomokuGridSize && ty>=0 && ty<gomokuGridSize && gomokuBoard[ty][tx]===p){ c++; tx+=dx*s; ty+=dy*s; }
                 }
-
-                stopCurrentAudio();
-
-                // 發送訊息到後端，獲取提示語 TTS 和設置下一個音檔
-                fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: `大自然${soundType}`,
-                        mode: currentMode,
-                        voice_type: voiceSelect.value
-                    })
-                }).then(response => response.json()).then(data => {
-                    if (data.reply) {
-                        const messageEl = addMessage('bot', data.reply);
-                        if (data.next_audio_url) {
-                            nextAudioToPlay = data.next_audio_url;
-                        }
-                        if (data.audio_url) {
-                            attachReplayButton(messageEl, data.audio_url);
-                            playAudioFromUrl(data.audio_url);
-                        }
-                    }
-                }).catch(err => {
-                    console.log('Nature sound fetch failed', err);
-                });
-            };
-        });
-
-        function submitSheepCount() {
-            const count = parseInt(sheepCountInput.value);
-            if (isNaN(count) || count < 1) {
-                alert("請輸入有效的數字喔！");
-                return;
+                if(c>=5) return true;
             }
-            if (count > 100) {
-                alert("數太多羊會太累喔，請輸入 100 以內的數字。");
-                return;
-            }
-
-            if (sheepCountModal) {
-                sheepCountModal.hide();
-            }
-
-            sendMessage(`數 ${count} 隻羊`, true);
+            return false;
         }
 
-        sheepCountSubmit.onclick = submitSheepCount;
-        sheepCountInput.onkeydown = (event) => {
-            if (event.key === 'Enter') {
-                submitSheepCount();
-            }
-        };
-
-        function openNamePrompt() {
-            if (!namePromptModal) {
-                namePromptModal = new bootstrap.Modal(document.getElementById('namePromptModal'));
-            }
-            namePromptModal.show();
-            setTimeout(() => {
-                if (namePromptInput) {
-                    namePromptInput.value = '';
-                    namePromptInput.focus();
-                }
-            }, 150);
+        // --- Synthetic Sounds ---
+        function playBeep(startF, endF, dur) {
+            const c = getCtx(), n = c.currentTime, o = c.createOscillator(), g = c.createGain();
+            o.type='sine'; o.frequency.setValueAtTime(startF, n); o.frequency.exponentialRampToValueAtTime(endF, n+dur);
+            g.gain.setValueAtTime(0.3, n); g.gain.exponentialRampToValueAtTime(0.01, n+dur);
+            o.connect(g); g.connect(c.destination); o.start(n); o.stop(n+dur+0.02);
         }
-
-        function submitNamePrompt() {
-            const name = namePromptInput ? namePromptInput.value.trim() : '';
-            if (!name) return;
-
-            if (namePromptModal) {
-                namePromptModal.hide();
-            }
-
-            sendSetName(name);
-        }
-
-        function openTitlePrompt() {
-            if (!titlePromptModal) {
-                titlePromptModal = new bootstrap.Modal(document.getElementById('titlePromptModal'));
-            }
-            titlePromptModal.show();
-        }
-
-        function sendSetName(name) {
-
-            fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: `[SET_NAME]${name}`,
-                    mode: currentMode,
-                    voice_type: voiceSelect.value
-                })
-            }).then(response => response.json()).then(data => {
-                if (data.reply) {
-                    const messageEl = addMessage('bot', data.reply);
-                    if (data.audio_url) {
-                        attachReplayButton(messageEl, data.audio_url);
-                        playAudioFromUrl(data.audio_url);
-                    }
-                }
-            }).catch(() => {
-                console.log('Name prompt fetch failed');
+        function playWinMelody() {
+            const c = getCtx(), n = c.currentTime;
+            [523, 659, 783, 1046].forEach((f, i) => {
+                const o = c.createOscillator(), g = c.createGain();
+                o.type='triangle'; o.frequency.setValueAtTime(f, n+i*0.1);
+                g.gain.setValueAtTime(0, n+i*0.1); g.gain.linearRampToValueAtTime(0.2, n+i*0.1+0.02); g.gain.exponentialRampToValueAtTime(0.01, n+i*0.1+0.3);
+                o.connect(g); g.connect(c.destination); o.start(n+i*0.1); o.stop(n+i*0.1+0.35);
             });
         }
 
-        function sendSetTitle(title) {
+        // --- Modals ---
+        function openRPSGame() { if(!rpsModal) rpsModal = new bootstrap.Modal(document.getElementById('rpsModal')); rpsModal.show(); }
+        function closeRPS() { if(rpsModal) rpsModal.hide(); }
+        function openNamePrompt() { if(!namePromptModal) namePromptModal = new bootstrap.Modal(document.getElementById('namePromptModal')); namePromptModal.show(); }
+        function openTitlePrompt() { if(!titlePromptModal) titlePromptModal = new bootstrap.Modal(document.getElementById('titlePromptModal')); titlePromptModal.show(); }
+        function openSheepCountPrompt() { if(!sheepCountModal) sheepCountModal = new bootstrap.Modal(document.getElementById('sheepCountModal')); sheepCountModal.show(); }
+        function openNatureSoundPrompt() { if(!natureSoundModal) natureSoundModal = new bootstrap.Modal(document.getElementById('natureSoundModal')); natureSoundModal.show(); }
+        function openQuestionPrompt() { if(!questionPromptModal) questionPromptModal = new bootstrap.Modal(document.getElementById('questionPromptModal')); questionPromptModal.show(); }
 
-            fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: `[SET_TITLE]${title}`,
-                    mode: currentMode,
-                    voice_type: voiceSelect.value
-                })
-            }).then(response => response.json()).then(data => {
-                if (data.reply) {
-                    const messageEl = addMessage('bot', data.reply);
-                    if (data.audio_url) {
-                        attachReplayButton(messageEl, data.audio_url);
-                        playAudioFromUrl(data.audio_url);
-                    }
-                }
-            }).catch(() => {
-                console.log('Title prompt fetch failed');
+        function setUILoading(l) {
+            isProcessing = l; [textInput, sendBtn, micBtn, modeDropdown, btnOriginal].forEach(el => {
+                if(l){ el.classList.add('opacity-50'); el.style.pointerEvents='none'; } else { el.classList.remove('opacity-50'); el.style.pointerEvents='auto'; }
             });
+            if(l){
+                const d = document.createElement('div'); d.id='thinking-bubble'; d.className='message bot-message';
+                d.innerHTML='<span class="spinner-grow spinner-grow-sm me-2"></span>通通正在思考...';
+                chatContainer.appendChild(d); chatContainer.scrollTop = chatContainer.scrollHeight;
+            } else { const tb = document.getElementById('thinking-bubble'); if(tb) tb.remove(); }
         }
 
-        titleChoiceButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const title = button.getAttribute('data-title');
-                if (!title) return;
-
-                if (titlePromptModal) {
-                    titlePromptModal.hide();
-                }
-
-                sendSetTitle(title);
-            });
-        });
-
-        function openIEQuizModal(questionText) {
-            const questionEl = document.getElementById('ieQuizQuestion');
-            if (questionEl) {
-                questionEl.innerText = questionText || '問你個問題，你是 I 人還是 E 人啊？';
-            }
-            if (!ieQuizModal) ieQuizModal = new bootstrap.Modal(document.getElementById('ieQuizModal'));
-            ieQuizModal.show();
+        async function sendMessage(t, isBtn=false) {
+            if(isProcessing) return; if(t.trim()) addMessage('user', t); setUILoading(true);
+            try {
+                abortController = new AbortController();
+                const r = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:t, mode:currentMode, voice_type:voiceSelect.value}), signal:abortController.signal });
+                const d = await r.json();
+                if(d.reply) { const m = addMessage('bot', d.reply); if(d.audio_url){ attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }
+            } catch(e) { if(e.name!=='AbortError') addMessage('bot', '連不上大腦囉...'); } finally { setUILoading(false); }
         }
 
-        function closeIEQuizModal() {
-            if (ieQuizModal) ieQuizModal.hide();
+        function addMessage(s, t) {
+            const d = document.createElement('div'); d.className=`message ${s}-message`; d.innerText=t;
+            chatContainer.appendChild(d); chatContainer.scrollTop = chatContainer.scrollHeight; return d;
+        }
+        function attachReplayButton(el, url) {
+            const b = document.createElement('button'); b.className='replay-audio-btn'; b.innerText='🔊';
+            b.onclick = () => playAudioFromUrl(url); el.appendChild(b);
         }
 
-        document.querySelectorAll('.ie-choice-btn').forEach(button => {
-            button.addEventListener('click', () => {
-                const answer = button.getAttribute('data-answer');
-                if (!answer) return;
-                closeIEQuizModal();
-                sendMessage(answer, true);
-            });
-        });
-
-        // RPS Game Logic
-        let rpsModal;
-        function openRPSGame() {
-            if (!rpsModal) rpsModal = new bootstrap.Modal(document.getElementById('rpsModal'));
-            document.getElementById('rps-status').innerText = "通通準備好了，你呢？😏";
-            document.getElementById('rps-result').style.display = "none";
-            rpsModal.show();
-        }
-
-        function closeRPS() {
-            if (rpsModal) rpsModal.hide();
-        }
-
-        function clearRpsTimers() {
-            if (rpsRevealTimer) {
-                clearTimeout(rpsRevealTimer);
-                rpsRevealTimer = null;
-            }
-            if (rpsReplyTimer) {
-                clearTimeout(rpsReplyTimer);
-                rpsReplyTimer = null;
-            }
-        }
-
-        let rpsAudioContext = null;
-
-        function ensureRpsAudioContext() {
-            if (!rpsAudioContext) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (!AudioContextClass) return null;
-                rpsAudioContext = new AudioContextClass();
-            }
-            if (rpsAudioContext.state === 'suspended') {
-                rpsAudioContext.resume().catch(() => { });
-            }
-            return rpsAudioContext;
-        }
-
-        function playRpsTone(type) {
-            const ctx = ensureRpsAudioContext();
-            if (!ctx) return;
-
-            const now = ctx.currentTime;
-
-            const makeBeep = (startTime, frequency, duration, volume, typeName = 'sine', gainCurve = 'exponential') => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = typeName;
-                osc.frequency.setValueAtTime(frequency, startTime);
-                gain.gain.setValueAtTime(0.0001, startTime);
-                gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start(startTime);
-                osc.stop(startTime + duration + 0.02);
-            };
-
-            if (type === 'win') {
-                makeBeep(now, 523.25, 0.10, 0.16, 'triangle');
-                makeBeep(now + 0.10, 659.25, 0.10, 0.18, 'triangle');
-                makeBeep(now + 0.20, 783.99, 0.12, 0.20, 'sine');
-                makeBeep(now + 0.33, 1046.5, 0.14, 0.22, 'sine');
-            } else if (type === 'lose') {
-                makeBeep(now, 220, 0.18, 0.15, 'sawtooth');
-                makeBeep(now + 0.20, 174.61, 0.20, 0.13, 'triangle');
-                makeBeep(now + 0.43, 130.81, 0.28, 0.10, 'triangle');
-            } else {
-                makeBeep(now, 523.25, 0.10, 0.16, 'triangle');
-                makeBeep(now + 0.12, 659.25, 0.10, 0.18, 'triangle');
-                makeBeep(now + 0.24, 523.25, 0.12, 0.16, 'sine');
-            }
-        }
-
-        function clearHighFiveAnimation() {
-            if (highFiveTimer) {
-                clearTimeout(highFiveTimer);
-                highFiveTimer = null;
-            }
-            if (highFiveOverlay) {
-                highFiveOverlay.remove();
-                highFiveOverlay = null;
-            }
-        }
-
-        function playAudioFromUrl(audioUrl) {
-            if (!audioUrl) return null;
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio.currentTime = 0;
-            }
-            currentAudio = new Audio(audioUrl);
-            currentAudio.onended = () => {
-                currentAudio = null;
-                if (nextAudioToPlay) {
-                    const tmp = nextAudioToPlay;
-                    nextAudioToPlay = null;
-                    playAudioFromUrl(tmp);
-                }
-            };
-            currentAudio.onerror = () => {
-                currentAudio = null;
-            };
-            currentAudio.play().catch(() => {
-                currentAudio = null;
-            });
-            return currentAudio;
-        }
-
-        function attachReplayButton(messageEl, audioUrl) {
-            if (!messageEl || !audioUrl) return;
-
-            const replayBtn = document.createElement('button');
-            replayBtn.type = 'button';
-            replayBtn.className = 'replay-audio-btn';
-            replayBtn.title = '重播語音';
-            replayBtn.innerText = '🔊';
-            replayBtn.onclick = (event) => {
-                event.stopPropagation();
-                playAudioFromUrl(audioUrl);
-            };
-
-            messageEl.appendChild(replayBtn);
-        }
-
-        function playHighFiveSound() {
-            const ctx = ensureRpsAudioContext();
-            if (!ctx) return;
-
-            const now = ctx.currentTime;
-
-            const makeClap = (startTime, volume) => {
-                const duration = 0.16;
-                const bufferSize = Math.floor(ctx.sampleRate * duration);
-                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-                const data = buffer.getChannelData(0);
-
-                for (let i = 0; i < bufferSize; i++) {
-                    const decay = Math.pow(1 - i / bufferSize, 2.5);
-                    data[i] = (Math.random() * 2 - 1) * decay;
-                }
-
-                const source = ctx.createBufferSource();
-                const bandPass = ctx.createBiquadFilter();
-                const gain = ctx.createGain();
-
-                source.buffer = buffer;
-                bandPass.type = 'bandpass';
-                bandPass.frequency.setValueAtTime(1800, startTime);
-                bandPass.Q.setValueAtTime(0.9, startTime);
-                gain.gain.setValueAtTime(0.0001, startTime);
-                gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.01);
-                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-
-                source.connect(bandPass);
-                bandPass.connect(gain);
-                gain.connect(ctx.destination);
-                source.start(startTime);
-                source.stop(startTime + duration + 0.02);
-            };
-
-            makeClap(now, 0.22);
-            makeClap(now + 0.10, 0.16);
-        }
-
-        // 合成親親音效（內建回退）
-        function playKissSynth() {
-            const ctx = ensureRpsAudioContext();
-            if (!ctx) return;
-
-            const now = ctx.currentTime;
-
-            // 1. 模擬「啾」開頭的摩擦聲 (高頻帶通噪音)
-            const noiseDuration = 0.06;
-            const noiseBuffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * noiseDuration), ctx.sampleRate);
-            const noiseData = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < noiseData.length; i++) {
-                noiseData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / noiseData.length, 3);
-            }
-            const noiseSource = ctx.createBufferSource();
-            noiseSource.buffer = noiseBuffer;
-
-            const noiseFilter = ctx.createBiquadFilter();
-            noiseFilter.type = 'bandpass';
-            noiseFilter.frequency.setValueAtTime(4000, now);
-            noiseFilter.Q.setValueAtTime(2, now);
-
-            const noiseGain = ctx.createGain();
-            noiseGain.gain.setValueAtTime(0.25, now);
-            noiseGain.gain.exponentialRampToValueAtTime(0.01, now + noiseDuration);
-
-            noiseSource.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(ctx.destination);
-
-            // 2. 模擬「啾」結尾的圓潤音 (正弦波掃頻)
-            const osc = ctx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(1000, now);
-            osc.frequency.exponentialRampToValueAtTime(500, now + 0.08);
-            osc.frequency.exponentialRampToValueAtTime(300, now + 0.15);
-
-            const oscGain = ctx.createGain();
-            oscGain.gain.setValueAtTime(0.001, now);
-            oscGain.gain.exponentialRampToValueAtTime(0.4, now + 0.03);
-            oscGain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-            osc.connect(oscGain);
-            oscGain.connect(ctx.destination);
-
-            noiseSource.start(now);
-            osc.start(now + 0.01);
-            osc.stop(now + 0.2);
-        }
-
-        // 嘗試播放真實親親音檔，找不到時回退到合成音效
-        function playKissSound() {
-            const candidates = ['/static/audio/kiss.mp3', '/static/audio/kiss.wav', '/static/audio/kiss.ogg'];
-
-            const tryPlay = (i) => {
-                if (i >= candidates.length) {
-                    // 回退到合成音效
-                    try { playKissSynth(); } catch (e) { console.warn('kiss synth failed', e); }
-                    return;
-                }
-                const path = candidates[i];
-                const audio = new Audio(path);
-                audio.volume = 0.92;
-                // 嘗試播放，失敗則嘗試下一個
-                audio.play().then(() => {
-                    // 成功播放
-                }).catch(() => {
-                    tryPlay(i + 1);
-                });
-            };
-
-            tryPlay(0);
-        }
-
-        // 溫馨的抱抱音效（兩個柔和振盪器 + 低通濾波）
-        function playHugSound() {
-            const ctx = ensureRpsAudioContext();
-            if (!ctx) return;
-
-            const now = ctx.currentTime;
-            const dur = 0.9;
-
-            const o1 = ctx.createOscillator();
-            const o2 = ctx.createOscillator();
-            const gain = ctx.createGain();
-            const lp = ctx.createBiquadFilter();
-
-            o1.type = 'sine';
-            o2.type = 'sine';
-            o1.frequency.setValueAtTime(440, now);
-            o2.frequency.setValueAtTime(660, now);
-            o2.detune.setValueAtTime(8, now);
-
-            lp.type = 'lowpass';
-            lp.frequency.setValueAtTime(1400, now);
-
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(0.16, now + 0.06);
-            gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
-
-            o1.connect(lp);
-            o2.connect(lp);
-            lp.connect(gain);
-            gain.connect(ctx.destination);
-
-            o1.start(now);
-            o2.start(now + 0.02);
-            o1.stop(now + dur + 0.02);
-            o2.stop(now + dur + 0.02);
-        }
-
-        function clearAffectionAnimation() {
-            if (window.affectionTimer) {
-                clearTimeout(window.affectionTimer);
-                window.affectionTimer = null;
-            }
-            if (window.affectionOverlay) {
-                window.affectionOverlay.remove();
-                window.affectionOverlay = null;
-            }
-        }
-
-        function showAffectionAnimation(kind) {
-            clearAffectionAnimation();
-
-            const isKiss = kind === 'kiss';
-            const overlay = document.createElement('div');
-            overlay.className = 'affection-overlay';
-            overlay.innerHTML = isKiss ? `
-                <div class="affection-card">
-                    <div class="affection-title">親親模式啟動</div>
-                    <div class="emoji-stage">
-                        <div class="bg-heart one">❤️</div>
-                        <div class="bg-heart two">❤️</div>
-                        <div class="bg-heart three">❤️</div>
-                        <div class="bg-heart four">❤️</div>
-                        <div class="emoji-face left kiss-left">
-                            <span>😘</span>
-                        </div>
-                        <div class="emoji-face right kiss-right">
-                            <span>😘</span>
-                        </div>
-                        <div class="floating float-heart one">❤</div>
-                        <div class="floating float-heart two">❤</div>
-                        <div class="floating float-heart three">❤</div>
-                        <div class="floating float-heart four">❤</div>
-                        <div class="floating float-heart five">❤</div>
-                        <div class="floating float-lip one">💋</div>
-                        <div class="floating float-lip two">💋</div>
-                        <div class="floating float-lip three">💋</div>
-                    </div>
-                    <div class="affection-text">啾一下，甜甜的心意送給你！</div>
-                </div>
-            ` : `
-                <div class="affection-card">
-                    <div class="affection-title">抱抱模式啟動</div>
-                    <div class="emoji-stage">
-                        <div class="bg-heart one">❤️</div>
-                        <div class="bg-heart two">❤️</div>
-                        <div class="bg-heart three">❤️</div>
-                        <div class="bg-heart four">❤️</div>
-                        <div class="emoji-face left hug-left">
-                            <span>🤗</span>
-                        </div>
-                        <div class="emoji-face right hug-right">
-                            <span>🤗</span>
-                        </div>
-                        <div class="floating float-heart one">❤</div>
-                        <div class="floating float-heart two">❤</div>
-                        <div class="floating float-heart three">❤</div>
-                        <div class="floating float-heart four">❤</div>
-                        <div class="floating float-heart five">❤</div>
-                        <div class="floating float-lip one">❤️</div>
-                        <div class="floating float-lip two">❤️</div>
-                        <div class="floating float-lip three">❤️</div>
-                    </div>
-                    <div class="affection-text">來一個大大抱抱，暖暖抱緊你！</div>
-                </div>
-            `;
-
-            document.body.appendChild(overlay);
-            window.affectionOverlay = overlay;
-            window.affectionTimer = setTimeout(() => {
-                if (window.affectionOverlay !== overlay) return;
-                overlay.remove();
-                window.affectionOverlay = null;
-                window.affectionTimer = null;
-            }, 1550);
-        }
-
-        function handleAffectionAction(kind, speechText, displayText) {
-            stopCurrentAudio();
-            showAffectionAnimation(kind);
-            if (kind === 'kiss') {
-                // 同步播放合成親親音效
-                try { playKissSound(); } catch (e) { console.warn('kiss sound failed', e); }
-            } else if (kind === 'hug') {
-                // 播放溫馨抱抱音效
-                try { playHugSound(); } catch (e) { console.warn('hug sound failed', e); }
-            }
-
-            const messageEl = addMessage('bot', displayText);
-
-            fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: `[RESULT]${speechText}`,
-                    mode: currentMode,
-                    voice_type: voiceSelect.value
-                })
-            }).then(response => response.json()).then(data => {
-                if (data.audio_url) {
-                    attachReplayButton(messageEl, data.audio_url);
-                    playAudioFromUrl(data.audio_url);
-                }
-            }).catch(() => {
-                console.log('Affection voice fetch failed');
-            });
-        }
-
-        function handleKiss() {
-            handleAffectionAction('kiss', '啾一下送給你，今天也要甜甜的。', '啾一下送給你，今天也要甜甜的。');
-        }
-
-        function handleHug() {
-            handleAffectionAction('hug', '來，給你一個大大抱抱。', '來，給你一個大大抱抱。');
-        }
-
-        function triggerHighFiveCelebration() {
-            clearHighFiveAnimation();
-            ensureRpsAudioContext();
-            playHighFiveSound();
-
-            const overlay = document.createElement('div');
-            overlay.className = 'highfive-overlay';
-            overlay.innerHTML = `
-                <div class="highfive-card">
-                    <div class="highfive-hand left">✋</div>
-                    <div class="highfive-hand right">🖐️</div>
-                    <div class="highfive-burst">💥</div>
-                    <div class="highfive-sparkle one">✨</div>
-                    <div class="highfive-sparkle two">✨</div>
-                    <div class="highfive-sparkle three">🤝</div>
-                    <div class="highfive-text">啪！擊掌成功！🤝💖</div>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            highFiveOverlay = overlay;
-
-            highFiveTimer = setTimeout(() => {
-                if (highFiveOverlay !== overlay) return;
-                overlay.remove();
-                highFiveOverlay = null;
-                highFiveTimer = null;
-            }, 1350);
-        }
-
-        function handleHighFive() {
-            stopCurrentAudio();
-            triggerHighFiveCelebration();
-            const highFiveSpeech = '合作愉快，我們是最棒的夥伴！';
-            const messageEl = addMessage('bot', `啪！✋✨ ${highFiveSpeech} 🤝💖`);
-
-            fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    message: `[RESULT]${highFiveSpeech}`,
-                    mode: currentMode,
-                    voice_type: voiceSelect.value
-                })
-            }).then(response => response.json()).then(data => {
-                if (data.audio_url) {
-                    attachReplayButton(messageEl, data.audio_url);
-                    playAudioFromUrl(data.audio_url);
-                }
-            }).catch(() => {
-                console.log('High five voice fetch failed');
-            });
-        }
-
-        function playRPS(userChoice) {
-            const roundId = ++rpsRoundId;
-            stopCurrentAudio();
-            clearRpsTimers();
-
-            const choices = ['✊', '✌️', '🖐️'];
-            const resultDiv = document.getElementById('rps-result');
-            const statusP = document.getElementById('rps-status');
-
-            ensureRpsAudioContext();
-
-            // First show "我出 ?" to build suspense
-            statusP.innerText = `你出 ${userChoice}，我出 ?`;
-            resultDiv.style.display = "none";
-
-            // After a short delay, reveal the bot's choice
-            rpsRevealTimer = setTimeout(() => {
-                if (roundId !== rpsRoundId) return;
-                rpsRevealTimer = null;
-                const botChoice = choices[Math.floor(Math.random() * choices.length)];
-
-                let outcome = "";
-                let colorClass = "";
-                let speechResult = "";
-                let voiceText = ""; // Text for voice synthesis (with emoji converted to Chinese)
-
-                // Emoji to Chinese mapping for voice
-                const emojiToChinese = {
-                    '✊': '石頭',
-                    '✌️': '剪刀',
-                    '🖐️': '布'
-                };
-
-                if (userChoice === botChoice) {
-                    outcome = "平手！😮";
-                    speechResult = `我們都出 ${userChoice}，是平手耶！再玩一次嘛！`;
-                    voiceText = `我們都出 ${emojiToChinese[userChoice]}，是平手耶！再玩一次嘛！`;
-                    colorClass = "text-warning";
-                    playRpsTone('tie');
-                } else if (
-                    (userChoice === '✊' && botChoice === '✌️') ||
-                    (userChoice === '✌️' && botChoice === '🖐️') ||
-                    (userChoice === '🖐️' && botChoice === '✊')
-                ) {
-                    outcome = "你贏了！🎉✨";
-                    speechResult = `嗚嗚，你出 ${userChoice}，我出 ${botChoice}。恭喜你贏過通通了！你太厲害啦！`;
-                    voiceText = `嗚嗚，你出 ${emojiToChinese[userChoice]}，我出 ${emojiToChinese[botChoice]}。恭喜你贏過通通了！你太厲害啦！`;
-                    colorClass = "text-success";
-                    playRpsTone('win');
-                } else {
-                    outcome = "通通贏了！😜💖";
-                    speechResult = `嘿嘿！你出 ${userChoice}，我出 ${botChoice}。這局是通通贏囉！承讓承讓！`;
-                    voiceText = `嘿嘿！你出 ${emojiToChinese[userChoice]}，我出 ${emojiToChinese[botChoice]}。這局是通通贏囉！承讓承讓！`;
-                    colorClass = "text-danger";
-                    playRpsTone('lose');
-                }
-
-                statusP.innerText = `你出 ${userChoice}，我出 ${botChoice}`;
-                resultDiv.innerText = outcome;
-                resultDiv.style.display = "block";
-                resultDiv.className = "mt-4 h3 fw-bold " + colorClass;
-
-                // Log to chat and Speak after a short delay
-                rpsReplyTimer = setTimeout(() => {
-                    if (roundId !== rpsRoundId) return;
-                    rpsReplyTimer = null;
-                    closeRPS();
-                    // Add bot's response directly to chat without [RESULT] prefix
-                    const messageEl = addMessage('bot', speechResult);
-                    // Play voice if available - send voiceText for speech synthesis
-                    fetch('/api/chat', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            message: `[RESULT]${voiceText}`,
-                            mode: currentMode,
-                            voice_type: voiceSelect.value
-                        })
-                    }).then(response => response.json()).then(data => {
-                        if (roundId !== rpsRoundId) return;
-                        if (data.audio_url) {
-                            attachReplayButton(messageEl, data.audio_url);
-                            playAudioFromUrl(data.audio_url);
-                        }
-                    }).catch(e => {
-                        console.log("Voice fetch failed");
-                    });
-                }, 1500);
-            }, 700);
-        }
-
-        function switchToOriginal() {
-            if (isProcessing) return;
-            window.location.href = "/?mode=" + encodeURIComponent("通通沒問題") + "&voice=" + encodeURIComponent(voiceSelect.value);
-        }
-
-        function switchToPersonality() {
-            if (isProcessing) return;
-            const selectedMode = modeDropdown.value;
-            if (selectedMode) {
-                window.location.href = "/?mode=" + encodeURIComponent(selectedMode) + "&voice=" + encodeURIComponent(voiceSelect.value);
-            }
-        }
-
-        function switchToGameZone() {
-            if (isProcessing) return;
-            window.location.href = "/?mode=" + encodeURIComponent("遊戲專區") + "&voice=" + encodeURIComponent(voiceSelect.value);
-        }
+        function switchToOriginal() { window.location.href = "/?mode=通通沒問題&voice=" + voiceSelect.value; }
+        function switchToPersonality() { window.location.href = "/?mode=" + modeDropdown.value + "&voice=" + voiceSelect.value; }
+        function switchToGameZone() { window.location.href = "/?mode=遊戲專區&voice=" + voiceSelect.value; }
 
         currentMode = "{{ current_mode }}" || '通通沒問題';
         updateUIForMode(currentMode);
-
-        // 只有「通通沒問題」和「遊戲專區」時，下拉選單顯示預設的「✨ 性格模式」
-        // 其他模式（如好心情、神算師等）則顯示該模式名稱
-        if (currentMode === '通通沒問題' || currentMode === '遊戲專區') {
-            modeDropdown.selectedIndex = 0;
-        } else {
-            modeDropdown.value = currentMode;
-        }
-
-        namePromptSubmit.onclick = submitNamePrompt;
-        if (namePromptInput) {
-            namePromptInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    submitNamePrompt();
-                }
-            });
-        }
-
-        const preloadedMsg = "{{ initial_message }}";
-        const preloadedAudio = "{{ initial_audio }}";
-
-        if (preloadedMsg && preloadedMsg !== "None") {
-            const preloadedMessageEl = addMessage('bot', preloadedMsg);
-            if (preloadedAudio && preloadedAudio !== "None") {
-                attachReplayButton(preloadedMessageEl, preloadedAudio);
-                currentAudio = new Audio(preloadedAudio);
-                currentAudio.play().catch(e => console.log("Autoplay waiting for interaction"));
-            }
-        }
-
-        let recognition;
-        if ('webkitSpeechRecognition' in window) {
-            recognition = new webkitSpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'zh-TW';
-            recognition.onstart = () => {
-                stopCurrentAudio();
-                micBtn.classList.add('recording');
-            };
-            recognition.onresult = (event) => sendMessage(event.results[0][0].transcript);
-            recognition.onerror = () => micBtn.classList.remove('recording');
-            recognition.onend = () => micBtn.classList.remove('recording');
-        }
-
-        micBtn.onclick = () => {
-            if (isProcessing || currentMode !== '通通沒問題') return;
-            if (micBtn.classList.contains('recording')) recognition.stop();
-            else recognition.start();
-        };
-
-        sendBtn.onclick = () => {
-            if (isProcessing) return;
-            const text = textInput.value;
-            if (text.trim()) { sendMessage(text); textInput.value = ''; }
-        };
-
-        textInput.onkeydown = (event) => {
-            if (event.key === 'Enter' && !isProcessing) {
-                sendBtn.click();
-                event.preventDefault();
-            }
-        };
-
-        async function sendMessage(text, isButtonClick = false) {
-            if (isProcessing) return;
-            if (!isButtonClick && currentMode !== '通通沒問題') return;
-
-            stopCurrentAudio();
-
-            if (currentMode === '好心情') {
-                const normalizedInput = text.trim();
-                if (normalizedInput === '擊掌' || normalizedInput === '跟我擊掌' || normalizedInput.includes('擊掌')) {
-                    handleHighFive();
-                    return;
-                }
-            }
-
-            if (currentMode === '屬於我') {
-                const normalizedInput = text.trim();
-                if (normalizedInput === '親親' || normalizedInput.includes('親親')) {
-                    handleKiss();
-                    return;
-                }
-                if (normalizedInput === '抱抱' || normalizedInput.includes('抱抱')) {
-                    handleHug();
-                    return;
-                }
-            }
-
-            if (text.trim()) addMessage('user', text);
-
-            // Check if user input is a rock-paper-scissors choice in good mood mode
-            if (currentMode === '好心情') {
-                const rpsMap = {
-                    '石頭': '✊',
-                    'stone': '✊',
-                    '✊': '✊',
-                    '剪刀': '✌️',
-                    'scissors': '✌️',
-                    '✌️': '✌️',
-                    '布': '🖐️',
-                    'paper': '🖐️',
-                    '🖐️': '🖐️'
-                };
-
-                const normalizedInput = text.trim();
-
-                // Check direct match
-                if (rpsMap[normalizedInput]) {
-                    playRPS(rpsMap[normalizedInput]);
-                    return;
-                }
-
-                // Check "我出 X" format
-                const myChoiceMatch = normalizedInput.match(/我出\s*([✊✌️🖐️石頭剪刀布])/);
-                if (myChoiceMatch) {
-                    const choice = myChoiceMatch[1];
-                    if (rpsMap[choice]) {
-                        playRPS(rpsMap[choice]);
-                        return;
-                    }
-                }
-            }
-
-            setUILoading(true);
-
-            try {
-                // Create new abort controller for this request
-                abortController = new AbortController();
-
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        message: text,
-                        mode: currentMode,
-                        voice_type: voiceSelect.value
-                    }),
-                    signal: abortController.signal
-                });
-
-                const data = await response.json();
-                if (data.reply) {
-                    const messageEl = addMessage('bot', data.reply);
-                    if (data.audio_url) {
-                        attachReplayButton(messageEl, data.audio_url);
-                        playAudioFromUrl(data.audio_url);
-                    }
-                }
-            } catch (error) {
-                // Only show error if it's not an abort (user cancellation)
-                if (error.name !== 'AbortError' && text.trim()) {
-                    addMessage('bot', '連不上大腦囉...');
-                }
-            } finally {
-                setUILoading(false);
-            }
-        }
-
-        function addMessage(sender, text) {
-            const div = document.createElement('div');
-            div.className = `message ${sender}-message`;
-            if (sender === 'bot') {
-                const content = document.createElement('span');
-                content.className = 'message-content';
-                const disclaimerText = '※ 以上僅供娛樂參考，請理性看待喔！';
-                const disclaimerIndex = text.indexOf(disclaimerText);
-
-                if (disclaimerIndex !== -1) {
-                    const mainText = text.slice(0, disclaimerIndex).trimEnd();
-                    const disclaimer = text.slice(disclaimerIndex);
-
-                    content.innerText = mainText;
-
-                    const disclaimerSpan = document.createElement('span');
-                    disclaimerSpan.className = 'message-disclaimer';
-                    disclaimerSpan.innerText = disclaimer;
-                    content.appendChild(disclaimerSpan);
-                } else {
-                    content.innerText = text;
-                }
-                div.appendChild(content);
-            } else {
-                div.innerText = text;
-            }
-            chatContainer.appendChild(div);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            return div;
-        }
-
         setInterval(() => fetch('/api/cleanup', { method: 'POST' }), 600000);
     </script>
 </body>
-
 </html>
-
-
