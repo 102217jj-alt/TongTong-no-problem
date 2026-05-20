@@ -14,14 +14,6 @@ VOICE_PROFILES = {
     "sunny":  {"voice": "zh-TW-YunJheNeural",    "rate": "+20%", "pitch": "+10Hz"}  # 陽光男孩：大幅調高、變快，聽起來像熱血少年
 }
 
-# 跨區備案 (香港語音) 也要拉開差距
-BACKUP_PROFILES = {
-    "female": {"voice": "zh-HK-HiuMaanNeural", "rate": "+0%", "pitch": "+0Hz"},
-    "male":   {"voice": "zh-HK-WanLungNeural",  "rate": "-5%", "pitch": "-5Hz"},
-    "loli":   {"voice": "zh-HK-HiuGaaiNeural",  "rate": "+20%", "pitch": "+10Hz"},
-    "sister": {"voice": "zh-HK-HiuMaanNeural", "rate": "-12%", "pitch": "-5Hz"},
-    "sunny":  {"voice": "zh-HK-WanLungNeural",  "rate": "+15%", "pitch": "+8Hz"}
-}
 
 if sys.platform == 'win32':
     try:
@@ -67,23 +59,7 @@ def generate_bot_audio(text, voice_type="female"):
         finally:
             loop.close()
     except Exception:
-        print("[VOICE] L1 (TW) Failed. Trying L2 (HK Backup)...")
-
-    # --- Level 2: 香港高品質備案 ---
-    try:
-        profile = BACKUP_PROFILES[voice_key]
-        print(f"[VOICE] L2 Trying HK Backup: {profile['voice']}")
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            loop.run_until_complete(_edge_speak(text, profile, filepath))
-            if os.path.exists(filepath) and os.path.getsize(filepath) > 0:
-                print("[VOICE] L2 Success!")
-                return f"/static/audio/{filename}"
-        finally:
-            loop.close()
-    except Exception:
-        print("[VOICE] L2 Failed. Using L3 Offline...")
+        print("[VOICE] L1 (TW) Failed. Falling back to offline (L3)...")
 
     # --- Level 3: 離線語音模擬 ---
     try:
