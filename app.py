@@ -6,6 +6,7 @@ import time
 from dotenv import load_dotenv
 from tongtong.brain import TongTongBrain
 from tongtong.voice import generate_bot_audio
+from gtts import gTTS
 from tongtong.text_utils import bot_speak_re, bot_clean_text
 
 # Load environment variables from .env file
@@ -33,14 +34,15 @@ def index():
     return render_template('index.html', 
                            initial_message=display_text, 
                            initial_audio=audio_url,
-                           current_mode=mode)
+                           current_mode=mode,
+                           current_voice=voice_type)
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
     data = request.json
     user_input = data.get('message', '').strip()
     voice_type = data.get('voice_type', 'female') # 'female' or 'male'
-    mode = data.get('mode', '好心情')
+    mode = data.get('mode', '通通沒問題')
 
     # If mode changed, return the welcome message for the new mode
     if mode != brain.mode:
@@ -93,6 +95,62 @@ def chat():
         result['next_audio_url'] = next_audio_url
     
     return jsonify(result)
+
+
+@app.route('/api/tts_preview', methods=['POST'])
+def tts_preview():
+    """Generate TTS for a given text and voice_type (used for preview on voice change)."""
+    data = request.json or {}
+    text = data.get('text', '').strip()
+    voice_type = data.get('voice_type', 'female')
+    if not text:
+        return jsonify({'status': 'error', 'message': 'no text provided'}), 400
+
+    print(f"[tts_preview] received text len={len(text)} voice_type={voice_type}")
+    try:
+        cleaned_text = bot_speak_re(text)
+        print(f"[tts_preview] cleaned_text='{cleaned_text}'")
+        if not cleaned_text:
+            cleaned_text = text
+            print("[tts_preview] cleaned_text empty, falling back to original text")
+
+        # Use gTTS directly for quick, reliable preview generation (avoids edge-tts failures)
+        import uuid
+        file_id = str(uuid.uuid4())
+        filename = f"voice_{file_id}.mp3"
+        filepath = os.path.join('static', 'audio', filename)
+        try:
+            import io
+            tts = gTTS(text=cleaned_text, lang='zh-TW')
+            buf = io.BytesIO()
+            tts.write_to_fp(buf)
+            buf.seek(0)
+            with open(filepath, 'wb') as f:
+                f.write(buf.read())
+            audio_url = f"/static/audio/{filename}"
+            print(f"[tts_preview] generated via gTTS -> {audio_url}")
+            return jsonify({'audio_url': audio_url})
+        except Exception as ge:
+            print(f"[tts_preview] gTTS write_to_fp error: {ge}")
+            # fallback to shared generator
+            audio_url = generate_bot_audio(cleaned_text, voice_type)
+            print(f"[tts_preview] fallback generate_bot_audio -> {audio_url}")
+            return jsonify({'audio_url': audio_url})
+    except Exception as e:
+        print(f"[tts_preview] exception: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/games')
+def games_index():
+    """Render the games index page."""
+    return render_template('games_index.html')
+
+
+@app.route('/games/gomoku')
+def games_gomoku():
+    """Render the Gomoku game page for embedding or direct access."""
+    return render_template('games/gomoku.html')
 
 @app.route('/api/cleanup', methods=['POST'])
 def cleanup():

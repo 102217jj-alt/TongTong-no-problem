@@ -7,7 +7,7 @@ class TongTongBrain:
         self.mode = "通通沒問題"  # Default mode set to 'TongTong No Problem'
         self.user_name = "主人"
         self.user_title = ""
-        self.modes = ["通通沒問題", "好心情", "神算師", "屬於我", "去睡覺", "不知道"]
+        self.modes = ["通通沒問題", "好心情", "神算師", "屬於我", "去睡覺", "不知道", "遊戲專區"]
         self.history = [] # Store conversation context
         self.unknown_guess_active = False
         self.unknown_secret_number = None
@@ -125,6 +125,8 @@ class TongTongBrain:
             elif self.mode == "不知道":
                 self.reset_unknown_game()
                 welcome_msg += "我現在什麼都不知道喔 🤪！你可以點擊「我要問問題」來考考我，看看我會怎麼回答你。"
+            elif self.mode == "遊戲專區":
+                welcome_msg += "歡迎來到通通遊戲專區！🎮 點擊下方的「五子棋」就可以開始挑戰囉！✨"
                 
             return welcome_msg
         return "哎呀，沒有這個模式喔 😅！"
