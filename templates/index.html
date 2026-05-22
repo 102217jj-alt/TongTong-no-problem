@@ -352,6 +352,43 @@
             border-radius: 8px;
             padding: 4px;
         }
+
+        /* 手機版優化 */
+        @media (max-width: 576px) {
+            #game-dashboard {
+                padding: 20px 10px;
+            }
+            .game-card-btn {
+                width: 140px !important;
+                min-height: 140px !important;
+                padding: 15px !important;
+            }
+            .game-card-btn div.fw-bold {
+                font-size: 1.1rem !important;
+            }
+            .game-card-btn div[style*="font-size: 60px"] {
+                font-size: 40px !important;
+            }
+            #gomokuCanvas, #carCanvas, #birdCanvas {
+                width: 100% !important;
+                height: auto !important;
+            }
+            #grid2048, .2048-container {
+                width: 280px !important;
+                height: 280px !important;
+            }
+            #grid2048 div {
+                width: 58px !important;
+                height: 58px !important;
+            }
+            #game-dashboard h2 {
+                font-size: 1.8rem !important;
+            }
+            #game-dashboard p.fs-4 {
+                font-size: 1.1rem !important;
+                margin-bottom: 2rem !important;
+            }
+        }
     </style>
 </head>
 
@@ -396,7 +433,7 @@
         <p class="mb-5 fs-4" style="color: #154360;">選擇一個遊戲開始挑戰吧！</p>
         <div class="d-flex gap-4 flex-wrap justify-content-center">
             <!-- 五子棋 -->
-            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
                 style="width: 220px; min-height: 180px; border: 3px solid #2980b9; background-color: #ffffff; color: #1565c0; transition: transform 0.2s;" 
                 onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f0f8ff';" 
                 onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
@@ -408,7 +445,7 @@
             </button>
 
             <!-- 飛鳥遊戲 -->
-            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
                 style="width: 220px; min-height: 180px; border: 3px solid #a29bfe; background-color: #ffffff; color: #6c5ce7; transition: transform 0.2s;" 
                 onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f3f0ff';" 
                 onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
@@ -420,7 +457,7 @@
             </button>
 
             <!-- 夢幻賽車手 -->
-            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
                 style="width: 220px; min-height: 180px; border: 3px solid #ff9ff3; background-color: #ffffff; color: #f368e0; transition: transform 0.2s;" 
                 onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff5f9';" 
                 onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
@@ -432,7 +469,7 @@
             </button>
 
             <!-- 2048 挑戰 -->
-            <button class="btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
                 style="width: 220px; min-height: 180px; border: 3px solid #fdcb6e; background-color: #ffffff; color: #e17055; transition: transform 0.2s;" 
                 onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff9f0';" 
                 onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
@@ -1230,6 +1267,11 @@
             const c = document.getElementById('gomokuCanvas');
             if (!gomokuListenerAttached) {
                 c.addEventListener('click', handleGomokuClick);
+                // 增加觸控監聽，解決手機延遲與精準度問題
+                c.addEventListener('touchstart', (e) => {
+                    e.preventDefault(); 
+                    handleGomokuClick(e);
+                }, { passive: false });
                 gomokuListenerAttached = true;
             }
             gomokuBoard = Array(15).fill().map(() => Array(15).fill(0)); 
@@ -1248,7 +1290,7 @@
                 ctx.beginPath(); ctx.moveTo(25, 25 + i * 25); ctx.lineTo(375, 25 + i * 25); ctx.stroke(); 
                 ctx.beginPath(); ctx.moveTo(25 + i * 25, 25); ctx.lineTo(25 + i * 25, 375); ctx.stroke(); 
             } 
-            ctx.font = "24px serif";
+            ctx.font = "20px serif";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             for (let y = 0; y < 15; y++) {
@@ -1266,18 +1308,41 @@
             document.getElementById('gomoku-winner-text').innerText = text;
             document.getElementById('gomoku-over-screen').style.setProperty('display', 'flex', 'important');
         }
-        function handleGomokuClick(e) { if (gomokuGameOver || (gomokuMode === 'ai' && gomokuCurrentPlayer === 2)) return; const c = document.getElementById('gomokuCanvas'), r = c.getBoundingClientRect(), x = Math.round((e.clientX - r.left - 25) / 25), y = Math.round((e.clientY - r.top - 25) / 25); if (x >= 0 && x < 15 && y >= 0 && y < 15 && !gomokuBoard[y][x]) { 
-            gomokuBoard[y][x] = gomokuCurrentPlayer; 
-            playBeep(600, 450, 0.05); // 玩家落子音效
-            drawGomokuBoard(); 
-            if (checkWin(x, y)) { 
-                gomokuGameOver = true; 
-                playWinMelody(); 
-                const winText = gomokuMode==='ai'?(gomokuCurrentPlayer===1?"你贏過通通了！🎉":"通通贏囉！😜"):("恭喜獲勝！✨");
-                showGomokuGameOver(winText);
-                sendMessage(`[RESULT]${winText.replace(/🎉|😜|✨/g, '')}`, true); 
-                return; 
-            } gomokuCurrentPlayer = 3 - gomokuCurrentPlayer; updateGomokuInfo(); if (gomokuMode === 'ai') setTimeout(aiMove, 600); } }
+        function handleGomokuClick(e) { 
+            if (gomokuGameOver || (gomokuMode === 'ai' && gomokuCurrentPlayer === 2)) return; 
+            
+            const c = document.getElementById('gomokuCanvas');
+            const r = c.getBoundingClientRect();
+            
+            // 處理觸控與滑鼠的不同坐標來源
+            const clientX = (e.type === 'touchstart') ? e.touches[0].clientX : e.clientX;
+            const clientY = (e.type === 'touchstart') ? e.touches[0].clientY : e.clientY;
+
+            // 重要：計算畫布縮放比例 (因為手機版 width: 100% 會縮放畫布)
+            const scaleX = c.width / r.width;
+            const scaleY = c.height / r.height;
+
+            // 換算成畫布內部的原始坐標 (0-400)
+            const canvasX = (clientX - r.left) * scaleX;
+            const canvasY = (clientY - r.top) * scaleY;
+
+            // 換算成棋盤索引 (0-14)
+            const x = Math.round((canvasX - 25) / 25);
+            const y = Math.round((canvasY - 25) / 25);
+
+            if (x >= 0 && x < 15 && y >= 0 && y < 15 && !gomokuBoard[y][x]) { 
+                gomokuBoard[y][x] = gomokuCurrentPlayer; 
+                playBeep(600, 450, 0.05); // 玩家落子音效
+                drawGomokuBoard(); 
+                if (checkWin(x, y)) { 
+                    gomokuGameOver = true; 
+                    playWinMelody(); 
+                    const winText = gomokuMode==='ai'?(gomokuCurrentPlayer===1?"你贏過通通了！🎉":"通通贏囉！😜"):("恭喜獲勝！✨");
+                    showGomokuGameOver(winText);
+                    sendMessage(`[RESULT]${winText.replace(/🎉|😜|✨/g, '')}`, true); 
+                    return; 
+                } gomokuCurrentPlayer = 3 - gomokuCurrentPlayer; updateGomokuInfo(); if (gomokuMode === 'ai') setTimeout(aiMove, 600); } 
+        }
         function aiMove() {
             let bestScore = -1, bx = 7, by = 7;
             const size = 15;
