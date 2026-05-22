@@ -126,7 +126,7 @@ class TongTongBrain:
                 self.reset_unknown_game()
                 welcome_msg += "我現在什麼都不知道喔 🤪！你可以點擊「我要問問題」來考考我，看看我會怎麼回答你。"
             elif self.mode == "遊戲專區":
-                welcome_msg += "歡迎來到通通遊戲專區！🎮 點擊下方的「五子棋」就可以開始挑戰囉！✨"
+                welcome_msg += "歡迎來到通通遊戲專區！🎮 這裡是通通為你準備的快樂小天地。不管是想來場腦力大戰，還是想體驗極速快感，點擊下方的遊戲圖示，通通都陪你玩到底！✨"
                 
             return welcome_msg
         return "哎呀，沒有這個模式喔 😅！"
