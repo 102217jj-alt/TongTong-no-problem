@@ -500,6 +500,10 @@
             border-color: #3a3a3c !important;
         }
 
+        body.dark-mode #text-input::placeholder {
+            color: #a0a0a0 !important;
+        }
+
         body.dark-mode .text-muted {
             color: #a0a0a0 !important;
         }
@@ -1951,6 +1955,70 @@
         document.getElementById('namePromptInput').onkeydown = (e) => { if (e.key === 'Enter') submitNamePrompt(); };
         document.getElementById('sheepCountInput').onkeydown = (e) => { if (e.key === 'Enter') submitSheepCount(); };
         document.getElementById('questionPromptInput').onkeydown = (e) => { if (e.key === 'Enter') submitQuestionPrompt(); };
+
+        // Speech Recognition
+        let recognition;
+        let isRecognizing = false;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.lang = 'zh-TW';
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                stopCurrentAudio();
+                isRecognizing = true;
+                micBtn.classList.add('recording');
+            };
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (transcript) sendMessage(transcript);
+            };
+            recognition.onerror = (event) => {
+                console.error("語音辨識錯誤:", event.error);
+                isRecognizing = false;
+                micBtn.classList.remove('recording');
+                
+                if (event.error === 'not-allowed') {
+                    alert("麥克風存取被拒絕。請檢查瀏覽器權限設定。");
+                }
+            };
+            recognition.onend = () => {
+                isRecognizing = false;
+                micBtn.classList.remove('recording');
+            };
+            // 針對某些行動裝置優化
+            recognition.onspeechend = () => {
+                recognition.stop();
+            };
+        }
+
+        micBtn.onclick = () => {
+            if (isProcessing || currentMode !== '通通沒問題') return;
+
+            // 重要：行動裝置（手機）通常要求 HTTPS 才能使用麥克風
+            if (!window.isSecureContext && window.location.hostname !== 'localhost') {
+                alert("【安全性限制】\n手機版瀏覽器通常要求使用 HTTPS 加密連線才能開啟麥克風。\n\n如果您是使用 IP 連線 (如 192.168...)，請改用電腦的 Chrome 瀏覽器測試，或在手機上使用支援非安全環境的瀏覽器。");
+                return;
+            }
+
+            if (!SpeechRecognition) {
+                alert("您的瀏覽器不支援語音辨識功能，建議使用 Chrome 瀏覽器。");
+                return;
+            }
+
+            if (isRecognizing) {
+                recognition.stop();
+            } else {
+                try {
+                    recognition.start();
+                } catch (err) {
+                    console.log("辨識已在運行中:", err);
+                }
+            }
+        };
 
         currentMode = "{{ current_mode }}" || '通通沒問題';
         updateUIForMode(currentMode);
