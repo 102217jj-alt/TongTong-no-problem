@@ -352,43 +352,6 @@
             border-radius: 8px;
             padding: 4px;
         }
-
-        /* 手機版優化 */
-        @media (max-width: 576px) {
-            #game-dashboard {
-                padding: 20px 10px;
-            }
-            .game-card-btn {
-                width: 140px !important;
-                min-height: 140px !important;
-                padding: 15px !important;
-            }
-            .game-card-btn div.fw-bold {
-                font-size: 1.1rem !important;
-            }
-            .game-card-btn div[style*="font-size: 60px"] {
-                font-size: 40px !important;
-            }
-            #gomokuCanvas, #carCanvas, #birdCanvas {
-                width: 100% !important;
-                height: auto !important;
-            }
-            #grid2048, .2048-container {
-                width: 280px !important;
-                height: 280px !important;
-            }
-            #grid2048 div {
-                width: 58px !important;
-                height: 58px !important;
-            }
-            #game-dashboard h2 {
-                font-size: 1.8rem !important;
-            }
-            #game-dashboard p.fs-4 {
-                font-size: 1.1rem !important;
-                margin-bottom: 2rem !important;
-            }
-        }
     </style>
 </head>
 
@@ -428,61 +391,68 @@
     </div>
 
     <!-- Game Dashboard -->
-    <div id="game-dashboard" style="display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; background-color: transparent; text-align: center;">
-        <h2 class="mb-4 fw-bold" style="color: #0984e3; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">🎮 通通遊戲專區</h2>
-        <p class="mb-5 fs-4" style="color: #154360;">選擇一個遊戲開始挑戰吧！</p>
-        <div class="d-flex gap-4 flex-wrap justify-content-center">
-            <!-- 五子棋 -->
-            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
-                style="width: 220px; min-height: 180px; border: 3px solid #2980b9; background-color: #ffffff; color: #1565c0; transition: transform 0.2s;" 
-                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f0f8ff';" 
-                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
-                onclick="stopCurrentAudio(); openGomokuGame()">
-                <div style="font-size: 60px; margin-bottom: 10px; display: flex; gap: 10px; line-height: 1;">
-                    <span>⚪</span><span>⚫</span>
-                </div>
-                <div class="fw-bold fs-3">五子棋</div>
-            </button>
+    <div id="game-dashboard" style="display: none; flex: 1; flex-direction: column; align-items: center; justify-content: flex-start; background-color: transparent; text-align: center; overflow-y: auto; padding: 20px 10px; height: 100%;">
+        <div style="margin: auto 0; width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <h2 class="mb-2 fw-bold" style="color: #0984e3; font-size: calc(1.6rem + 1vw); text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">🌈 通通的夢幻遊戲樂園</h2>
+            <p class="mb-2 fs-6 fs-md-5" style="color: #154360; padding: 0 10px;">嘿嘿！快選一個喜歡的遊戲，跟通通一起挑戰最高分吧！✨🎮</p>
+            
+            <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-3 gap-md-4 mt-5 px-2 flex-wrap" style="width: 100%; max-width: 1000px; padding-bottom: 80px;">
+                <!-- 五子棋 -->
+                <button class="btn p-3 p-md-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                    style="width: 100%; max-width: 220px; height: 140px; min-height: 170px; border: 3px solid #2980b9; background-color: #ffffff; color: #1565c0; transition: transform 0.2s;" 
+                    onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f0f8ff';" 
+                    onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                    onclick="stopCurrentAudio(); openGomokuGame()"
+                    ontouchend="stopCurrentAudio(); openGomokuGame(); event.preventDefault();">
+                    <div style="font-size: 50px; margin-bottom: 5px; display: flex; gap: 5px; line-height: 1;">
+                        <span>⚪</span><span>⚫</span>
+                    </div>
+                    <div class="fw-bold fs-5">五子棋</div>
+                </button>
 
-            <!-- 飛鳥遊戲 -->
-            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
-                style="width: 220px; min-height: 180px; border: 3px solid #a29bfe; background-color: #ffffff; color: #6c5ce7; transition: transform 0.2s;" 
-                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f3f0ff';" 
-                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
-                onclick="stopCurrentAudio(); openBirdGame()">
-                <div style="font-size: 60px; margin-bottom: 10px; line-height: 1;">
-                    <span>🐦</span>
-                </div>
-                <div class="fw-bold fs-3">飛鳥大冒險</div>
-            </button>
+                <!-- 飛鳥遊戲 -->
+                <button class="btn p-2 p-md-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                    style="width: 100%; max-width: 220px; height: 140px; min-height: 170px; border: 3px solid #a29bfe; background-color: #ffffff; color: #6c5ce7; transition: transform 0.2s;" 
+                    onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#f3f0ff';" 
+                    onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                    onclick="stopCurrentAudio(); openBirdGame()"
+                    ontouchend="stopCurrentAudio(); openBirdGame(); event.preventDefault();">
+                    <div style="font-size: 50px; margin-bottom: 5px; line-height: 1;">
+                        <span>🐦</span>
+                    </div>
+                    <div class="fw-bold fs-5">飛鳥大冒險</div>
+                </button>
 
-            <!-- 夢幻賽車手 -->
-            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
-                style="width: 220px; min-height: 180px; border: 3px solid #ff9ff3; background-color: #ffffff; color: #f368e0; transition: transform 0.2s;" 
-                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff5f9';" 
-                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
-                onclick="stopCurrentAudio(); openCarGame()">
-                <div style="font-size: 60px; margin-bottom: 10px; line-height: 1;">
-                    <span>🏎️</span>
-                </div>
-                <div class="fw-bold fs-3">夢幻賽車手</div>
-            </button>
+                <!-- 夢幻賽車手 -->
+                <button class="btn p-2 p-md-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                    style="width: 100%; max-width: 220px; height: 140px; min-height: 170px; border: 3px solid #ff9ff3; background-color: #ffffff; color: #f368e0; transition: transform 0.2s;" 
+                    onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff5f9';" 
+                    onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                    onclick="stopCurrentAudio(); openCarGame()"
+                    ontouchend="stopCurrentAudio(); openCarGame(); event.preventDefault();">
+                    <div style="font-size: 50px; margin-bottom: 5px; line-height: 1;">
+                        <span>🏎️</span>
+                    </div>
+                    <div class="fw-bold fs-5">夢幻賽車手</div>
+                </button>
 
-            <!-- 2048 挑戰 -->
-            <button class="btn game-card-btn p-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
-                style="width: 220px; min-height: 180px; border: 3px solid #fdcb6e; background-color: #ffffff; color: #e17055; transition: transform 0.2s;" 
-                onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff9f0';" 
-                onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
-                onclick="stopCurrentAudio(); open2048Game()">
-                <div style="font-size: 60px; margin-bottom: 10px; line-height: 1;">
-                    <span>🧩</span>
-                </div>
-                <div class="fw-bold fs-3">2048 挑戰</div>
-            </button>
+                <!-- 2048 挑戰 -->
+                <button class="btn p-2 p-md-4 rounded-4 shadow-lg d-flex flex-column align-items-center justify-content-center" 
+                    style="width: 100%; max-width: 220px; height: 140px; min-height: 170px; border: 3px solid #fdcb6e; background-color: #ffffff; color: #e17055; transition: transform 0.2s;" 
+                    onmouseover="this.style.transform='scale(1.08)'; this.style.backgroundColor='#fff9f0';" 
+                    onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#ffffff';" 
+                    onclick="stopCurrentAudio(); open2048Game()"
+                    ontouchend="stopCurrentAudio(); open2048Game(); event.preventDefault();">
+                    <div style="font-size: 50px; margin-bottom: 5px; line-height: 1;">
+                        <span>🧩</span>
+                    </div>
+                    <div class="fw-bold fs-5">2048 挑戰</div>
+                </button>
+            </div>
         </div>
     </div>
 
-    <button id="game-zone-btn" onclick="switchToGameZone()" title="開啟遊戲專區">🎮</button>
+    <button id="game-zone-btn" onclick="switchToGameZone()" ontouchend="switchToGameZone(); event.preventDefault();" title="開啟遊戲專區">🎮</button>
 
     <div id="input-area">
         <input type="text" id="text-input" class="form-control me-2" placeholder="輸入你想查詢的內容..." autocomplete="off"
@@ -507,16 +477,14 @@
                         </div>
                         <button class="btn btn-primary fw-bold px-4" onclick="init2048()" style="background: #8f7a66; border: none;">New Game</button>
                     </div>
-                    <div class="position-relative mx-auto" style="width: 300px; height: 300px;">
-                        <div id="grid2048" style="background: #bbada0; width: 100%; height: 100%; border-radius: 6px; padding: 10px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; touch-action: none;">
-                            <!-- Tiles will be injected here -->
-                        </div>
-                        <!-- 2048 遊戲結束畫面 -->
-                        <div id="2048-over-screen" class="position-absolute top-50 start-50 translate-middle text-center w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="display: none !important; background: rgba(238, 228, 218, 0.85); border-radius: 6px; z-index: 10;">
-                            <h1 class="fw-bold mb-2" style="color: #776e65; font-size: 2.5rem;">遊戲結束</h1>
-                            <div class="fs-4 mb-4" style="color: #776e65;">最終分數：<span id="2048-final-score" class="fw-bold text-danger">0</span></div>
-                            <button class="btn btn-primary btn-lg fw-bold px-5 py-2 rounded-pill shadow-sm" onclick="init2048()" style="background: #8f7a66; border: none;">重新開始 ✨</button>
-                        </div>
+                    <div id="grid2048" style="background: #bbada0; width: 300px; height: 300px; margin: 0 auto; border-radius: 6px; padding: 10px; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr); gap: 10px; position: relative; touch-action: none;">
+                        <!-- Tiles will be injected here -->
+                    </div>
+                    <!-- 2048 遊戲結束畫面 -->
+                    <div id="2048-over-screen" class="position-absolute top-50 start-50 translate-middle text-center w-75" style="display: none; background: rgba(255,255,255,0.95); padding: 25px 0; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.2); z-index: 10;">
+                        <h1 class="text-primary fw-bold mb-2">遊戲結束</h1>
+                        <div class="fs-4 mb-4" style="color: #776e65;">最終得分：<span id="2048-final-score" class="fw-bold text-danger">0</span></div>
+                        <button class="btn btn-primary btn-lg fw-bold px-4 py-2 rounded-pill" onclick="stopCurrentAudio(); init2048();" style="background: #8f7a66; border: none;">重新開始</button>
                     </div>
                     <p class="mt-3 text-muted small">使用鍵盤方向鍵或滑動螢幕來移動方塊</p>
                 </div>
@@ -645,14 +613,12 @@
                             <div id="gomoku-info" class="fw-bold fs-5">輪到：黑棋</div>
                             <div id="gomoku-mode-display" class="badge bg-secondary"></div>
                         </div>
-                        <div class="position-relative d-inline-block mx-auto">
-                            <canvas id="gomokuCanvas" width="400" height="400" style="background: #DEB887; border: 2px solid #8B4513; max-width: 100%; cursor: crosshair; display: block;"></canvas>
-                            <!-- 五子棋 遊戲結束畫面 -->
-                            <div id="gomoku-over-screen" class="position-absolute top-50 start-50 translate-middle text-center w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="display: none !important; background: rgba(222, 184, 135, 0.85); border-radius: 2px; z-index: 10;">
-                                <h1 class="fw-bold mb-2" style="color: #8B4513; font-size: 2.5rem;">遊戲結束</h1>
-                                <div class="fs-4 mb-4" style="color: #8B4513;"><span id="gomoku-winner-text" class="fw-bold">恭喜獲勝！</span></div>
-                                <button class="btn btn-primary btn-lg fw-bold px-5 py-2 rounded-pill shadow-sm" onclick="initGomoku()" style="background: #8B4513; border: none;">重新開始 ✨</button>
-                            </div>
+                        <canvas id="gomokuCanvas" width="400" height="400" style="background: #DEB887; border: 2px solid #8B4513; max-width: 100%; cursor: crosshair;"></canvas>
+                        <!-- 五子棋遊戲結束畫面 -->
+                        <div id="gomoku-over-screen" class="position-absolute top-50 start-50 translate-middle text-center w-75" style="display: none; background: rgba(255,255,255,0.95); padding: 30px 0; border-radius: 15px; box-shadow: 0 0 20px rgba(0,0,0,0.2); z-index: 10; border: 4px solid var(--primary-color);">
+                            <h1 id="gomoku-over-title" class="text-primary fw-bold mb-2">恭喜獲勝！</h1>
+                            <p id="gomoku-over-msg" class="fs-5 mb-4 text-muted">你太厲害了！</p>
+                            <button class="btn btn-primary btn-lg fw-bold px-5 py-2 rounded-pill" onclick="stopCurrentAudio(); initGomoku();">重新開始</button>
                         </div>
                         <div class="mt-4 d-flex justify-content-center gap-2">
                             <button class="btn btn-outline-secondary btn-sm" onclick="showGomokuSetup()">返回選單</button>
@@ -712,7 +678,7 @@
                     <div id="bird-start-screen" class="position-absolute top-50 start-50 translate-middle text-center w-100">
                         <h1 class="fw-bold mb-4" style="color: #2c3e50; text-shadow: 2px 2px 0px #fff;">準備好了嗎？</h1>
                         <button class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm border-white border-2" onclick="handleBirdInput()">開始挑戰</button>
-                        <p class="mt-3 text-muted fw-bold">點擊畫面跳躍</p>
+                        <p class="mt-3 text-muted fw-bold">點擊畫面或按空白鍵跳躍</p>
                     </div>
 
                     <!-- 結算畫面 -->
@@ -751,7 +717,7 @@
         let highFiveOverlay = null, highFiveTimer = null, rpsRevealTimer = null, rpsReplyTimer = null, rpsRoundId = 0;
 
         // Init Voice
-        const serverVoice = "{{ current_voice }}";
+        const serverVoice = "female";
         voiceSelect.value = (serverVoice && serverVoice !== "None") ? serverVoice : (localStorage.getItem('tongtong_voice') || 'female');
         voiceSelect.onchange = () => localStorage.setItem('tongtong_voice', voiceSelect.value);
 
@@ -777,80 +743,28 @@
 
         // --- 2048 Game ---
         let game2048Modal = null, grid2048 = [], score2048 = 0, game2048Over = false;
-        let tsX2048 = null, tsY2048 = null;
-        let msX2048 = null, msY2048 = null; // Mouse swipe start coordinates
-
         function open2048Game() {
-            const mEl = document.getElementById('game2048Modal');
-            if (!game2048Modal) game2048Modal = new bootstrap.Modal(mEl);
+            if (!game2048Modal) game2048Modal = new bootstrap.Modal(document.getElementById('game2048Modal'));
             game2048Modal.show();
             init2048();
-
             // 監聽鍵盤
             window.addEventListener('keydown', handle2048Key);
-            
-            // 監聽滑動 (觸控)
+            // 監聽滑動 (簡化版)
+            let tsX, tsY;
             const g = document.getElementById('grid2048');
-            g.addEventListener('touchstart', handle2048TouchStart, { passive: false });
-            g.addEventListener('touchend', handle2048TouchEnd, { passive: false });
-
-            // 監聽滑動 (滑鼠)
-            g.addEventListener('mousedown', handle2048MouseDown);
-            g.addEventListener('mouseup', handle2048MouseUp);
+            g.ontouchstart = (e) => { tsX = e.touches[0].clientX; tsY = e.touches[0].clientY; };
+            g.ontouchend = (e) => {
+                if (!tsX || !tsY) return;
+                const teX = e.changedTouches[0].clientX, teY = e.changedTouches[0].clientY;
+                const dx = teX - tsX, dy = teY - tsY;
+                if (Math.abs(dx) > Math.abs(dy)) { if (Math.abs(dx) > 30) move2048(dx > 0 ? 'right' : 'left'); }
+                else { if (Math.abs(dy) > 30) move2048(dy > 0 ? 'down' : 'up'); }
+            };
         }
-
-        // 當 2048 視窗關閉時，移除監聽器
-        document.getElementById('game2048Modal').addEventListener('hidden.bs.modal', function () {
-            window.removeEventListener('keydown', handle2048Key);
-            const g = document.getElementById('grid2048');
-            if (g) {
-                g.removeEventListener('touchstart', handle2048TouchStart);
-                g.removeEventListener('touchend', handle2048TouchEnd);
-                g.removeEventListener('mousedown', handle2048MouseDown);
-                g.removeEventListener('mouseup', handle2048MouseUp);
-            }
-        });
-
-        function handle2048TouchStart(e) {
-            tsX2048 = e.touches[0].clientX;
-            tsY2048 = e.touches[0].clientY;
-        }
-
-        function handle2048TouchEnd(e) {
-            if (tsX2048 === null || tsY2048 === null) return;
-            const teX = e.changedTouches[0].clientX;
-            const teY = e.changedTouches[0].clientY;
-            process2048Swipe(tsX2048, tsY2048, teX, teY);
-            tsX2048 = null; tsY2048 = null;
-        }
-
-        function handle2048MouseDown(e) {
-            msX2048 = e.clientX;
-            msY2048 = e.clientY;
-        }
-
-        function handle2048MouseUp(e) {
-            if (msX2048 === null || msY2048 === null) return;
-            process2048Swipe(msX2048, msY2048, e.clientX, e.clientY);
-            msX2048 = null; msY2048 = null;
-        }
-
-        function process2048Swipe(startX, startY, endX, endY) {
-            const dx = endX - startX;
-            const dy = endY - startY;
-            const threshold = 35;
-
-            if (Math.abs(dx) > Math.abs(dy)) {
-                if (Math.abs(dx) > threshold) move2048(dx > 0 ? 'right' : 'left');
-            } else {
-                if (Math.abs(dy) > threshold) move2048(dy > 0 ? 'down' : 'up');
-            }
-        }
-
         function init2048() {
             grid2048 = Array(4).fill().map(() => Array(4).fill(0));
             score2048 = 0; game2048Over = false;
-            document.getElementById('2048-over-screen').style.setProperty('display', 'none', 'important');
+            document.getElementById('2048-over-screen').style.display = 'none'; // 隱藏結束畫面
             addRandomTile(); addRandomTile();
             update2048UI();
         }
@@ -912,8 +826,8 @@
                 game2048Over = true; 
                 playRpsTone('lose'); 
                 document.getElementById('2048-final-score').innerText = score2048;
-                document.getElementById('2048-over-screen').style.setProperty('display', 'flex', 'important');
-                sendMessage(`[RESULT]2048 遊戲結束囉！你拿到了 ${score2048} 分，通通覺得你已經很厲害了！下次挑戰 2048 分吧！✨`, true); 
+                document.getElementById('2048-over-screen').style.display = 'block';
+                sendMessage(`[RESULT]2048 遊戲結束囉！你拿到了 ${score2048} 分，通通覺得你已經很厲害了！✨`, true); 
             }
         }
 
@@ -943,35 +857,7 @@
                     handleCarInput();
                 }
             };
-            
-            // 加入鍵盤監聽事件 (左右方向鍵)
-            window.addEventListener('keydown', handleCarKeyInput);
-            
             resetCarGame();
-        }
-        
-        // 當賽車視窗關閉時，移除鍵盤監聽
-        document.getElementById('carModal').addEventListener('hidden.bs.modal', function () {
-            window.removeEventListener('keydown', handleCarKeyInput);
-            closeCarGame();
-        });
-
-        function handleCarKeyInput(e) {
-            if (!document.getElementById('carModal').classList.contains('show')) return;
-            
-            if (carGameState === 'playing') {
-                if ((e.key === 'ArrowLeft' || e.key === 'a') && carLane > 0) {
-                    carLane--;
-                    carTargetX = lanesX[carLane];
-                    playBeep(300, 400, 0.05);
-                } else if ((e.key === 'ArrowRight' || e.key === 'd') && carLane < 2) {
-                    carLane++;
-                    carTargetX = lanesX[carLane];
-                    playBeep(300, 400, 0.05);
-                }
-            } else if (carGameState === 'start' && (e.key === 'Enter' || e.key === ' ')) {
-                handleCarInput();
-            }
         }
 
         function closeCarGame() { if (carAnimationFrame) cancelAnimationFrame(carAnimationFrame); }
@@ -981,12 +867,6 @@
             document.getElementById('car-score').innerText = '0';
             document.getElementById('car-start-screen').style.display = 'block';
             document.getElementById('car-over-screen').style.display = 'none';
-            
-            // 更新提示文字
-            const startScreen = document.getElementById('car-start-screen');
-            const hintText = startScreen.querySelector('p.text-muted');
-            if (hintText) hintText.innerText = "點擊兩側或使用鍵盤左右鍵(A/D)控制";
-            
             drawCarGame();
         }
 
@@ -1008,13 +888,12 @@
         function updateCarGame() {
             carRoadOffset = (carRoadOffset + carSpeed) % 80;
             carScore++;
-            if (carScore % 150 === 0) carSpeed += 0.6; // 難度提高：變快頻率增加，增幅加大
+            if (carScore % 200 === 0) carSpeed += 0.5; // 漸漸變快
             document.getElementById('car-score').innerText = Math.floor(carScore/10);
 
             carCurrentX += (carTargetX - carCurrentX) * 0.2;
 
-            // 難度提高：障礙物間距縮短 (200 -> 180)
-            if (carEnemies.length === 0 || carEnemies[carEnemies.length-1].y > 180) {
+            if (carEnemies.length === 0 || carEnemies[carEnemies.length-1].y > 200) {
                 const lane = Math.floor(Math.random() * 3);
                 const types = ['🚚', '🚕', '🚧', '📦'];
                 carEnemies.push({ lane: lane, y: -100, type: types[Math.floor(Math.random()*types.length)] });
@@ -1036,12 +915,8 @@
             carCtx.strokeStyle = '#ffffff'; carCtx.setLineDash([40, 40]); carCtx.lineDashOffset = -carRoadOffset; carCtx.lineWidth = 4;
             [120, 240].forEach(x => { carCtx.beginPath(); carCtx.moveTo(x, 0); carCtx.lineTo(x, 480); carCtx.stroke(); });
             carCtx.setLineDash([]); carCtx.font = "50px serif"; carCtx.textAlign = 'center'; carCtx.textBaseline = 'middle';
-            
-            // 只有在非初始狀態才繪製車子與障礙物
-            if (carGameState !== 'start') {
-                carEnemies.forEach(e => { carCtx.fillText(e.type, lanesX[e.lane], e.y); });
-                carCtx.fillText('🚗', carCurrentX, carY);
-            }
+            carEnemies.forEach(e => { carCtx.fillText(e.type, lanesX[e.lane], e.y); });
+            carCtx.fillText('🚗', carCurrentX, carY);
         }
 
         function gameOverCar() {
@@ -1061,41 +936,16 @@
             birdCanvas = document.getElementById('birdCanvas'); 
             birdCtx = birdCanvas.getContext('2d'); 
             birdCanvas.onclick = handleBirdInput; 
-            
-            // 加入鍵盤監聽事件 (空白鍵)
-            window.addEventListener('keydown', handleBirdKeyInput);
-            
             resetBirdGame(); 
         }
-
-        // 當視窗關閉時，移除鍵盤監聽，避免影響其他輸入
-        document.getElementById('birdModal').addEventListener('hidden.bs.modal', function () {
-            window.removeEventListener('keydown', handleBirdKeyInput);
-        });
-
         function closeBirdGame() { if (birdAnimationFrame) cancelAnimationFrame(birdAnimationFrame); }
         function resetBirdGame() { 
             birdY = 200; birdVelocity = 0; birdPipes = []; birdScore = 0; birdGameState = 'start'; 
             document.getElementById('bird-score').innerText = '0'; 
             document.getElementById('bird-start-screen').style.display = 'block'; 
             document.getElementById('bird-over-screen').style.display = 'none'; // 隱藏結束畫面
-            
-            // 更新提示文字
-            const startScreen = document.getElementById('bird-start-screen');
-            const hintText = startScreen.querySelector('p.text-muted');
-            if (hintText) hintText.innerText = "點擊畫面或按空白鍵跳躍";
-            
             drawBirdGame(); 
         }
-
-        function handleBirdKeyInput(e) {
-            // 如果按下的是空白鍵，且遊戲視窗正在顯示中
-            if (e.code === 'Space' && document.getElementById('birdModal').classList.contains('show')) {
-                e.preventDefault(); // 阻止頁面捲動
-                handleBirdInput();
-            }
-        }
-
         function handleBirdInput() { 
             if (birdGameState === 'start') { 
                 birdGameState = 'playing'; 
@@ -1212,6 +1062,7 @@
                     else if (action === '五子棋') openGomokuGame();
                     else if (action === '飛鳥大冒險') openBirdGame();
                     else if (action === '夢幻賽車手') openCarGame();
+                    else if (action === '2048 挑戰') open2048Game();
                     else sendMessage(action, true);
                 };
                 quickActions.appendChild(btn);
@@ -1242,23 +1093,6 @@
         function startGomoku(mode) { gomokuMode = mode; document.getElementById('gomoku-setup').style.display = 'none'; document.getElementById('gomoku-game-area').style.display = 'block'; document.getElementById('gomoku-mode-display').innerText = mode === 'ai' ? '🤖 挑戰通通' : '👥 雙人對弈'; initGomoku(); }
 
         function setUILoading(l) { isProcessing = l; [textInput, sendBtn, micBtn, modeDropdown, btnOriginal].forEach(el => { if (el) { if (l) { el.classList.add('opacity-50'); el.style.pointerEvents = 'none'; } else { el.classList.remove('opacity-50'); el.style.pointerEvents = 'auto'; } } }); if (l) { const d = document.createElement('div'); d.id = 'thinking-bubble'; d.className = 'message bot-message'; d.innerHTML = '<span class="spinner-grow spinner-grow-sm me-2"></span>通通正在思考...'; chatContainer.appendChild(d); chatContainer.scrollTop = chatContainer.scrollHeight; } else { const tb = document.getElementById('thinking-bubble'); if (tb) tb.remove(); } }
-        async function sendMessage(t, isBtn = false) {
-            if (isProcessing) return; const n = t.trim();
-            if (currentMode === '好心情' && (n==='擊掌'||n==='跟我擊掌'||n.includes('擊掌'))) { stopCurrentAudio(); triggerHighFiveCelebration(); const s = '合作愉快，我們是最棒的夥伴！'; const m = addMessage('bot', `啪！✋✨ ${s} 🤝💖`); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
-            if (currentMode === '屬於我' && (n==='親親'||n.includes('親親'))) { stopCurrentAudio(); showAffectionAnimation('kiss'); const s = '啾一下送給你，今天也要甜甜的。'; const m = addMessage('bot', s); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
-            if (currentMode === '屬於我' && (n==='抱抱'||n.includes('抱抱'))) { stopCurrentAudio(); showAffectionAnimation('hug'); const s = '來，給你一個大大抱抱。'; const m = addMessage('bot', s); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
-            if (n) addMessage('user', n); setUILoading(true);
-            try { abortController = new AbortController(); const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: t, mode: currentMode, voice_type: voiceSelect.value }), signal: abortController.signal }); const d = await r.json(); if (d.reply) { const m = addMessage('bot', d.reply); if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } } }
-            catch (e) { if (e.name !== 'AbortError') addMessage('bot', '連不上大腦囉...'); } finally { setUILoading(false); }
-        }
-        function sendMessageFromInput() { const t = textInput.value; if (t.trim()) { sendMessage(t); textInput.value = ''; } }
-        textInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessageFromInput(); };
-
-        function addMessage(s, t) { const div = document.createElement('div'); div.className = `message ${s}-message`; if (s === 'bot') { const content = document.createElement('span'); content.className = 'message-content'; const disc = '※ 以上僅供娛樂參考，請理性看待喔！'; const idx = t.indexOf(disc); if (idx !== -1) { content.innerText = t.slice(0, idx).trimEnd(); const sSpan = document.createElement('span'); sSpan.className = 'message-disclaimer'; sSpan.innerText = t.slice(idx); content.appendChild(sSpan); } else { content.innerText = t; } div.appendChild(content); } else { div.innerText = t; } chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight; return div; }
-        function attachReplayButton(el, url) { const b = document.createElement('button'); b.className = 'replay-audio-btn'; b.innerText = '🔊'; b.onclick = () => playAudioFromUrl(url); el.appendChild(b); }
-        function switchToOriginal() { window.location.href = "/?mode=通通沒問題&voice=" + voiceSelect.value; }
-        function switchToPersonality() { window.location.href = "/?mode=" + modeDropdown.value + "&voice=" + voiceSelect.value; }
-        function switchToGameZone() { window.location.href = "/?mode=遊戲專區&voice=" + voiceSelect.value; }
 
         // Gomoku Game Logic (Simplified)
         let gomokuBoard = [], gomokuCurrentPlayer = 1, gomokuGameOver = false, gomokuMode = 'friend', gomokuListenerAttached = false;
@@ -1267,17 +1101,12 @@
             const c = document.getElementById('gomokuCanvas');
             if (!gomokuListenerAttached) {
                 c.addEventListener('click', handleGomokuClick);
-                // 增加觸控監聽，解決手機延遲與精準度問題
-                c.addEventListener('touchstart', (e) => {
-                    e.preventDefault(); 
-                    handleGomokuClick(e);
-                }, { passive: false });
                 gomokuListenerAttached = true;
             }
             gomokuBoard = Array(15).fill().map(() => Array(15).fill(0)); 
             gomokuCurrentPlayer = 1; 
             gomokuGameOver = false; 
-            document.getElementById('gomoku-over-screen').style.setProperty('display', 'none', 'important');
+            document.getElementById('gomoku-over-screen').style.display = 'none'; // 隱藏結束畫面
             updateGomokuInfo(); 
             drawGomokuBoard(); 
         }
@@ -1304,135 +1133,125 @@
             }
         }
         function updateGomokuInfo() { document.getElementById('gomoku-info').innerText = `輪到：${gomokuCurrentPlayer === 1 ? "黑棋" : (gomokuMode === 'ai' ? "通通" : "白棋")}`; }
-        function showGomokuGameOver(text) {
-            document.getElementById('gomoku-winner-text').innerText = text;
-            document.getElementById('gomoku-over-screen').style.setProperty('display', 'flex', 'important');
-        }
         function handleGomokuClick(e) { 
             if (gomokuGameOver || (gomokuMode === 'ai' && gomokuCurrentPlayer === 2)) return; 
-            
             const c = document.getElementById('gomokuCanvas');
             const r = c.getBoundingClientRect();
-            
-            // 處理觸控與滑鼠的不同坐標來源
-            const clientX = (e.type === 'touchstart') ? e.touches[0].clientX : e.clientX;
-            const clientY = (e.type === 'touchstart') ? e.touches[0].clientY : e.clientY;
-
-            // 重要：計算畫布縮放比例 (因為手機版 width: 100% 會縮放畫布)
             const scaleX = c.width / r.width;
             const scaleY = c.height / r.height;
-
-            // 換算成畫布內部的原始坐標 (0-400)
-            const canvasX = (clientX - r.left) * scaleX;
-            const canvasY = (clientY - r.top) * scaleY;
-
-            // 換算成棋盤索引 (0-14)
+            const canvasX = (e.clientX - r.left) * scaleX;
+            const canvasY = (e.clientY - r.top) * scaleY;
             const x = Math.round((canvasX - 25) / 25);
             const y = Math.round((canvasY - 25) / 25);
-
+            
             if (x >= 0 && x < 15 && y >= 0 && y < 15 && !gomokuBoard[y][x]) { 
                 gomokuBoard[y][x] = gomokuCurrentPlayer; 
-                playBeep(600, 450, 0.05); // 玩家落子音效
+                playBeep(600, 450, 0.05);
                 drawGomokuBoard(); 
                 if (checkWin(x, y)) { 
                     gomokuGameOver = true; 
                     playWinMelody(); 
-                    const winText = gomokuMode==='ai'?(gomokuCurrentPlayer===1?"你贏過通通了！🎉":"通通贏囉！😜"):("恭喜獲勝！✨");
-                    showGomokuGameOver(winText);
-                    sendMessage(`[RESULT]${winText.replace(/🎉|😜|✨/g, '')}`, true); 
+                    const title = gomokuMode === 'ai' ? "你贏過通通了！" : "恭喜獲勝！";
+                    const msg = gomokuMode === 'ai' ? "太強了吧！通通甘拜下風！🏆" : "這場對決太精彩了！✨";
+                    showGomokuOver(title, msg);
+                    sendMessage(`[RESULT]${title}${msg}`, true); 
                     return; 
-                } gomokuCurrentPlayer = 3 - gomokuCurrentPlayer; updateGomokuInfo(); if (gomokuMode === 'ai') setTimeout(aiMove, 600); } 
+                } 
+                gomokuCurrentPlayer = 3 - gomokuCurrentPlayer; 
+                updateGomokuInfo(); 
+                if (gomokuMode === 'ai') setTimeout(aiMove, 600); 
+            } 
         }
         function aiMove() {
             let bestScore = -1, bx = 7, by = 7;
             const size = 15;
-            
-            // 遍歷棋盤上所有空格，計算評分
             for (let y = 0; y < size; y++) {
                 for (let x = 0; x < size; x++) {
                     if (gomokuBoard[y][x] === 0) {
-                        // 評估該位置對「通通(2)」的進攻分數，以及對「玩家(1)」的防禦分數
                         let score = evaluatePosition(x, y, 2) + evaluatePosition(x, y, 1);
-                        
-                        // 加入些微隨機性，避免每次開局走法都一模一樣
                         score += Math.random() * 2;
-
-                        if (score > bestScore) {
-                            bestScore = score;
-                            bx = x;
-                            by = y;
-                        }
+                        if (score > bestScore) { bestScore = score; bx = x; by = y; }
                     }
                 }
             }
-
             gomokuBoard[by][bx] = 2;
-            playBeep(500, 350, 0.05); // 通通落子音效
+            playBeep(500, 350, 0.05);
             drawGomokuBoard();
-            
             if (checkWin(bx, by)) {
                 gomokuGameOver = true;
                 playRpsTone('lose');
-                const winText = "通通贏囉！😜🏆";
-                showGomokuGameOver(winText);
+                showGomokuOver("通通贏囉！", "嘿嘿，下次再挑戰我吧！😜🏆");
                 sendMessage("[RESULT]嘿嘿！這局是通通贏囉！你要再接再厲喔！😜🏆", true);
                 return;
             }
-            
             gomokuCurrentPlayer = 1;
             updateGomokuInfo();
+        }
+        function showGomokuOver(title, msg) {
+            document.getElementById('gomoku-over-title').innerText = title;
+            document.getElementById('gomoku-over-msg').innerText = msg;
+            document.getElementById('gomoku-over-screen').style.display = 'block';
         }
 
         function evaluatePosition(x, y, player) {
             let totalScore = 0;
             const directions = [[1, 0], [0, 1], [1, 1], [1, -1]];
-            
             for (let [dx, dy] of directions) {
-                let count = 1;
-                let block = 0;
-                
-                // 正向檢查
+                let count = 1; let block = 0;
                 let tx = x + dx, ty = y + dy;
-                while (tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === player) {
-                    count++; tx += dx; ty += dy;
-                }
+                while (tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === player) { count++; tx += dx; ty += dy; }
                 if (!(tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === 0)) block++;
-                
-                // 反向檢查
                 tx = x - dx; ty = y - dy;
-                while (tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === player) {
-                    count++; tx -= dx; ty -= dy;
-                }
+                while (tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === player) { count++; tx -= dx; ty -= dy; }
                 if (!(tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === 0)) block++;
-
-                // 評分權重
                 if (count >= 5) totalScore += 100000;
-                else if (count === 4) {
-                    if (block === 0) totalScore += 10000; // 活四
-                    else if (block === 1) totalScore += 1000; // 衝四
-                }
-                else if (count === 3) {
-                    if (block === 0) totalScore += 500; // 活三
-                    else if (block === 1) totalScore += 100; // 眠三
-                }
-                else if (count === 2) {
-                    if (block === 0) totalScore += 50;
-                }
+                else if (count === 4) { if (block === 0) totalScore += 10000; else if (block === 1) totalScore += 1000; }
+                else if (count === 3) { if (block === 0) totalScore += 500; else if (block === 1) totalScore += 100; }
+                else if (count === 2) { if (block === 0) totalScore += 50; }
             }
             return totalScore;
         }
         function checkWin(x, y) { const p = gomokuBoard[y][x]; for (let [dx, dy] of [[1, 0], [0, 1], [1, 1], [1, -1]]) { let c = 1; for (let s of [1, -1]) { let tx = x + dx * s, ty = y + dy * s; while (tx >= 0 && tx < 15 && ty >= 0 && ty < 15 && gomokuBoard[ty][tx] === p) { c++; tx += dx * s; ty += dy * s; } } if (c >= 5) return true; } return false; }
         function playWinMelody() { const c = getCtx(), n = c.currentTime; [523, 659, 783, 1046].forEach((f, i) => playBeep(f, f, 0.3, n + i * 0.1)); }
 
+        async function sendMessage(t, isBtn = false) {
+            if (isProcessing) return; const n = t.trim();
+            if (currentMode === '好心情' && (n==='擊掌'||n==='跟我擊掌'||n.includes('擊掌'))) { stopCurrentAudio(); triggerHighFiveCelebration(); const s = '合作愉快，我們是最棒的夥伴！'; const m = addMessage('bot', `啪！✋✨ ${s} 🤝💖`); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
+            if (currentMode === '屬於我' && (n==='親親'||n.includes('親親'))) { stopCurrentAudio(); showAffectionAnimation('kiss'); const s = '啾一下送給你，今天也要甜甜的。'; const m = addMessage('bot', s); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
+            if (currentMode === '屬於我' && (n==='抱抱'||n.includes('抱抱'))) { stopCurrentAudio(); showAffectionAnimation('hug'); const s = '來，給你一個大大抱抱。'; const m = addMessage('bot', s); fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: `[RESULT]${s}`, mode: currentMode, voice_type: voiceSelect.value }) }).then(r => r.json()).then(d => { if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } }); return; }
+            if (n) addMessage('user', n); setUILoading(true);
+            try { abortController = new AbortController(); const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: t, mode: currentMode, voice_type: voiceSelect.value }), signal: abortController.signal }); const d = await r.json(); if (d.reply) { const m = addMessage('bot', d.reply); if (d.audio_url) { attachReplayButton(m, d.audio_url); playAudioFromUrl(d.audio_url); } } }
+            catch (e) { if (e.name !== 'AbortError') addMessage('bot', '連不上大腦囉...'); } finally { setUILoading(false); }
+        }
+        function sendMessageFromInput() { const t = textInput.value; if (t.trim()) { sendMessage(t); textInput.value = ''; } }
+        textInput.onkeydown = (e) => { if (e.key === 'Enter') sendMessageFromInput(); };
+
+        function addMessage(s, t) { const div = document.createElement('div'); div.className = `message ${s}-message`; if (s === 'bot') { const content = document.createElement('span'); content.className = 'message-content'; const disc = '※ 以上僅供娛樂參考，請理性看待喔！'; const idx = t.indexOf(disc); if (idx !== -1) { content.innerText = t.slice(0, idx).trimEnd(); const sSpan = document.createElement('span'); sSpan.className = 'message-disclaimer'; sSpan.innerText = t.slice(idx); content.appendChild(sSpan); } else { content.innerText = t; } div.appendChild(content); } else { div.innerText = t; } chatContainer.appendChild(div); chatContainer.scrollTop = chatContainer.scrollHeight; return div; }
+        function attachReplayButton(el, url) { const b = document.createElement('button'); b.className = 'replay-audio-btn'; b.innerText = '🔊'; b.onclick = () => playAudioFromUrl(url); el.appendChild(b); }
+
+        function switchToOriginal() { window.location.href = "/?mode=通通沒問題&voice=" + voiceSelect.value; }
+        function switchToPersonality() { window.location.href = "/?mode=" + modeDropdown.value + "&voice=" + voiceSelect.value; }
+        function switchToGameZone() { window.location.href = "/?mode=遊戲專區&voice=" + voiceSelect.value; }
+
         // Start
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' || e.key === ' ') {
+                const birdModal = document.getElementById('birdModal');
+                if (birdModal && birdModal.classList.contains('show')) {
+                    e.preventDefault(); // 防止頁面捲動
+                    handleBirdInput();
+                }
+            }
+        });
+
         document.getElementById('namePromptInput').onkeydown = (e) => { if (e.key === 'Enter') submitNamePrompt(); };
         document.getElementById('sheepCountInput').onkeydown = (e) => { if (e.key === 'Enter') submitSheepCount(); };
         document.getElementById('questionPromptInput').onkeydown = (e) => { if (e.key === 'Enter') submitQuestionPrompt(); };
 
-        currentMode = "{{ current_mode }}" || '通通沒問題';
+        currentMode = "通通沒問題" || '通通沒問題';
         updateUIForMode(currentMode);
-        const initialMsg = {{ initial_message | tojson }};
-        const initialAudio = {{ initial_audio | tojson }};
+        const initialMsg = "\u2728 \u6a21\u5f0f\u5df2\u5207\u63db\u70ba\uff1a\u3010\u901a\u901a\u6c92\u554f\u984c\u3011 \u2728 \u6211\u662f\u6700\u5f37\u5927\u7684\u901a\u901a\uff01\u6709\u4ec0\u9ebc\u554f\u984c\u4ea4\u7d66\u6211\u5c31\u5c0d\u4e86\uff0c\u901a\u901a\u6c92\u554f\u984c\uff01\ud83e\udd16\ud83d\udcaa";
+        const initialAudio = "/static/audio/voice_8ca2fc60-601e-4f30-9e2f-e1739beaae5a.mp3";
         if (initialMsg && initialMsg !== "" && initialMsg !== "None") { const m = addMessage('bot', initialMsg); if (initialAudio && initialAudio !== "" && initialAudio !== "None") { attachReplayButton(m, initialAudio); playAudioFromUrl(initialAudio); } }
         setInterval(() => fetch('/api/cleanup', { method: 'POST' }), 600000);
     </script>
