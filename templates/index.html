@@ -67,25 +67,23 @@
             border: 1px solid rgba(0, 123, 255, 0.5);
         }
 
-        .personality-dropdown {
-            background: #fff;
+        .personality-dropdown,
+        .voice-settings select,
+        .theme-settings button,
+        #stop-btn {
+            background-color: #ffffff !important;
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            padding: 6px;
             border-radius: 8px;
-            font-size: 16px;
-            width: 130px;
-            font-weight: 500;
+            padding: 6px;
+            font-size: 14px;
+            transition: 0.3s;
         }
 
-        #stop-btn {
-            border: 1px solid var(--border-color);
-            background: #fff;
-            color: #666;
-            font-size: 14px;
-            padding: 5px 10px;
-            border-radius: 8px;
-            transition: 0.3s;
+        .personality-dropdown {
+            width: 130px;
+            font-size: 16px;
+            font-weight: 500;
         }
 
         #chat-container {
@@ -395,6 +393,179 @@
                 margin-bottom: 2rem !important;
             }
         }
+
+        /* 深色模式全域樣式 */
+        body.dark-mode {
+            --bg-light: #121212;
+            --nav-bg: #1e1e1e;
+            --text-main: #e0e0e0;
+            --border-color: #333333;
+        }
+
+        /* 計算機深色模式修正 */
+        body.dark-mode #calc-display, 
+        body.dark-mode #kinship-display, 
+        body.dark-mode #kinship-result {
+            background-color: #2c2c2e !important;
+            color: #ffffff !important;
+            border-color: #48484a !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3) !important;
+        }
+
+        body.dark-mode .calc-grid button,
+        body.dark-mode .kinship-grid button {
+            border-color: #3a3a3c !important;
+        }
+
+        body.dark-mode .calc-grid .btn-light,
+        body.dark-mode .kinship-grid .btn-light {
+            background-color: #3a3a3c !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .calc-grid .btn-white,
+        body.dark-mode .kinship-grid .btn-white {
+            background-color: #2c2c2e !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .calc-grid button:hover,
+        body.dark-mode .kinship-grid button:hover {
+            background-color: #48484a !important;
+            filter: brightness(1.2);
+        }
+
+        body.dark-mode #chat-container { background-color: #121212; }
+
+        /* 遊戲專區深色模式修正 */
+        body.dark-mode #game-dashboard h2 {
+            color: #74b9ff !important;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5) !important;
+        }
+
+        body.dark-mode #game-dashboard p {
+            color: #aed6f1 !important;
+        }
+        
+        body.dark-mode .bot-message {
+            background-color: #2c2c2e;
+            color: #e0e0e0;
+            border-color: #3a3a3c;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .modal-content {
+            background-color: #1c1c1e !important;
+            color: #e0e0e0;
+        }
+
+        /* 彈出視窗關閉按鈕 (叉叉) 修正 */
+        body.dark-mode .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        /* 計算機模式切換鈕 (數字/親戚) 修正 */
+        body.dark-mode .btn-group {
+            background-color: #2c2c2e !important;
+        }
+
+        body.dark-mode .btn-group .btn {
+            color: #a0a0a0;
+        }
+
+        body.dark-mode .btn-check:checked + .btn {
+            background-color: #3a3a3c !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .personality-dropdown,
+        body.dark-mode .voice-settings select,
+        body.dark-mode .theme-settings button,
+        body.dark-mode #theme-toggle-btn,
+        body.dark-mode #stop-btn {
+            background-color: #2c2c2e !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3c !important;
+        }
+
+        body.dark-mode .action-btn {
+            background-color: #2c2c2e;
+            color: #ccc;
+            border-color: #3a3a3c;
+        }
+
+        body.dark-mode #text-input {
+            background-color: #2c2c2e !important;
+            color: #e0e0e0 !important;
+            border-color: #3a3a3c !important;
+        }
+
+        body.dark-mode .text-muted {
+            color: #a0a0a0 !important;
+        }
+
+        body.dark-mode .form-control {
+            background-color: #2c2c2e;
+            color: #ffffff;
+            border-color: #3a3a3c;
+        }
+
+        body.dark-mode .form-control:focus {
+            background-color: #3a3a3c;
+            color: #ffffff;
+        }
+
+        body.dark-mode .original-btn:not(.active) {
+            opacity: 0.8;
+        }
+
+        /* 遊戲專區按鈕深色模式修正 */
+        .game-card-btn {
+            background-color: #ffffff !important;
+            transition: transform 0.2s, background-color 0.3s !important;
+        }
+
+        .game-card-btn:hover {
+            transform: scale(1.08);
+            background-color: #f8f9fa !important;
+        }
+
+        body.dark-mode .game-card-btn {
+            background-color: #1c1c1e !important;
+            border-width: 2px !important;
+        }
+
+        body.dark-mode .game-card-btn:hover {
+            background-color: #2c2c2e !important;
+        }
+
+        body.dark-mode .game-card-btn .fw-bold {
+            color: #ffffff !important;
+        }
+
+        /* 猜拳與擊掌深色模式修正 */
+        body.dark-mode .rps-choice-btn {
+            border-color: #636e72 !important;
+            color: #dfe6e9 !important;
+        }
+
+        body.dark-mode .rps-choice-btn:hover {
+            background-color: #636e72 !important;
+            color: #fff !important;
+        }
+
+        body.dark-mode #rps-status {
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .highfive-card {
+            background-color: #1c1c1e !important;
+            border-color: #f39c12 !important;
+        }
+
+        body.dark-mode .highfive-text {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 
@@ -404,7 +575,7 @@
         <div class="d-flex gap-2">
             <button id="btn-original" class="original-btn active" onclick="switchToOriginal()" title="返回對話模式">🤖 通通沒問題</button>
             <button id="game-zone-btn" class="original-btn" onclick="switchToGameZone()" title="開啟遊戲專區" style="background-color: #0984e3;">🎮 遊戲專區</button>
-            <button id="calc-btn" class="original-btn" onclick="openCalc()" title="開啟計算機" style="background-color: #f39c12;">🧮 計算機</button>
+            <button id="calc-btn" class="original-btn" onclick="openCalc()" title="開啟計算機" style="background-color: #e74c3c;">🧮 計算機</button>
         </div>
 
         <div class="d-flex align-items-center">
@@ -417,7 +588,6 @@
                 <option value="屬於我">👤 屬於我</option>
                 <option value="去睡覺">😴 去睡覺</option>
                 <option value="不知道">❓ 不知道</option>
-                <option value="遊戲專區">🎮 遊戲專區</option>
             </select>
             <div class="voice-settings ms-2">
                 <select id="voice-select" class="form-select form-select-sm">
@@ -427,6 +597,9 @@
                     <option value="sister">👩 溫柔姐姐</option>
                     <option value="sunny">🧢 陽光男孩</option>
                 </select>
+                </div>
+                <div class="theme-settings ms-2">
+                <button id="theme-toggle-btn" class="btn btn-sm btn-outline-secondary" onclick="toggleDarkMode()" style="width: 40px; height: 35px; padding: 0; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; border-radius: 8px; border-color: var(--border-color); background: var(--nav-bg); color: var(--text-main);">☀️</button>
             </div>
         </div>
     </div>
@@ -848,19 +1021,36 @@
         let namePromptModal = null, titlePromptModal = null, sheepCountModal = null, natureSoundModal = null, questionPromptModal = null, gomokuModal = null, rpsModal = null;
         let highFiveOverlay = null, highFiveTimer = null, rpsRevealTimer = null, rpsReplyTimer = null, rpsRoundId = 0;
 
-        // Init Voice
+        // Init Voice & Theme
         const serverVoice = "{{ current_voice }}";
         voiceSelect.value = (serverVoice && serverVoice !== "None") ? serverVoice : (localStorage.getItem('tongtong_voice') || 'female');
         voiceSelect.onchange = () => localStorage.setItem('tongtong_voice', voiceSelect.value);
 
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        const savedTheme = localStorage.getItem('tongtong_theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            if (themeBtn) themeBtn.innerText = '🌙';
+        } else {
+            if (themeBtn) themeBtn.innerText = '☀️';
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            const newTheme = isDark ? 'dark' : 'light';
+            localStorage.setItem('tongtong_theme', newTheme);
+            if (themeBtn) themeBtn.innerText = isDark ? '🌙' : '☀️';
+            applyTheme(currentMode);
+        }
+
         const THEMES = {
-            '通通沒問題': { primary: '#007bff', accent: '#333', bg: '#f8f9fa', nav: '#ffffff' },
-            '好心情': { primary: '#f39c12', accent: '#333', bg: '#fff9e6', nav: '#fffcf0' },
-            '神算師': { primary: '#9b59b6', accent: '#333', bg: '#f8f0ff', nav: '#fbf8ff' },
-            '屬於我': { primary: '#e91e63', accent: '#333', bg: '#fff0f5', nav: '#fff8fa' },
-            '去睡覺': { primary: '#34495e', accent: '#333', bg: '#f0f4f8', nav: '#f8fafd' },
-            '不知道': { primary: '#1abc9c', accent: '#333', bg: '#f0fff4', nav: '#f8fffb' },
-            '遊戲專區': { primary: '#2980b9', accent: '#fff', bg: '#aed6f1', nav: '#85c1e9' }
+            '通通沒問題': { primary: '#007bff', bg: '#f8f9fa', nav: '#ffffff', darkBg: '#121212', darkNav: '#1e1e1e' },
+            '好心情': { primary: '#f39c12', bg: '#fff9e6', nav: '#fffcf0', darkBg: '#2d2412', darkNav: '#3d2e18' },
+            '神算師': { primary: '#9b59b6', bg: '#f8f0ff', nav: '#fbf8ff', darkBg: '#21162d', darkNav: '#2d1e3d' },
+            '屬於我': { primary: '#e91e63', bg: '#fff0f5', nav: '#fff8fa', darkBg: '#2d121c', darkNav: '#3d1825' },
+            '去睡覺': { primary: '#34495e', bg: '#f0f4f8', nav: '#f8fafd', darkBg: '#161c23', darkNav: '#1e242d' },
+            '不知道': { primary: '#1abc9c', bg: '#f0fff4', nav: '#f8fffb', darkBg: '#122d28', darkNav: '#183d36' },
+            '遊戲專區': { primary: '#2980b9', bg: '#aed6f1', nav: '#85c1e9', darkBg: '#122332', darkNav: '#182e44' }
         };
 
         const MODE_ACTIONS = {
@@ -1383,7 +1573,13 @@
                 let result = relationship({ text: kinshipExpression, sex: 1, type: 'traditional' });
                 if (result && result.length > 0) {
                     // 強制轉換簡體為繁體 (即時預覽也要轉)
-                    const converted = result[0].replace(/妈/g, '媽').replace(/爷/g, '爺').replace(/儿/g, '兒').replace(/孙/g, '孫');
+                    const converted = result[0]
+                        .replace(/妈/g, '媽')
+                        .replace(/爷/g, '爺')
+                        .replace(/儿/g, '兒')
+                        .replace(/孙/g, '孫')
+                        .replace(/妇/g, '婦')
+                        .replace(/么/g, '麼');
                     document.getElementById('kinship-result').innerText = converted;
                 }
             } else document.getElementById('kinship-result').innerText = '自己';
@@ -1401,6 +1597,8 @@
                     .replace(/爷/g, '爺')
                     .replace(/儿/g, '兒')
                     .replace(/孙/g, '孫')
+                    .replace(/妇/g, '婦')
+                    .replace(/么/g, '麼')
                     .replace(/姊/g, '姐')
                 );
                 resultEl.innerText = result.join(' / ');
@@ -1439,13 +1637,54 @@
 
         // --- Core Functions ---
         function applyTheme(mode) {
-            const theme = THEMES[mode] || THEMES['通通沒問題']; const root = document.documentElement;
-            root.style.setProperty('--primary-color', theme.primary); root.style.setProperty('--bg-light', theme.bg); root.style.setProperty('--nav-bg', theme.nav);
+            const theme = THEMES[mode] || THEMES['通通沒問題']; 
+            const root = document.documentElement;
+            const isDark = document.body.classList.contains('dark-mode');
+
+            // 根據暗色模式選擇顏色
+            const primaryColor = theme.primary;
+            const bgColor = isDark ? (theme.darkBg || '#121212') : theme.bg;
+            const navColor = isDark ? (theme.darkNav || '#1e1e1e') : theme.nav;
+
+            root.style.setProperty('--primary-color', primaryColor); 
+            root.style.setProperty('--bg-light', bgColor); 
+            root.style.setProperty('--nav-bg', navColor);
+
             document.querySelectorAll('.custom-modal-theme').forEach(mc => { 
-                mc.style.border = 'none'; // 徹底移除邊框
-                const t = mc.querySelector('.modal-title'); if (t) t.style.color = theme.primary; 
+                mc.style.border = 'none'; 
+                const t = mc.querySelector('.modal-title'); 
+                if (t) {
+                    // 暗色模式下標題顏色稍微亮一點點，避免跟背景混在一起
+                    t.style.color = isDark ? '#74b9ff' : primaryColor; 
+                }
             });
-            document.querySelectorAll('.theme-submit-btn').forEach(b => b.style.backgroundColor = theme.primary);
+
+            document.querySelectorAll('.theme-submit-btn').forEach(b => {
+                b.style.backgroundColor = primaryColor;
+            });
+
+            // 更新所有選擇按鈕的顏色 (標題、猜拳、大自然聲音)
+            document.querySelectorAll('.title-choice-btn, .rps-choice-btn, .nature-choice-btn').forEach(btn => {
+                if (isDark) {
+                    btn.style.borderColor = '#48484a';
+                    btn.style.color = '#e0e0e0';
+                    btn.style.backgroundColor = 'transparent';
+                } else {
+                    btn.style.borderColor = primaryColor;
+                    btn.style.color = primaryColor;
+                    btn.style.backgroundColor = 'transparent';
+                }
+                
+                // Hover 效果處理
+                btn.onmouseover = () => {
+                    btn.style.backgroundColor = isDark ? '#48484a' : primaryColor;
+                    btn.style.color = '#ffffff';
+                };
+                btn.onmouseout = () => {
+                    btn.style.backgroundColor = 'transparent';
+                    btn.style.color = isDark ? '#e0e0e0' : primaryColor;
+                };
+            });
         }
 
         function updateUIForMode(mode) {
