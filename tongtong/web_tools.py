@@ -161,7 +161,7 @@ def bot_enhance_with_gemini(user_input, search_result=""):
     try:
         import google.genai as genai
         api_key = os.getenv('GEMINI_API_KEY')
-        if not api_key or api_key == "請在這裡貼上您的API_KEY":
+        if not api_key or api_key == "GEMINI_API_KEY":
             return search_result
         client = genai.Client(api_key=api_key)
         prompt = f"你是一個可愛機器人通通。用簡潔友善的台灣繁體中文回答。問題：{user_input}\n資訊：{search_result}"
@@ -187,7 +187,7 @@ def bot_ask_gemini_direct(user_input, history=None):
     try:
         import google.genai as genai
         api_key = os.getenv('GEMINI_API_KEY')
-        if api_key and api_key != "請在這裡貼上您的API_KEY":
+        if api_key and api_key != "GEMINI_API_KEY":
             client = genai.Client(api_key=api_key)
             context = ""
             if history:
